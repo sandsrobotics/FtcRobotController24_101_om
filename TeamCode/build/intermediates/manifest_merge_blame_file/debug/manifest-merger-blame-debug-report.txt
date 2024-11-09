@@ -12,87 +12,87 @@
 12
 13    <uses-sdk
 14        android:minSdkVersion="24"
-14-->/Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
+14-->/Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
 15        android:targetSdkVersion="28" />
-15-->/Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
+15-->/Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
 16
-17    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-17-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:5-81
-17-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:22-78
-18    <uses-permission
-18-->[org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:11:5-13:35
-19        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-19-->[org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:12:9-65
-20        android:required="true" />
-20-->[org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:13:9-32
-21    <uses-permission
-21-->[org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:14:5-16:35
-22        android:name="android.permission.READ_EXTERNAL_STORAGE"
-22-->[org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:15:9-64
-23        android:required="true" />
-23-->[org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:16:9-32
-24    <uses-permission
-24-->[org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:12:5-76
-25        android:name="android.permission.ACCESS_WIFI_STATE"
-25-->[org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:12:22-73
-26        android:required="true" />
-26-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:13:9-32
-27    <uses-permission
-27-->[org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:19:5-21:35
-28        android:name="android.permission.WRITE_SETTINGS"
-28-->[org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:20:9-57
-29        android:required="true" />
-29-->[org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:21:9-32
-30    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-30-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:12:5-74
-30-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:12:22-71
-31    <uses-permission
-31-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:13:5-76
-32        android:name="android.permission.CHANGE_WIFI_STATE"
-32-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:13:22-73
-33        android:required="true" />
-33-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:16:9-32
-34    <uses-permission
-34-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:14:5-79
-35        android:name="android.permission.CHANGE_NETWORK_STATE"
-35-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:14:22-76
-36        android:required="true" />
-36-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:22:9-32
-37    <uses-permission
-37-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:15:5-67
-38        android:name="android.permission.INTERNET"
-38-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:15:22-64
-39        android:required="true" />
-39-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:25:9-32
-40    <uses-permission
-40-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:16:5-79
-41        android:name="android.permission.ACCESS_NETWORK_STATE"
-41-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:16:22-76
-42        android:required="true" />
-42-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:19:9-32
-43    <uses-permission android:name="android.permission.BLUETOOTH" /> <!-- see AppUtil.setTimeZone() -->
-43-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:17:5-68
-43-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:17:22-65
-44    <uses-permission
-44-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:42:5-44:35
-45        android:name="android.permission.SET_TIME_ZONE"
-45-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:43:9-56
-46        android:required="true" />
-46-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:44:9-32
-47    <!--
-48  Note: we suspect that this (android.permission.WAKE_LOCK) is no
-49  longer needed, but haven't yet found the time necessary to verify
-50  that assertion before removing it
-51    -->
-52    <uses-permission
-52-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:51:5-53:35
-53        android:name="android.permission.WAKE_LOCK"
-53-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:52:9-52
-54        android:required="true" />
-54-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:53:9-32
-55    <uses-permission android:name="android.permission.CAMERA" />
-55-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:54:5-65
-55-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:54:22-62
+17    <uses-permission android:name="android.permission.CAMERA" />
+17-->[ftc265-3.0.0-pre.5.aar] /Users/tkroon/.gradle/caches/transforms-3/3367be271291b58b1da54666bc0df50a/transformed/ftc265-3.0.0-pre.5/AndroidManifest.xml:11:5-65
+17-->[ftc265-3.0.0-pre.5.aar] /Users/tkroon/.gradle/caches/transforms-3/3367be271291b58b1da54666bc0df50a/transformed/ftc265-3.0.0-pre.5/AndroidManifest.xml:11:22-62
+18    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+18-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:5-81
+18-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:22-78
+19    <uses-permission
+19-->[org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:11:5-13:35
+20        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+20-->[org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:12:9-65
+21        android:required="true" />
+21-->[org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:13:9-32
+22    <uses-permission
+22-->[org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:14:5-16:35
+23        android:name="android.permission.READ_EXTERNAL_STORAGE"
+23-->[org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:15:9-64
+24        android:required="true" />
+24-->[org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:16:9-32
+25    <uses-permission
+25-->[org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:12:5-76
+26        android:name="android.permission.ACCESS_WIFI_STATE"
+26-->[org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:12:22-73
+27        android:required="true" />
+27-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:13:9-32
+28    <uses-permission
+28-->[org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:19:5-21:35
+29        android:name="android.permission.WRITE_SETTINGS"
+29-->[org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:20:9-57
+30        android:required="true" />
+30-->[org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:21:9-32
+31    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+31-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:12:5-74
+31-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:12:22-71
+32    <uses-permission
+32-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:13:5-76
+33        android:name="android.permission.CHANGE_WIFI_STATE"
+33-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:13:22-73
+34        android:required="true" />
+34-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:16:9-32
+35    <uses-permission
+35-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:14:5-79
+36        android:name="android.permission.CHANGE_NETWORK_STATE"
+36-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:14:22-76
+37        android:required="true" />
+37-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:22:9-32
+38    <uses-permission
+38-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:15:5-67
+39        android:name="android.permission.INTERNET"
+39-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:15:22-64
+40        android:required="true" />
+40-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:25:9-32
+41    <uses-permission
+41-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:16:5-79
+42        android:name="android.permission.ACCESS_NETWORK_STATE"
+42-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:16:22-76
+43        android:required="true" />
+43-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:19:9-32
+44    <uses-permission android:name="android.permission.BLUETOOTH" /> <!-- see AppUtil.setTimeZone() -->
+44-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:17:5-68
+44-->[org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:17:22-65
+45    <uses-permission
+45-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:42:5-44:35
+46        android:name="android.permission.SET_TIME_ZONE"
+46-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:43:9-56
+47        android:required="true" />
+47-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:44:9-32
+48    <!--
+49  Note: we suspect that this (android.permission.WAKE_LOCK) is no
+50  longer needed, but haven't yet found the time necessary to verify
+51  that assertion before removing it
+52    -->
+53    <uses-permission
+53-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:51:5-53:35
+54        android:name="android.permission.WAKE_LOCK"
+54-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:52:9-52
+55        android:required="true" />
+55-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:53:9-32
 56    <uses-permission
 56-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:55:5-57:35
 57        android:name="android.permission.ACCESS_COARSE_LOCATION"
@@ -172,115 +172,115 @@
 99-->[com.journeyapps:zxing-android-embedded:4.3.0] /Users/tkroon/.gradle/caches/transforms-3/aafad4d5d6c33ce1e1f09474f7d3144e/transformed/zxing-android-embedded-4.3.0/AndroidManifest.xml:44:9-33
 100
 101    <application
-101-->/Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml:10:5-19
+101-->/Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml:10:5-19
 102        android:name="org.firstinspires.ftc.robotcore.internal.system.RobotApplication"
 102-->[org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:87:18-97
 103        android:allowBackup="true"
-103-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:9-35
+103-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:9-35
 104        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 104-->[androidx.core:core:1.3.0] /Users/tkroon/.gradle/caches/transforms-3/080f313e68143e30a4633ed9df16502e/transformed/core-1.3.0/AndroidManifest.xml:24:18-86
 105        android:debuggable="true"
 106        android:icon="@drawable/ic_launcher"
-106-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:9-45
+106-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:9-45
 107        android:label="@string/app_name"
-107-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:9-41
+107-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:9-41
 108        android:largeHeap="true"
-108-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:9-33
+108-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:9-33
 109        android:theme="@style/AppThemeRedRC"
-109-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:9-45
+109-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:9-45
 110        android:usesCleartextTraffic="true" > <!-- Indicates to the ControlHubUpdater what the latest version of the Control Hub is that this app supports -->
-110-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:20:9-44
+110-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:20:9-44
 111        <meta-data
-111-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:23:9-25:33
+111-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:23:9-25:33
 112            android:name="org.firstinspires.latestSupportedControlHubVersion"
-112-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:24:13-78
+112-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:24:13-78
 113            android:value="1" /> <!-- The main robot controller activity -->
-113-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:13-30
+113-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:13-30
 114        <activity
-114-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:28:9-39:20
+114-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:28:9-39:20
 115            android:name="org.firstinspires.ftc.robotcontroller.internal.PermissionValidatorWrapper"
-115-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:29:13-101
+115-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:29:13-101
 116            android:configChanges="orientation|screenSize"
-116-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:30:13-59
+116-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:30:13-59
 117            android:label="@string/app_name"
-117-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:31:13-45
+117-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:31:13-45
 118            android:launchMode="singleTask"
-118-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:32:13-44
+118-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:32:13-44
 119            android:screenOrientation="fullUser" >
-119-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:33:13-49
+119-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:33:13-49
 120            <intent-filter>
-120-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:34:13-38:29
+120-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:34:13-38:29
 121                <category android:name="android.intent.category.LAUNCHER" />
-121-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:35:17-77
-121-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:35:27-74
+121-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:35:17-77
+121-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:35:27-74
 122
 123                <action android:name="android.intent.action.MAIN" />
-123-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:37:17-69
-123-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:37:25-66
+123-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:37:17-69
+123-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:37:25-66
 124            </intent-filter>
 125        </activity>
 126        <activity
-126-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:40:9-58:20
+126-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:40:9-58:20
 127            android:name="org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity"
-127-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:41:13-101
+127-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:41:13-101
 128            android:configChanges="orientation|screenSize"
-128-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:42:13-59
+128-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:42:13-59
 129            android:label="@string/app_name"
-129-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:43:13-45
+129-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:43:13-45
 130            android:launchMode="singleTask"
-130-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:44:13-44
+130-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:44:13-44
 131            android:screenOrientation="fullUser" >
-131-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:45:13-49
+131-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:45:13-49
 132            <intent-filter>
-132-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:46:13-48:29
+132-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:46:13-48:29
 133                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-133-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:47:17-90
-133-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:47:25-87
+133-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:47:17-90
+133-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:47:25-87
 134            </intent-filter>
 135
 136            <meta-data
-136-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:50:13-52:57
+136-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:50:13-52:57
 137                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-137-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:51:17-79
+137-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:51:17-79
 138                android:resource="@xml/device_filter" />
-138-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:52:17-54
+138-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:52:17-54
 139
 140            <!-- org.firstinspires.main.entry indicates that this app is compatible with the Dragonboard Control Hub -->
 141            <meta-data
-141-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:55:13-57:40
+141-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:55:13-57:40
 142                android:name="org.firstinspires.main.entry"
-142-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:56:17-60
+142-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:56:17-60
 143                android:value="true" />
-143-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:57:17-37
+143-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:57:17-37
 144        </activity> <!-- The robot controller service in which most of the robot functionality is managed -->
 145        <service
-145-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:61:9-63:38
+145-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:61:9-63:38
 146            android:name="com.qualcomm.ftccommon.FtcRobotControllerService"
-146-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:62:13-76
+146-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:62:13-76
 147            android:enabled="true" /> <!-- Assistant that autostarts the robot controller on android boot (if it's supposed to) -->
-147-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:63:13-35
+147-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:63:13-35
 148        <receiver
-148-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:66:9-77:20
+148-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:66:9-77:20
 149            android:name="org.firstinspires.ftc.ftccommon.internal.RunOnBoot"
-149-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:67:13-78
+149-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:67:13-78
 150            android:enabled="true"
-150-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:68:13-35
+150-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:68:13-35
 151            android:exported="true"
-151-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:69:13-36
+151-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:69:13-36
 152            android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
-152-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:70:13-75
+152-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:70:13-75
 153            <intent-filter>
-153-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:71:13-76:29
+153-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:71:13-76:29
 154                <category android:name="android.intent.category.DEFAULT" />
-154-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:72:17-76
-154-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:72:27-73
+154-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:72:17-76
+154-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:72:27-73
 155
 156                <action android:name="android.intent.action.BOOT_COMPLETED" />
-156-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:74:17-79
-156-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:74:25-76
+156-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:74:17-79
+156-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:74:25-76
 157                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-157-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:75:17-82
-157-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:75:25-79
+157-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:75:17-82
+157-->[:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:75:25-79
 158            </intent-filter>
 159        </receiver>
 160

@@ -1,12 +1,14 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
-INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
-INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
-INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
-MERGED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-80:12
+ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
+INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
+INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
+INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
+MERGED from [ftc265-3.0.0-pre.5.aar] /Users/tkroon/.gradle/caches/transforms-3/3367be271291b58b1da54666bc0df50a/transformed/ftc265-3.0.0-pre.5/AndroidManifest.xml:2:1-13:12
+MERGED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:2:1-80:12
 MERGED from [org.firstinspires.ftc:OnBotJava:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/2b473f8db28410253b603c93ebcf3ec4/transformed/OnBotJava-10.1.0/AndroidManifest.xml:34:1-43:12
 MERGED from [org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:2:1-26:12
+MERGED from [com.acmerobotics.dashboard:dashboard:0.4.14] /Users/tkroon/.gradle/caches/transforms-3/e353200caea7631e5aeb592af853b3ca/transformed/dashboard-0.4.14/AndroidManifest.xml:2:1-9:12
 MERGED from [org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:3:1-180:12
 MERGED from [org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:2:1-32:12
 MERGED from [org.firstinspires.ftc:RobotServer:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/29c826a2a88dc23f084c6713e5befbf6/transformed/RobotServer-10.1.0/AndroidManifest.xml:2:1-11:12
@@ -14,6 +16,9 @@ MERGED from [org.firstinspires.ftc:Hardware:10.1.0] /Users/tkroon/.gradle/caches
 MERGED from [org.firstinspires.ftc:Vision:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/16cff8030bf9f8310ad129f385e392c6/transformed/Vision-10.1.0/AndroidManifest.xml:2:1-9:12
 MERGED from [org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:2:1-131:12
 MERGED from [androidx.appcompat:appcompat:1.2.0] /Users/tkroon/.gradle/caches/transforms-3/c6f9a08362f0b2ebd1f0ffa501e6b073/transformed/appcompat-1.2.0/AndroidManifest.xml:17:1-24:12
+MERGED from [org.tensorflow:tensorflow-lite-task-vision:0.4.3] /Users/tkroon/.gradle/caches/transforms-3/04b9956cc6bbc08e0894d0fb60375181/transformed/tensorflow-lite-task-vision-0.4.3/AndroidManifest.xml:2:1-9:12
+MERGED from [org.openftc:i2cdrivers:1.0.0] /Users/tkroon/.gradle/caches/transforms-3/8a2285a998c262a10e072b009823860c/transformed/i2cdrivers-1.0.0/AndroidManifest.xml:2:1-11:12
+MERGED from [org.tensorflow:tensorflow-lite:2.12.0] /Users/tkroon/.gradle/caches/transforms-3/a4f7021db4f14156f184a1024ffe0841/transformed/tensorflow-lite-2.12.0/AndroidManifest.xml:2:1-11:12
 MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] /Users/tkroon/.gradle/caches/transforms-3/aafad4d5d6c33ce1e1f09474f7d3144e/transformed/zxing-android-embedded-4.3.0/AndroidManifest.xml:17:1-56:12
 MERGED from [com.jakewharton.threetenabp:threetenabp:1.3.1] /Users/tkroon/.gradle/caches/transforms-3/1590952169d9f2e127c6932d7ab9578e/transformed/threetenabp-1.3.1/AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.fragment:fragment:1.1.0] /Users/tkroon/.gradle/caches/transforms-3/5a6c3bdc4d162f256ce385235f9ca0fe/transformed/fragment-1.1.0/AndroidManifest.xml:17:1-24:12
@@ -37,28 +42,32 @@ MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /Users/tkroon/.gr
 MERGED from [androidx.arch.core:core-runtime:2.0.0] /Users/tkroon/.gradle/caches/transforms-3/4e786792028adedfab0f8cd035ae1abc/transformed/core-runtime-2.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [org.openftc:easyopencv:1.7.3] /Users/tkroon/.gradle/caches/transforms-3/c231f5ffd0cb254819f37bb730ec8283/transformed/easyopencv-1.7.3/AndroidManifest.xml:2:1-9:12
 MERGED from [org.openftc:apriltag:2.1.0] /Users/tkroon/.gradle/caches/transforms-3/e3ea830f8ac62a6d71860ffa68d7d919/transformed/apriltag-2.1.0/AndroidManifest.xml:2:1-9:12
+MERGED from [org.tensorflow:tensorflow-lite-task-base:0.4.3] /Users/tkroon/.gradle/caches/transforms-3/8740cd3304b525ee7912722b3f738fd6/transformed/tensorflow-lite-task-base-0.4.3/AndroidManifest.xml:2:1-6:12
+MERGED from [org.tensorflow:tensorflow-lite-support-api:0.4.3] /Users/tkroon/.gradle/caches/transforms-3/f1f0c9d92887dcab28175f82510e6769/transformed/tensorflow-lite-support-api-0.4.3/AndroidManifest.xml:2:1-5:12
+MERGED from [org.tensorflow:tensorflow-lite-api:2.12.0] /Users/tkroon/.gradle/caches/transforms-3/84cccb6032ce083a8940ef00b4bf0b83/transformed/tensorflow-lite-api-2.12.0/AndroidManifest.xml:2:1-11:12
 MERGED from [org.openftc:opencv-repackaged-bundled-dylibs:4.10.0-A] /Users/tkroon/.gradle/caches/transforms-3/4887d79b5895854dea86b3135d6c5c10/transformed/opencv-repackaged-bundled-dylibs-4.10.0-A/AndroidManifest.xml:2:1-9:12
-INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
-INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
-INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
+MERGED from [com.google.android.odml:image:1.0.0-beta1] /Users/tkroon/.gradle/caches/transforms-3/dab063106eb8f67346aefe3cbc144c00/transformed/image-1.0.0-beta1/AndroidManifest.xml:2:1-9:12
+INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
+INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
+INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
 	package
-		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
-		ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
-		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
+		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
+		ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
+		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
 	android:versionName
-		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
-		ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
-		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
+		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
+		ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
+		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
 	android:versionCode
-		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
-		ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
-		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
+		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
+		ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml:8:1-11:12
+		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
 	xmlns:android
-		ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml:9:5-63
+		ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml:9:5-63
 application
-ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml:10:5-19
-MERGED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:5-78:19
-MERGED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:5-78:19
+ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml:10:5-19
+MERGED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:5-78:19
+MERGED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:14:5-78:19
 MERGED from [org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:18:5-24:19
 MERGED from [org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:18:5-24:19
 MERGED from [org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:23:5-178:19
@@ -67,6 +76,8 @@ MERGED from [org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/cach
 MERGED from [org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:19:5-30:19
 MERGED from [org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:87:5-129:19
 MERGED from [org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:87:5-129:19
+MERGED from [org.tensorflow:tensorflow-lite:2.12.0] /Users/tkroon/.gradle/caches/transforms-3/a4f7021db4f14156f184a1024ffe0841/transformed/tensorflow-lite-2.12.0/AndroidManifest.xml:9:5-20
+MERGED from [org.tensorflow:tensorflow-lite:2.12.0] /Users/tkroon/.gradle/caches/transforms-3/a4f7021db4f14156f184a1024ffe0841/transformed/tensorflow-lite-2.12.0/AndroidManifest.xml:9:5-20
 MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] /Users/tkroon/.gradle/caches/transforms-3/aafad4d5d6c33ce1e1f09474f7d3144e/transformed/zxing-android-embedded-4.3.0/AndroidManifest.xml:46:5-54:19
 MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] /Users/tkroon/.gradle/caches/transforms-3/aafad4d5d6c33ce1e1f09474f7d3144e/transformed/zxing-android-embedded-4.3.0/AndroidManifest.xml:46:5-54:19
 MERGED from [com.jakewharton.threetenabp:threetenabp:1.3.1] /Users/tkroon/.gradle/caches/transforms-3/1590952169d9f2e127c6932d7ab9578e/transformed/threetenabp-1.3.1/AndroidManifest.xml:7:5-20
@@ -75,32 +86,42 @@ MERGED from [androidx.core:core:1.3.0] /Users/tkroon/.gradle/caches/transforms-3
 MERGED from [androidx.core:core:1.3.0] /Users/tkroon/.gradle/caches/transforms-3/080f313e68143e30a4633ed9df16502e/transformed/core-1.3.0/AndroidManifest.xml:24:5-89
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/tkroon/.gradle/caches/transforms-3/cf8406776fd5b23f3359310765c2e504/transformed/versionedparcelable-1.1.0/AndroidManifest.xml:24:5-25:19
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /Users/tkroon/.gradle/caches/transforms-3/cf8406776fd5b23f3359310765c2e504/transformed/versionedparcelable-1.1.0/AndroidManifest.xml:24:5-25:19
+MERGED from [org.tensorflow:tensorflow-lite-task-base:0.4.3] /Users/tkroon/.gradle/caches/transforms-3/8740cd3304b525ee7912722b3f738fd6/transformed/tensorflow-lite-task-base-0.4.3/AndroidManifest.xml:4:4-5:18
+MERGED from [org.tensorflow:tensorflow-lite-task-base:0.4.3] /Users/tkroon/.gradle/caches/transforms-3/8740cd3304b525ee7912722b3f738fd6/transformed/tensorflow-lite-task-base-0.4.3/AndroidManifest.xml:4:4-5:18
+MERGED from [org.tensorflow:tensorflow-lite-api:2.12.0] /Users/tkroon/.gradle/caches/transforms-3/84cccb6032ce083a8940ef00b4bf0b83/transformed/tensorflow-lite-api-2.12.0/AndroidManifest.xml:9:5-20
+MERGED from [org.tensorflow:tensorflow-lite-api:2.12.0] /Users/tkroon/.gradle/caches/transforms-3/84cccb6032ce083a8940ef00b4bf0b83/transformed/tensorflow-lite-api-2.12.0/AndroidManifest.xml:9:5-20
+MERGED from [com.google.android.odml:image:1.0.0-beta1] /Users/tkroon/.gradle/caches/transforms-3/dab063106eb8f67346aefe3cbc144c00/transformed/image-1.0.0-beta1/AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.odml:image:1.0.0-beta1] /Users/tkroon/.gradle/caches/transforms-3/dab063106eb8f67346aefe3cbc144c00/transformed/image-1.0.0-beta1/AndroidManifest.xml:7:5-20
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.3.0] /Users/tkroon/.gradle/caches/transforms-3/080f313e68143e30a4633ed9df16502e/transformed/core-1.3.0/AndroidManifest.xml:24:18-86
 	android:label
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:9-41
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:17:9-41
 	android:largeHeap
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:9-33
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:18:9-33
 	android:icon
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:9-45
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:16:9-45
 	android:allowBackup
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:9-35
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:15:9-35
 	android:theme
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:9-45
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:19:9-45
 	android:name
 		ADDED from [org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:87:18-97
 	android:usesCleartextTraffic
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:20:9-44
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:20:9-44
 uses-sdk
-INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
-INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
-MERGED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:5-10:41
-MERGED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:5-10:41
+INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
+INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
+MERGED from [ftc265-3.0.0-pre.5.aar] /Users/tkroon/.gradle/caches/transforms-3/3367be271291b58b1da54666bc0df50a/transformed/ftc265-3.0.0-pre.5/AndroidManifest.xml:7:5-9:41
+MERGED from [ftc265-3.0.0-pre.5.aar] /Users/tkroon/.gradle/caches/transforms-3/3367be271291b58b1da54666bc0df50a/transformed/ftc265-3.0.0-pre.5/AndroidManifest.xml:7:5-9:41
+MERGED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:5-10:41
+MERGED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:8:5-10:41
 MERGED from [org.firstinspires.ftc:OnBotJava:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/2b473f8db28410253b603c93ebcf3ec4/transformed/OnBotJava-10.1.0/AndroidManifest.xml:39:5-41:41
 MERGED from [org.firstinspires.ftc:OnBotJava:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/2b473f8db28410253b603c93ebcf3ec4/transformed/OnBotJava-10.1.0/AndroidManifest.xml:39:5-41:41
 MERGED from [org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:7:5-9:41
 MERGED from [org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:7:5-9:41
+MERGED from [com.acmerobotics.dashboard:dashboard:0.4.14] /Users/tkroon/.gradle/caches/transforms-3/e353200caea7631e5aeb592af853b3ca/transformed/dashboard-0.4.14/AndroidManifest.xml:5:5-7:41
+MERGED from [com.acmerobotics.dashboard:dashboard:0.4.14] /Users/tkroon/.gradle/caches/transforms-3/e353200caea7631e5aeb592af853b3ca/transformed/dashboard-0.4.14/AndroidManifest.xml:5:5-7:41
 MERGED from [org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:8:5-10:41
 MERGED from [org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:8:5-10:41
 MERGED from [org.firstinspires.ftc:Inspection:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/e44095c853e5e5554fb67e48e0f767cb/transformed/Inspection-10.1.0/AndroidManifest.xml:7:5-9:41
@@ -115,6 +136,12 @@ MERGED from [org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/cache
 MERGED from [org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:7:5-9:41
 MERGED from [androidx.appcompat:appcompat:1.2.0] /Users/tkroon/.gradle/caches/transforms-3/c6f9a08362f0b2ebd1f0ffa501e6b073/transformed/appcompat-1.2.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.appcompat:appcompat:1.2.0] /Users/tkroon/.gradle/caches/transforms-3/c6f9a08362f0b2ebd1f0ffa501e6b073/transformed/appcompat-1.2.0/AndroidManifest.xml:20:5-22:41
+MERGED from [org.tensorflow:tensorflow-lite-task-vision:0.4.3] /Users/tkroon/.gradle/caches/transforms-3/04b9956cc6bbc08e0894d0fb60375181/transformed/tensorflow-lite-task-vision-0.4.3/AndroidManifest.xml:5:5-7:41
+MERGED from [org.tensorflow:tensorflow-lite-task-vision:0.4.3] /Users/tkroon/.gradle/caches/transforms-3/04b9956cc6bbc08e0894d0fb60375181/transformed/tensorflow-lite-task-vision-0.4.3/AndroidManifest.xml:5:5-7:41
+MERGED from [org.openftc:i2cdrivers:1.0.0] /Users/tkroon/.gradle/caches/transforms-3/8a2285a998c262a10e072b009823860c/transformed/i2cdrivers-1.0.0/AndroidManifest.xml:7:5-9:41
+MERGED from [org.openftc:i2cdrivers:1.0.0] /Users/tkroon/.gradle/caches/transforms-3/8a2285a998c262a10e072b009823860c/transformed/i2cdrivers-1.0.0/AndroidManifest.xml:7:5-9:41
+MERGED from [org.tensorflow:tensorflow-lite:2.12.0] /Users/tkroon/.gradle/caches/transforms-3/a4f7021db4f14156f184a1024ffe0841/transformed/tensorflow-lite-2.12.0/AndroidManifest.xml:6:5-7:38
+MERGED from [org.tensorflow:tensorflow-lite:2.12.0] /Users/tkroon/.gradle/caches/transforms-3/a4f7021db4f14156f184a1024ffe0841/transformed/tensorflow-lite-2.12.0/AndroidManifest.xml:6:5-7:38
 MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] /Users/tkroon/.gradle/caches/transforms-3/aafad4d5d6c33ce1e1f09474f7d3144e/transformed/zxing-android-embedded-4.3.0/AndroidManifest.xml:20:5-44
 MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] /Users/tkroon/.gradle/caches/transforms-3/aafad4d5d6c33ce1e1f09474f7d3144e/transformed/zxing-android-embedded-4.3.0/AndroidManifest.xml:20:5-44
 MERGED from [com.jakewharton.threetenabp:threetenabp:1.3.1] /Users/tkroon/.gradle/caches/transforms-3/1590952169d9f2e127c6932d7ab9578e/transformed/threetenabp-1.3.1/AndroidManifest.xml:5:5-44
@@ -161,110 +188,124 @@ MERGED from [org.openftc:easyopencv:1.7.3] /Users/tkroon/.gradle/caches/transfor
 MERGED from [org.openftc:easyopencv:1.7.3] /Users/tkroon/.gradle/caches/transforms-3/c231f5ffd0cb254819f37bb730ec8283/transformed/easyopencv-1.7.3/AndroidManifest.xml:5:5-7:41
 MERGED from [org.openftc:apriltag:2.1.0] /Users/tkroon/.gradle/caches/transforms-3/e3ea830f8ac62a6d71860ffa68d7d919/transformed/apriltag-2.1.0/AndroidManifest.xml:5:5-7:41
 MERGED from [org.openftc:apriltag:2.1.0] /Users/tkroon/.gradle/caches/transforms-3/e3ea830f8ac62a6d71860ffa68d7d919/transformed/apriltag-2.1.0/AndroidManifest.xml:5:5-7:41
+MERGED from [org.tensorflow:tensorflow-lite-support-api:0.4.3] /Users/tkroon/.gradle/caches/transforms-3/f1f0c9d92887dcab28175f82510e6769/transformed/tensorflow-lite-support-api-0.4.3/AndroidManifest.xml:4:3-71
+MERGED from [org.tensorflow:tensorflow-lite-support-api:0.4.3] /Users/tkroon/.gradle/caches/transforms-3/f1f0c9d92887dcab28175f82510e6769/transformed/tensorflow-lite-support-api-0.4.3/AndroidManifest.xml:4:3-71
+MERGED from [org.tensorflow:tensorflow-lite-api:2.12.0] /Users/tkroon/.gradle/caches/transforms-3/84cccb6032ce083a8940ef00b4bf0b83/transformed/tensorflow-lite-api-2.12.0/AndroidManifest.xml:6:5-7:38
+MERGED from [org.tensorflow:tensorflow-lite-api:2.12.0] /Users/tkroon/.gradle/caches/transforms-3/84cccb6032ce083a8940ef00b4bf0b83/transformed/tensorflow-lite-api-2.12.0/AndroidManifest.xml:6:5-7:38
 MERGED from [org.openftc:opencv-repackaged-bundled-dylibs:4.10.0-A] /Users/tkroon/.gradle/caches/transforms-3/4887d79b5895854dea86b3135d6c5c10/transformed/opencv-repackaged-bundled-dylibs-4.10.0-A/AndroidManifest.xml:5:5-7:41
 MERGED from [org.openftc:opencv-repackaged-bundled-dylibs:4.10.0-A] /Users/tkroon/.gradle/caches/transforms-3/4887d79b5895854dea86b3135d6c5c10/transformed/opencv-repackaged-bundled-dylibs-4.10.0-A/AndroidManifest.xml:5:5-7:41
-INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
-INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
+MERGED from [com.google.android.odml:image:1.0.0-beta1] /Users/tkroon/.gradle/caches/transforms-3/dab063106eb8f67346aefe3cbc144c00/transformed/image-1.0.0-beta1/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.odml:image:1.0.0-beta1] /Users/tkroon/.gradle/caches/transforms-3/dab063106eb8f67346aefe3cbc144c00/transformed/image-1.0.0-beta1/AndroidManifest.xml:5:5-44
+INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
+INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
-		ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
-		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
+		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
+		ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
+		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
-		ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
-		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController-master/TeamCode/src/main/AndroidManifest.xml
+		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
+		ADDED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
+		INJECTED from /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/TeamCode/src/main/AndroidManifest.xml
+uses-permission#android.permission.CAMERA
+ADDED from [ftc265-3.0.0-pre.5.aar] /Users/tkroon/.gradle/caches/transforms-3/3367be271291b58b1da54666bc0df50a/transformed/ftc265-3.0.0-pre.5/AndroidManifest.xml:11:5-65
+MERGED from [org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:54:5-65
+MERGED from [org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:54:5-65
+MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] /Users/tkroon/.gradle/caches/transforms-3/aafad4d5d6c33ce1e1f09474f7d3144e/transformed/zxing-android-embedded-4.3.0/AndroidManifest.xml:22:5-65
+MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] /Users/tkroon/.gradle/caches/transforms-3/aafad4d5d6c33ce1e1f09474f7d3144e/transformed/zxing-android-embedded-4.3.0/AndroidManifest.xml:22:5-65
+	android:name
+		ADDED from [ftc265-3.0.0-pre.5.aar] /Users/tkroon/.gradle/caches/transforms-3/3367be271291b58b1da54666bc0df50a/transformed/ftc265-3.0.0-pre.5/AndroidManifest.xml:11:22-62
 uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:5-81
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:5-81
 	android:name
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:22-78
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:12:22-78
 meta-data#org.firstinspires.latestSupportedControlHubVersion
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:23:9-25:33
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:23:9-25:33
 	android:value
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:13-30
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:25:13-30
 	android:name
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:24:13-78
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:24:13-78
 activity#org.firstinspires.ftc.robotcontroller.internal.PermissionValidatorWrapper
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:28:9-39:20
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:28:9-39:20
 	android:screenOrientation
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:33:13-49
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:33:13-49
 	android:label
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:31:13-45
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:31:13-45
 	android:launchMode
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:32:13-44
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:32:13-44
 	android:configChanges
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:30:13-59
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:30:13-59
 	android:name
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:29:13-101
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:29:13-101
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:34:13-38:29
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:34:13-38:29
 category#android.intent.category.LAUNCHER
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:35:17-77
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:35:17-77
 	android:name
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:35:27-74
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:35:27-74
 action#android.intent.action.MAIN
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:37:17-69
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:37:17-69
 	android:name
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:37:25-66
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:37:25-66
 activity#org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:40:9-58:20
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:40:9-58:20
 	android:screenOrientation
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:45:13-49
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:45:13-49
 	android:label
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:43:13-45
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:43:13-45
 	android:launchMode
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:44:13-44
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:44:13-44
 	android:configChanges
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:42:13-59
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:42:13-59
 	android:name
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:41:13-101
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:41:13-101
 intent-filter#action:name:android.hardware.usb.action.USB_DEVICE_ATTACHED
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:46:13-48:29
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:46:13-48:29
 action#android.hardware.usb.action.USB_DEVICE_ATTACHED
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:47:17-90
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:47:17-90
 	android:name
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:47:25-87
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:47:25-87
 meta-data#android.hardware.usb.action.USB_DEVICE_ATTACHED
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:50:13-52:57
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:50:13-52:57
 	android:resource
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:52:17-54
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:52:17-54
 	android:name
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:51:17-79
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:51:17-79
 meta-data#org.firstinspires.main.entry
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:55:13-57:40
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:55:13-57:40
 	android:value
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:57:17-37
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:57:17-37
 	android:name
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:56:17-60
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:56:17-60
 service#com.qualcomm.ftccommon.FtcRobotControllerService
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:61:9-63:38
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:61:9-63:38
 	android:enabled
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:63:13-35
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:63:13-35
 	android:name
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:62:13-76
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:62:13-76
 receiver#org.firstinspires.ftc.ftccommon.internal.RunOnBoot
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:66:9-77:20
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:66:9-77:20
 	android:enabled
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:68:13-35
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:68:13-35
 	android:exported
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:69:13-36
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:69:13-36
 	android:permission
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:70:13-75
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:70:13-75
 	android:name
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:67:13-78
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:67:13-78
 intent-filter#action:name:android.intent.action.BOOT_COMPLETED+action:name:android.intent.action.QUICKBOOT_POWERON+category:name:android.intent.category.DEFAULT
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:71:13-76:29
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:71:13-76:29
 category#android.intent.category.DEFAULT
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:72:17-76
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:72:17-76
 	android:name
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:72:27-73
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:72:27-73
 action#android.intent.action.BOOT_COMPLETED
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:74:17-79
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:74:17-79
 	android:name
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:74:25-76
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:74:25-76
 action#android.intent.action.QUICKBOOT_POWERON
-ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:75:17-82
+ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:75:17-82
 	android:name
-		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController-master/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:75:25-79
+		ADDED from [:FtcRobotController] /Users/tkroon/source/workspace/ftc/FtcRobotController24_101_om/FtcRobotController/build/intermediates/merged_manifest/debug/AndroidManifest.xml:75:25-79
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
 ADDED from [org.firstinspires.ftc:Blocks:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/5855a4390792ffd033fb98d4c7b600ef/transformed/Blocks-10.1.0/AndroidManifest.xml:11:5-13:35
 MERGED from [org.firstinspires.ftc:FtcCommon:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/79c45d12abb657e732b7f462e69bb790/transformed/FtcCommon-10.1.0/AndroidManifest.xml:13:5-15:35
@@ -631,12 +672,6 @@ ADDED from [org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches
 		ADDED from [org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:53:9-32
 	android:name
 		ADDED from [org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:52:9-52
-uses-permission#android.permission.CAMERA
-ADDED from [org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:54:5-65
-MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] /Users/tkroon/.gradle/caches/transforms-3/aafad4d5d6c33ce1e1f09474f7d3144e/transformed/zxing-android-embedded-4.3.0/AndroidManifest.xml:22:5-65
-MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] /Users/tkroon/.gradle/caches/transforms-3/aafad4d5d6c33ce1e1f09474f7d3144e/transformed/zxing-android-embedded-4.3.0/AndroidManifest.xml:22:5-65
-	android:name
-		ADDED from [org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:54:22-62
 uses-permission#android.permission.ACCESS_COARSE_LOCATION
 ADDED from [org.firstinspires.ftc:RobotCore:10.1.0] /Users/tkroon/.gradle/caches/transforms-3/568c17108b84c243325edb918d7686e1/transformed/RobotCore-10.1.0/AndroidManifest.xml:55:5-57:35
 	android:required

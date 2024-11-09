@@ -444,6 +444,7 @@ int color dark_orange 0x0
 int color dark_purple 0x0
 int color dark_red 0x0
 int color dark_teal 0x0
+int color dashboardColor 0x0
 int color dim_foreground_disabled_material_dark 0x0
 int color dim_foreground_disabled_material_light 0x0
 int color dim_foreground_material_dark 0x0

@@ -173,6 +173,7 @@
     <color name="dark_purple">#21014b</color>
     <color name="dark_red">#4e0106</color>
     <color name="dark_teal">#01384b</color>
+    <color name="dashboardColor">#2962ff</color>
     <color name="dim_foreground_disabled_material_dark">#80bebebe</color>
     <color name="dim_foreground_disabled_material_light">#80323232</color>
     <color name="dim_foreground_material_dark">#ffbebebe</color>
