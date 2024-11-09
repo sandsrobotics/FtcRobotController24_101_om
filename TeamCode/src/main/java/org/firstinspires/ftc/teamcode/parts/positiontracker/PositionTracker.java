@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.parts.positiontracker;
 
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.parts.apriltag.AprilTag;
@@ -18,7 +17,6 @@ import om.self.ezftc.utils.AngleMath;
 import om.self.ezftc.utils.Vector2;
 import om.self.ezftc.utils.Vector3;
 import om.self.ezftc.utils.VectorMath;
-
 
 public class PositionTracker extends LoopedPartImpl<Robot, PositionTrackerSettings, PositionTrackerHardware> {
     private Vector3 currentPosition = new Vector3();
