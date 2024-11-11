@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.parts.apriltag.AprilTag;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.encodertracking.EncoderTracker;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.hardware.PositionTrackerHardware;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.odometry.Odometry;
+import org.firstinspires.ftc.teamcode.parts.positiontracker.pinpoint.Pinpoint;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.settings.PositionTrackerSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.slamra.Slamra;
 
@@ -98,7 +99,9 @@ public class PositionTracker extends LoopedPartImpl<Robot, PositionTrackerSettin
 
     @Override
     public void onBeanLoad() {
-        if(getBeanManager().getBestMatch(Slamra.class, true, true) != null)
+        if(getBeanManager().getBestMatch(Pinpoint.class, true, true) != null)
+            positionSourceId = Pinpoint.class;
+        else if(getBeanManager().getBestMatch(Slamra.class, true, true) != null)
             positionSourceId = Slamra.class;
         else if(getBeanManager().getBestMatch(EncoderTracker.class, true, true) != null)
             positionSourceId = EncoderTracker.class;

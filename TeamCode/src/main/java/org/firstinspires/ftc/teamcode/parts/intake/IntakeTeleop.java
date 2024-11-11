@@ -31,7 +31,7 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
 
     @Override
     public void onInit() {
-        parent.dropCounter = 0;
+
     }
 
     @Override
@@ -49,38 +49,6 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
 
     @Override
     public void onRun() {
-        int pix = settings.pixChangeSupplier.get();
-
-        if(pix != 0){
-            parent.setPix(parent.getPix() + pix);
-        }
-
-        if(settings.autoDropSupplier.get())
-            parent.startAutoDrop();
-        else if(settings.autoDockSupplier.get())
-            parent.startAutoDock();
-        else if(settings.autoHomeSupplier.get())
-            parent.startAutoHome();
-        else if(settings.autoArmSupplier.get())
-            parent.startAutoArm();
-//        else if(settings.autoStoreSupplier.get())
-//            parent.startAutoStore();
-        else if(settings.releaseRange.get()) {
-            parent.dropCounter++;
-            parent.rangingHeld = true;
-            parent.lastBackDist = 322;
-            if(parent.dropCounter == 2) {
-                parent.startAutoDock();
-                parent.dropCounter = 0;
-            }
-        }
-        else if(settings.releaseCenter.get())
-            parent.startRunCenter();
-        else if(settings.abortSupplier.get())
-            parent.abortRange = false;
-
-
-        parent.parent.opMode.telemetry.addData("pix", parent.getPix() + 1);
     }
 
     @Override

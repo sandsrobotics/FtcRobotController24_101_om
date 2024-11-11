@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.parts.drive.DriveTeleop;
 import org.firstinspires.ftc.teamcode.parts.drive.settings.DriveTeleopSettings;
 @Disabled
 @TeleOp(name="2 Teleop Forza", group="Linear Opmode")
-public class TeleopForza extends TestPixel {
+public class TeleopForza extends TeleopDive {
     @Override
     public void initTeleop(){
         new DriveTeleop(drive, DriveTeleopSettings.makeForza(robot));

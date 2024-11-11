@@ -19,7 +19,9 @@ import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolv
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.hardware.PositionTrackerHardware;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.odometry.Odometry;
+import org.firstinspires.ftc.teamcode.parts.positiontracker.pinpoint.Pinpoint;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.settings.PositionTrackerSettings;
+import org.firstinspires.ftc.teamcode.parts.positiontracker.encodertracking.EncoderTracker;
 
 import java.text.DecimalFormat;
 
@@ -49,7 +51,7 @@ public class TeleopDive extends LinearOpMode {
         new BulkRead(robot);
         drive = new Drive(robot);
         initTeleop();
-        Led ledStick = new Led(robot);
+        //Led ledStick = new Led(robot);
         drive.setFieldCentric(false);
 
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false, 100, new Vector3(2,2,2), fieldStartPos);
@@ -57,14 +59,12 @@ public class TeleopDive extends LinearOpMode {
         positionSolver = new PositionSolver(drive);
         positionSolver.setSettings(PositionSolverSettings.defaultNoAlwaysRunSettings);
         XRelativeSolver solver = new XRelativeSolver(drive);
-//        EncoderTracker et = new EncoderTracker(pt);
-//        pt.positionSourceId = EncoderTracker.class;
-//        Odometry24 odo = new Odometry24(pt);
-//        pt.positionSourceId = Odometry24.class;
-        Odometry odo = new Odometry(pt);
-        pt.positionSourceId = Odometry.class;
-        Intake intake = new Intake(robot);
-        new IntakeTeleop(intake);
+        EncoderTracker et = new EncoderTracker(pt);
+        pt.positionSourceId = EncoderTracker.class;
+        //Pinpoint odo = new Pinpoint(robot);
+        //pt.positionSourceId = Pinpoint.class;
+        //Intake intake = new Intake(robot);
+        //new IntakeTeleop(intake);
         robot.init();
 
         while (!isStarted()) {
@@ -72,11 +72,7 @@ public class TeleopDive extends LinearOpMode {
             dashboard.sendTelemetryPacket(packet);
             telemetry.update();
         }
-
-        aprilTag = new AprilTag(robot);
-        aprilTag.onInit();
         robot.start();
-        aprilTag.setDesiredTag(-1);
 
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
@@ -85,16 +81,6 @@ public class TeleopDive extends LinearOpMode {
             telemetry.addData("position", pt.getCurrentPosition());
             telemetry.addData("tile position", fieldToTile(pt.getCurrentPosition()));
             telemetry.addData("relative position", pt.getRelativePosition());
-
-            if (aprilTag.targetFound) {
-                telemetry.addData("Found", "ID %d (%s)", aprilTag.desiredTag.id, aprilTag.desiredTag.metadata.name);
-                telemetry.addData("Range",  "%5.1f inches", aprilTag.desiredTag.ftcPose.range);
-                telemetry.addData("X", "%5.1f inches", aprilTag.desiredTag.ftcPose.x);
-                telemetry.addData("Y", "%5.1f inches", aprilTag.desiredTag.ftcPose.y);
-                telemetry.addData("Bearing","%3.0f degrees", aprilTag.desiredTag.ftcPose.bearing);
-                telemetry.addData("Yaw","%3.0f degrees", aprilTag.desiredTag.ftcPose.yaw);
-                telemetry.addData("position: ", aprilTag.desiredTag.metadata.fieldPosition);
-            }
 
             robot.opMode.telemetry.addData("time", System.currentTimeMillis() - start);
             dashboard.sendTelemetryPacket(packet);
