@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.parts.intake;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
@@ -7,7 +8,6 @@ import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
 
 public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardware, IntakeControl> {
-    private boolean sweepStored;
     public int slideTargetPosition;
     double motorPower = 0;
     private int currentSlidePos;
@@ -15,7 +15,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 
     //***** Constructors *****
     public Intake(Robot parent) {
-        super(parent, "Slider", () -> new IntakeControl(0, 0, 0, 0, 0, 0, 0));
+        super(parent, "Slider", () -> new IntakeControl(0, 0, 0, 0));
         setConfig(
                 IntakeSettings.makeDefault(),
                 IntakeHardware.makeDefault(parent.opMode.hardwareMap)
@@ -23,7 +23,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public Intake(Robot parent, IntakeSettings settings, IntakeHardware hardware) {
-        super(parent, "slider", () -> new IntakeControl(0, 0, 0, 0, 0, 0, 0));
+        super(parent, "slider", () -> new IntakeControl(0, 0, 0, 0));
         setConfig(settings, hardware);
     }
 
@@ -38,9 +38,10 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     private void setMotorsToRunConfig() {
+        getHardware().sliderMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         getHardware().sliderMotor.setPower(IntakeHardware.slideHoldPower);
-        //getHardware().rightLiftMotor.setPower(LifterHardware.liftHoldPower);
         getHardware().sliderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        //getHardware().rightLiftMotor.setPower(LifterHardware.liftHoldPower);
         //getHardware().rightLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
@@ -48,9 +49,9 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         if (Math.abs(power) < getSettings().minRegisterVal) return;
 
         if (power < 0)
-            power *= getSettings().maxDownLiftSpeed;
+            power *= getSettings().maxSlideSpeed;
         else
-            power *= getSettings().maxDownLiftSpeed;
+            power *= getSettings().maxSlideSpeed;
 
         if (force)
             setSlidePositionUnsafe(getSlidePosition() + (int) power);
@@ -72,6 +73,14 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         getHardware().sliderMotor.setTargetPosition(position);
     }
 
+    private void changeSlidePosition(int position) {
+        if (position > -1) {
+            if(position > 0)
+                setSlidePosition(getSettings().maxSlidePosition);
+            else setSlidePosition(0);
+        }
+    }
+
     private void setBucketLiftPositionUnsafe(int position) {
         getHardware().bucketLiftMotor.setTargetPosition(position);
     }
@@ -91,11 +100,9 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public void setSweepPosition(int position) {
         switch (position) {
             case 1:
-                sweepStored = false;
                 getHardware().tiltServoLeft.setPosition(getSettings().tiltServoDownPosition);
                 break;
             case 2:
-                sweepStored = true;
                 getHardware().tiltServoLeft.setPosition(getSettings().tiltServoUpPosition);
                 break;
         }
@@ -103,7 +110,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 
     @Override
     public void onInit() {
-         //setSwingPosition(2);
+        setMotorsToRunConfig();
     }
 
     @Override
@@ -114,6 +121,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public void onRun(IntakeControl control) {
         sweepWithPower(control.sweeperPower);
         setSweepPosition(control.sweepLiftPosition);
+        changeSlidePosition(control.sweepSlidePosition);
+        //slideWithPower(control.sweepSlidePosition,false);
 
         currentSlidePos = getHardware().sliderMotor.getCurrentPosition();
         currentLiftPos = getHardware().bucketLiftMotor.getCurrentPosition();

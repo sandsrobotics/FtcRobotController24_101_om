@@ -2,21 +2,13 @@ package org.firstinspires.ftc.teamcode.parts.intake;
 public class IntakeControl {
     public int sweeperPower;
     public int sweepLiftPosition;
-    public int robotLiftPosition;
-    public int grabberPosition;
-    public int launchState;
-    public int ranging;
-    public int centering;
+    public int sweepSlidePosition;
+    public int bucketLiftPosition;
 
-    public IntakeControl(int sweeperPower, int sweeperLiftPosition,
-                         int robotLiftPosition, int grabberPosition,
-                         int launchState, int ranging, int centering) {
+    public IntakeControl(int sweeperPower, int sweeperLiftPosition, int sweepSlidePosition, int bucketLiftPosition) {
         this.sweeperPower = sweeperPower;
         this.sweepLiftPosition = sweeperLiftPosition;
-        this.robotLiftPosition = robotLiftPosition;
-        this.grabberPosition = grabberPosition;
-        this.launchState = launchState;
-        this.ranging = ranging;
-        this.centering = centering;
+        this.sweepSlidePosition = sweepSlidePosition;
+        this.bucketLiftPosition = bucketLiftPosition;
     }
 }

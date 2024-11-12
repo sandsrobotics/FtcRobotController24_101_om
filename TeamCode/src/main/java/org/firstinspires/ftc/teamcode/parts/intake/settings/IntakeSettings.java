@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.parts.intake.settings;
 public class IntakeSettings {
     public final int minSlidePosition;
     public final int maxSlidePosition;
+    public final int maxSlideSpeed;
     public final double tiltServoDownPosition;
     public final double tiltServoUpPosition;
     public final int maxDownLiftSpeed;
@@ -12,11 +13,12 @@ public class IntakeSettings {
     public final double minRegisterVal;
     public final int tolerance;
 
-    public IntakeSettings(int minSlidePosition, int maxSlidePosition, double tiltServoDownPosition,
+    public IntakeSettings(int minSlidePosition, int maxSlidePosition, int maxSlideSpeed, double tiltServoDownPosition,
                           int maxDownLiftSpeed, int maxUpLiftSpeed, int minLiftPosition, int maxLiftPosition,
                           double tiltServoUpPosition, double minRegisterVal, int tolerance) {
         this.minSlidePosition = minSlidePosition;
         this.maxSlidePosition = maxSlidePosition;
+        this.maxSlideSpeed = maxSlideSpeed;
         this.tiltServoDownPosition = tiltServoDownPosition;
         this.tiltServoUpPosition = tiltServoUpPosition;
         this.minRegisterVal = minRegisterVal;
@@ -30,13 +32,14 @@ public class IntakeSettings {
     public static IntakeSettings makeDefault(){
         return new IntakeSettings(
                 0,
-                0,
-                0,
+                1520,
+                50,
+                0.9,
                 150,
                 150,
                 0,
                 3000,
-                .36,
+                0,
                 0.05,
                 20);
     }

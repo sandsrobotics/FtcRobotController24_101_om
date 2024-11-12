@@ -39,11 +39,8 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
         parent.setBaseController(() -> new IntakeControl(
                 (int) settings.sweepSpeedSupplier.get(),
                 (int) settings.sweepLiftSupplier.get(),
-                (int) settings.robotLiftSupplier.get(),
-                (int) settings.grabberSupplier.get(),
-                (int) settings.launchReleaseSupplier.get(),
-                (int) settings.startTagRanging.get(),
-                (int) settings.startTagCentering.get()
+                (int) settings.sweepSlideSupplier.get(),
+                (int) settings.bucketLiftSupplier.get()
         ), true);
     }
 
