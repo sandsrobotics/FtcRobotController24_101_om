@@ -13,20 +13,22 @@ public class IntakeHardware2 {
     public static final double slideHoldPower = 1;
     public static final double bucketHoldPower = 1;
     public final DcMotorEx bucketLiftMotor;
-    public final DcMotorEx robotLift1Motor;
-    public final Servo sliderServo;
+    public final DcMotorEx robotLiftMotor;
+    public final Servo sliderServoLeft;
+    public final Servo sliderServoRight;
     public final Servo tiltServoLeft;
     public final Servo tiltServoRight;
     public final CRServo intakeWheelServoLeft;
     public final CRServo intakeWheelServoRight;
     public final DigitalChannel liftZeroSwitch;
 
-    public IntakeHardware2(DcMotorEx bucketLiftMotor, DcMotorEx robotLift1Motor, Servo sliderServo,
-                           Servo tiltServoLeft, Servo tiltServoRight, CRServo intakeWheelServoLeft,
+    public IntakeHardware2(DcMotorEx bucketLiftMotor, DcMotorEx robotLiftMotor, Servo sliderServoLeft,
+                           Servo sliderServoRight, Servo tiltServoLeft, Servo tiltServoRight, CRServo intakeWheelServoLeft,
                            CRServo intakeWheelServoRight, DigitalChannel liftZeroSwitch) {
         this.bucketLiftMotor = bucketLiftMotor;
-        this.robotLift1Motor = robotLift1Motor;
-        this.sliderServo = sliderServo;
+        this.robotLiftMotor = robotLiftMotor;
+        this.sliderServoLeft = sliderServoLeft;
+        this.sliderServoRight = sliderServoRight;
         this.tiltServoLeft = tiltServoLeft;
         this.tiltServoRight = tiltServoRight;
         this.intakeWheelServoLeft = intakeWheelServoLeft;
@@ -37,9 +39,10 @@ public class IntakeHardware2 {
     public static IntakeHardware2 makeDefault(HardwareMap hardwareMap) {
         MotorSettings bucketLiftMotorSettings =new MotorSettings(MotorSettings.Number.ONE_B, DcMotorSimple.Direction.REVERSE, DcMotorEx.ZeroPowerBehavior.BRAKE, DcMotorEx.RunMode.RUN_TO_POSITION, bucketHoldPower);
         MotorSettings robotLift1MotorSettings = new MotorSettings(MotorSettings.Number.ZERO_B, DcMotorSimple.Direction.FORWARD, DcMotorEx.ZeroPowerBehavior.BRAKE, DcMotorEx.RunMode.RUN_TO_POSITION, slideHoldPower);
-        ServoSettings sliderServoSettings = new ServoSettings(ServoSettings.Number.THREE, Servo.Direction.FORWARD);
-        ServoSettings tiltServoLeftSettings = new ServoSettings(ServoSettings.Number.FOUR, Servo.Direction.FORWARD);
-        ServoSettings tiltServoRightSettings = new ServoSettings(ServoSettings.Number.FIVE, Servo.Direction.FORWARD);
+        ServoSettings sliderServoLeftSettings = new ServoSettings(ServoSettings.Number.THREE, Servo.Direction.FORWARD);
+        ServoSettings sliderServoRightSettings = new ServoSettings(ServoSettings.Number.FOUR, Servo.Direction.REVERSE);
+        ServoSettings tiltServoLeftSettings = new ServoSettings(ServoSettings.Number.FOUR_B, Servo.Direction.FORWARD);
+        ServoSettings tiltServoRightSettings = new ServoSettings(ServoSettings.Number.FIVE_B, Servo.Direction.FORWARD);
         MotorSettings intakeWheelServoLeftSettings = new MotorSettings(ServoSettings.Number.ZERO, DcMotorSimple.Direction.FORWARD);
         MotorSettings intakeWheelServoRightSettings = new MotorSettings(ServoSettings.Number.TWO, DcMotorSimple.Direction.REVERSE);
         DigitalChannel liftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital0");
@@ -48,9 +51,10 @@ public class IntakeHardware2 {
         return new IntakeHardware2(
                 bucketLiftMotorSettings.makeExMotor(hardwareMap),
                 robotLift1MotorSettings.makeExMotor(hardwareMap),
-                sliderServoSettings.makeServo(hardwareMap),
-                tiltServoLeftSettings.makeServo(hardwareMap),
+                sliderServoLeftSettings.makeServo(hardwareMap),
+                sliderServoRightSettings.makeServo(hardwareMap),
                 tiltServoRightSettings.makeServo(hardwareMap),
+                tiltServoLeftSettings.makeServo(hardwareMap),
                 intakeWheelServoLeftSettings.makeCRServo(hardwareMap),
                 intakeWheelServoRightSettings.makeCRServo(hardwareMap),
                 liftZeroSwitch

@@ -81,7 +81,7 @@ public class PositionTracker extends LoopedPartImpl<Robot, PositionTrackerSettin
 
     private void updateAngle() {
         if(getHardware() != null) {
-            double angle = getHardware().imu.getAngularOrientation(AxesReference.EXTRINSIC, getSettings().axesOrder, AngleUnit.DEGREES).thirdAngle;
+            double angle = getHardware().imu.getRobotOrientation(AxesReference.EXTRINSIC, getSettings().axesOrder, AngleUnit.DEGREES).thirdAngle;
             lkRawImuAngle = AngleMath.scaleAngle(angle); //LK
             if (getSettings().flipAngle)
                 angle *= -1;
@@ -131,14 +131,14 @@ public class PositionTracker extends LoopedPartImpl<Robot, PositionTrackerSettin
     public void onHardwareUpdate(PositionTrackerHardware hardware) {
         hardware.imu.initialize(hardware.parameters);
 
-        while (!hardware.imu.isGyroCalibrated())
-        {
-            parent.opMode.telemetry.addData("gyro status", "calibrating");
-            parent.opMode.telemetry.update();
-        }
-
-        parent.opMode.telemetry.addData("gyro status", "calibrated :)");
-        parent.opMode.telemetry.update();
+//        while (!hardware.imu..isGyroCalibrated())
+//        {
+//            parent.opMode.telemetry.addData("gyro status", "calibrating");
+//            parent.opMode.telemetry.update();
+//        }
+//
+//        parent.opMode.telemetry.addData("gyro status", "calibrated :)");
+//        parent.opMode.telemetry.update();
     }
 
     @Override

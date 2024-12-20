@@ -65,6 +65,7 @@ public class TeleopDive extends LinearOpMode {
 //        pt.positionSourceId = EncoderTracker.class;
         //Pinpoint odo = new Pinpoint(robot);
         //pt.positionSourceId = Pinpoint.class;
+
         Intake2 intake = new Intake2(robot);
         new IntakeTeleop2(intake);
         robot.init();
@@ -84,6 +85,8 @@ public class TeleopDive extends LinearOpMode {
 //            telemetry.addData("relative position", pt.getRelativePosition());
             telemetry.addData("Slide Position", intake.getSlidePosition());
             robot.opMode.telemetry.addData("time", System.currentTimeMillis() - start);
+            telemetry.addData("Robot lift Position", intake.getRobotLiftPosition());
+            telemetry.addData("lift hang button", intake.hangValue);
             dashboard.sendTelemetryPacket(packet);
             telemetry.update();
         }

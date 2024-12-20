@@ -10,10 +10,11 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     double motorPower = 0;
     private double currentSlidePos = 0.5;
     private int currentLiftPos;
+    public int hangValue;
 
     //***** Constructors *****
     public Intake2(Robot parent) {
-        super(parent, "Slider", () -> new IntakeControl2(0, 0, 0, 0));
+        super(parent, "Slider", () -> new IntakeControl2(0, 0, 0, 0, 0,0,0));
         setConfig(
                 IntakeSettings2.makeDefault(),
                 IntakeHardware2.makeDefault(parent.opMode.hardwareMap)
@@ -21,7 +22,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public Intake2(Robot parent, IntakeSettings2 settings, IntakeHardware2 hardware) {
-        super(parent, "slider", () -> new IntakeControl2(0, 0, 0, 0));
+        super(parent, "slider", () -> new IntakeControl2(0, 0, 0, 0,0,0,0));
         setConfig(settings, hardware);
     }
 
@@ -32,6 +33,10 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     private void setBucketLiftPositionUnsafe(int position) {
         getHardware().bucketLiftMotor.setTargetPosition(position);
+    }
+
+    private void setRobotLiftPositionUnsafe(int position) {
+        getHardware().robotLiftMotor.setTargetPosition(position);
     }
 
     public boolean isLiftInTolerance() {
@@ -66,20 +71,37 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
                 currentSlidePos -= .01;
                 break;
         }
-        getHardware().sliderServo.setPosition(currentSlidePos);
+        getHardware().sliderServoLeft.setPosition(currentSlidePos);
     }
 
 
     public void setSlidePositionServo(int position) {
         switch (position) {
             case 0:
-                getHardware().sliderServo.setPosition(getSettings().minServoSlide);
+                getHardware().sliderServoLeft.setPosition(getSettings().minServoLeftSlide);
+                getHardware().sliderServoRight.setPosition(getSettings().minServoRightSlide);
                 break;
             case 1:
-                getHardware().sliderServo.setPosition(getSettings().maxServoSlide);
+                getHardware().sliderServoLeft.setPosition(getSettings().maxServoLeftSlide);
+                getHardware().sliderServoRight.setPosition(getSettings().maxServoRightSlide);
                 break;
         }
     }
+
+    public void setRobotLiftPosition(int lift, int zero, int hang) {
+        if (lift == 1){
+            setRobotLiftPositionUnsafe(5000); // top
+        } else if (lift == -1){
+            setRobotLiftPositionUnsafe(0); // bottom
+        } else if(zero == 1) {
+            setRobotLiftPositionUnsafe(getRobotLiftPosition() - 50);
+        } else if(hang == -1){
+            setRobotLiftPositionUnsafe(943);
+        } else {
+            setRobotLiftPositionUnsafe(getRobotLiftPosition());
+        }
+    }
+
     @Override
     public void onInit() {
 
@@ -94,9 +116,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         sweepWithPower(control.sweeperPower);
         setSweepPosition(control.sweepLiftPosition);
         setSlidePositionServo(control.sweepSlidePosition);
-        //incrementAndSlide(control.sweepSlidePosition);
-
-        currentLiftPos = getHardware().robotLift1Motor.getCurrentPosition();
+        setRobotLiftPosition(control.robotliftPosition, control.robotlift0Position, control.robotlifthangPosition);
+        hangValue = control.robotlifthangPosition;
+        currentLiftPos = getHardware().robotLiftMotor.getCurrentPosition();
     }
 
     @Override

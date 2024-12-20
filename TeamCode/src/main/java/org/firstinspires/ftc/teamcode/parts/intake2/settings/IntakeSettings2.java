@@ -12,13 +12,15 @@ public class IntakeSettings2 {
     public final int maxLiftPosition;
     public final double minRegisterVal;
     public final int tolerance;
-    public final double minServoSlide;
-    public final double maxServoSlide;
+    public final double minServoLeftSlide;
+    public final double maxServoLeftSlide;
+    public final double minServoRightSlide;
+    public final double maxServoRightSlide;
 
     public IntakeSettings2(int minSlidePosition, int maxSlidePosition, int maxSlideSpeed, double tiltServoDownPosition,
                            int maxDownLiftSpeed, int maxUpLiftSpeed, int minLiftPosition, int maxLiftPosition,
-                           double tiltServoUpPosition, double minRegisterVal, int tolerance, double minServoSlide,
-                           double maxServoSlide) {
+                           double tiltServoUpPosition, double minRegisterVal, int tolerance, double minServoLeftSlide,
+                           double maxServoLeftSlide, double minServoRightSlide, double maxServoRightSlide) {
         this.minSlidePosition = minSlidePosition;
         this.maxSlidePosition = maxSlidePosition;
         this.maxSlideSpeed = maxSlideSpeed;
@@ -30,8 +32,10 @@ public class IntakeSettings2 {
         this.maxUpLiftSpeed = maxUpLiftSpeed;
         this.minLiftPosition = minLiftPosition;
         this.maxLiftPosition = maxLiftPosition;
-        this.minServoSlide = minServoSlide;
-        this.maxServoSlide = maxServoSlide;
+        this.minServoLeftSlide = minServoLeftSlide;
+        this.maxServoLeftSlide = maxServoLeftSlide;
+        this.minServoRightSlide = minServoRightSlide;
+        this.maxServoRightSlide = maxServoRightSlide;
     }
 
     public static IntakeSettings2 makeDefault(){
@@ -47,7 +51,10 @@ public class IntakeSettings2 {
                 0,
                 0.05,
                 20,
-                0.276, //out
-                0.61); //up
+                0.276,
+                0.61,
+                0.281,
+                0.59); // in
+        // max is in - min is out
     }
 }
