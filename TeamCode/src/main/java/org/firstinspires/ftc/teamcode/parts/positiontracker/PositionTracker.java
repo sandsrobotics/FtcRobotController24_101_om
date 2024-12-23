@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.parts.positiontracker;
 
+import com.qualcomm.hardware.bosch.BHI260IMU;
+import com.qualcomm.robotcore.hardware.IMU;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.parts.apriltag.AprilTag;
@@ -34,7 +37,7 @@ public class PositionTracker extends LoopedPartImpl<Robot, PositionTrackerSettin
 
     public PositionTracker(Robot robot) {
         super(robot, "position tracker", robot.startTaskManager);
-        setConfig(PositionTrackerSettings.makeDefault(), PositionTrackerHardware.makeDefault(robot));
+        setConfig(PositionTrackerSettings.makeDefault(), PositionTrackerHardware.makeDefault(robot, BHI260IMU.class));
     }
 
     public PositionTracker(Robot robot, PositionTrackerSettings positionTrackerSettings, PositionTrackerHardware positionTrackerHardware) {
@@ -82,6 +85,7 @@ public class PositionTracker extends LoopedPartImpl<Robot, PositionTrackerSettin
     private void updateAngle() {
         if(getHardware() != null) {
             double angle = getHardware().imu.getRobotOrientation(AxesReference.EXTRINSIC, getSettings().axesOrder, AngleUnit.DEGREES).thirdAngle;
+//            double angle = getHardware().imu.getAngularOrientation(AxesReference.EXTRINSIC, getSettings().axesOrder, AngleUnit.DEGREES).thirdAngle;
             lkRawImuAngle = AngleMath.scaleAngle(angle); //LK
             if (getSettings().flipAngle)
                 angle *= -1;

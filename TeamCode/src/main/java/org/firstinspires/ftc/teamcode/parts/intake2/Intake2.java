@@ -10,7 +10,6 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     double motorPower = 0;
     private double currentSlidePos = 0.5;
     private int currentLiftPos;
-    public int hangValue;
 
     //***** Constructors *****
     public Intake2(Robot parent) {
@@ -26,7 +25,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         setConfig(settings, hardware);
     }
 
-    public void sweepWithPower(double power) {
+    public void spinIntakeWithPower(double power) {
         getHardware().intakeWheelServoLeft.setPower(power);
         getHardware().intakeWheelServoRight.setPower(power);
     }
@@ -51,7 +50,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         return currentLiftPos;
     }
 
-    public void setSweepPosition(int position) {
+    public void setIntakeUpDown(int position) {
         switch (position) {
             case 1:
                 getHardware().tiltServoLeft.setPosition(getSettings().tiltServoDownPosition);
@@ -75,7 +74,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
 
-    public void setSlidePositionServo(int position) {
+    public void setHorizontalSlidePosition(int position) {
         switch (position) {
             case 0:
                 getHardware().sliderServoLeft.setPosition(getSettings().minServoLeftSlide);
@@ -113,11 +112,19 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     @Override
     public void onRun(IntakeControl2 control) {
-        sweepWithPower(control.sweeperPower);
-        setSweepPosition(control.sweepLiftPosition);
-        setSlidePositionServo(control.sweepSlidePosition);
+        spinIntakeWithPower(control.sweeperPower); // two servo intake spin fwd/reverse
+        setIntakeUpDown(control.sweepLiftPosition); // intake angle up and down
+        setHorizontalSlidePosition(control.sweepSlidePosition); // intake slide in/out all the way
+
+        // test code for end of match lift to lower level
         setRobotLiftPosition(control.robotliftPosition, control.robotlift0Position, control.robotlifthangPosition);
-        hangValue = control.robotlifthangPosition;
+
+        //Todo: Lift tower up and down, score
+        //Todo: Zero lift tower on digital input
+        //Todo: Zero robot lift on digital input
+        //Todo: Bucket angle set
+        //Todo: Slide in/out infinite positions
+
         currentLiftPos = getHardware().robotLiftMotor.getCurrentPosition();
     }
 

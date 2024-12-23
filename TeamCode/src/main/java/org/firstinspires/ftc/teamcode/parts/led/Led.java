@@ -3,14 +3,14 @@ package org.firstinspires.ftc.teamcode.parts.led;
 import android.graphics.Color;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.firstinspires.ftc.teamcode.lib.QwiicLEDStick;
+import org.firstinspires.ftc.teamcode.lib.QwiicLEDStickLK;
 
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.LoopedPartImpl;
 
 public class Led extends LoopedPartImpl<Robot, ObjectUtils.Null, ObjectUtils.Null> {
 
-    public QwiicLEDStick leds;
+    public QwiicLEDStickLK leds;
 
     boolean bottomOn = false;
     boolean topOn = false;
@@ -31,7 +31,7 @@ public class Led extends LoopedPartImpl<Robot, ObjectUtils.Null, ObjectUtils.Nul
 
     @Override
     public void onInit() {
-        leds = parent.opMode.hardwareMap.get(QwiicLEDStick.class, "statLed");
+        leds = parent.opMode.hardwareMap.get(QwiicLEDStickLK.class, "statLed");
     }
 
     @Override

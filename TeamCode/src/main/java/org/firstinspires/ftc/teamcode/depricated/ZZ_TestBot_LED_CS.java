@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.lib.QwiicLEDStick;
+import org.firstinspires.ftc.teamcode.lib.QwiicLEDStickLK;
 @Disabled
 @TeleOp (name="ZZ_TestBot_LED_CS", group="Test")
 public class ZZ_TestBot_LED_CS extends LinearOpMode {
@@ -18,13 +18,13 @@ public class ZZ_TestBot_LED_CS extends LinearOpMode {
     int ledmode = 1;
 
     NormalizedColorSensor colorSensor;
-    QwiicLEDStick qled = null;
+    QwiicLEDStickLK qled = null;
 
     @Override
     public void runOpMode() {
 
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, "botSensor");
-        qled = hardwareMap.get(QwiicLEDStick.class, "statLed");
+        qled = hardwareMap.get(QwiicLEDStickLK.class, "statLed");
 
         qled.changeLength(20);
         qled.setBrightness(31);

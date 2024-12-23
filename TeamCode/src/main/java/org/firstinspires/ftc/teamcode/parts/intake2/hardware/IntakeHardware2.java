@@ -43,8 +43,8 @@ public class IntakeHardware2 {
         ServoSettings sliderServoRightSettings = new ServoSettings(ServoSettings.Number.FOUR, Servo.Direction.REVERSE);
         ServoSettings tiltServoLeftSettings = new ServoSettings(ServoSettings.Number.FOUR_B, Servo.Direction.FORWARD);
         ServoSettings tiltServoRightSettings = new ServoSettings(ServoSettings.Number.FIVE_B, Servo.Direction.FORWARD);
-        MotorSettings intakeWheelServoLeftSettings = new MotorSettings(ServoSettings.Number.ZERO, DcMotorSimple.Direction.FORWARD);
-        MotorSettings intakeWheelServoRightSettings = new MotorSettings(ServoSettings.Number.TWO, DcMotorSimple.Direction.REVERSE);
+        MotorSettings intakeWheelServoLeftSettings = new MotorSettings(ServoSettings.Number.THREE_B, DcMotorSimple.Direction.FORWARD);
+        MotorSettings intakeWheelServoRightSettings = new MotorSettings(ServoSettings.Number.ONE_B, DcMotorSimple.Direction.REVERSE);
         DigitalChannel liftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital0");
         liftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
 

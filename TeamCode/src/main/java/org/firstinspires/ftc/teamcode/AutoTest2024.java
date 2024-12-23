@@ -111,6 +111,7 @@ public class AutoTest2024 extends LinearOpMode{
     private void testAuto(TimedTask autoTask) {
         Vector3 stack = new Vector3(1.0, -2.0, -90);
         autoTask.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
+
         positionSolver.addMoveToTaskExNoWait(tileToInchAuto(stack), autoTask);
     }
 }

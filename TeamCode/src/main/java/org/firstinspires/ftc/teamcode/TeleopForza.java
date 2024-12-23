@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.parts.drive.DriveTeleop;
 import org.firstinspires.ftc.teamcode.parts.drive.settings.DriveTeleopSettings;
-@Disabled
+
 @TeleOp(name="2 Teleop Forza", group="Linear Opmode")
 public class TeleopForza extends TeleopDive {
     @Override

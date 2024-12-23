@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.bosch.BHI260IMU;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -11,7 +12,6 @@ import org.firstinspires.ftc.teamcode.parts.apriltag.AprilTag;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveTeleop;
-import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 import org.firstinspires.ftc.teamcode.parts.intake2.IntakeTeleop2;
 import org.firstinspires.ftc.teamcode.parts.intake2.Intake2;
 import org.firstinspires.ftc.teamcode.parts.led.Led;
@@ -53,18 +53,19 @@ public class TeleopDive extends LinearOpMode {
         new BulkRead(robot);
         drive = new Drive(robot);
         initTeleop();
-        //Led ledStick = new Led(robot);
         drive.setFieldCentric(false);
 
-//        PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false, 100, new Vector3(2,2,2), fieldStartPos);
-//        pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));
+        PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false, 100, new Vector3(2,2,2), fieldStartPos);
+        //newer IMU - BHI260IMU.class Older IMU - BNO055IMU.class;
+        pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot,BHI260IMU.class));
 //        positionSolver = new PositionSolver(drive);
 //        positionSolver.setSettings(PositionSolverSettings.defaultNoAlwaysRunSettings);
-//        XRelativeSolver solver = new XRelativeSolver(drive);
-//        EncoderTracker et = new EncoderTracker(pt);
-//        pt.positionSourceId = EncoderTracker.class;
-        //Pinpoint odo = new Pinpoint(robot);
-        //pt.positionSourceId = Pinpoint.class;
+        XRelativeSolver solver = new XRelativeSolver(drive);
+
+        EncoderTracker et = new EncoderTracker(pt);
+        pt.positionSourceId = EncoderTracker.class;
+//        Pinpoint odo = new Pinpoint(robot);
+//        pt.positionSourceId = Pinpoint.class;
 
         Intake2 intake = new Intake2(robot);
         new IntakeTeleop2(intake);
@@ -80,13 +81,12 @@ public class TeleopDive extends LinearOpMode {
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
             robot.run();
-//            telemetry.addData("position", pt.getCurrentPosition());
-//            telemetry.addData("tile position", fieldToTile(pt.getCurrentPosition()));
-//            telemetry.addData("relative position", pt.getRelativePosition());
+            telemetry.addData("position", pt.getCurrentPosition());
+            telemetry.addData("tile position", fieldToTile(pt.getCurrentPosition()));
+            telemetry.addData("relative position", pt.getRelativePosition());
             telemetry.addData("Slide Position", intake.getSlidePosition());
-            robot.opMode.telemetry.addData("time", System.currentTimeMillis() - start);
+            telemetry.addData("time", System.currentTimeMillis() - start);
             telemetry.addData("Robot lift Position", intake.getRobotLiftPosition());
-            telemetry.addData("lift hang button", intake.hangValue);
             dashboard.sendTelemetryPacket(packet);
             telemetry.update();
         }
@@ -102,6 +102,4 @@ public class TeleopDive extends LinearOpMode {
     public Vector3 fieldToTile(Vector3 p){
         return new Vector3(p.X / tileSide, p.Y / tileSide, p.Z);
     }
-
-
 }
