@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.parts.intake;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
@@ -30,17 +29,17 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     private void setSlideToHomeConfig() {
         double power = -0.125;
 
-        getHardware().sliderMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         //getHardware().rightLiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        getHardware().sliderMotor.setPower(power);
+        getHardware().horizSliderMotor.setPower(power);
         //getHardware().rightLiftMotor.setPower(power);
     }
 
     private void setMotorsToRunConfig() {
-        getHardware().sliderMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        getHardware().sliderMotor.setPower(IntakeHardware.slideHoldPower);
-        getHardware().sliderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        getHardware().horizSliderMotor.setPower(IntakeHardware.slideHoldPower);
+        getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         //getHardware().rightLiftMotor.setPower(LifterHardware.liftHoldPower);
         //getHardware().rightLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
@@ -60,8 +59,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public void sweepWithPower(double power) {
-        getHardware().intakeWheelServoLeft.setPower(power);
-        getHardware().intakeWheelServoRight.setPower(power);
+        getHardware().intakeFlipperServo.setPower(power);
     }
 
     public void setSlidePosition(int position) {
@@ -70,7 +68,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 
     private void setSlidePositionUnsafe(int position) {
         slideTargetPosition = position;
-        getHardware().sliderMotor.setTargetPosition(position);
+        getHardware().horizSliderMotor.setTargetPosition(position);
     }
 
     private void changeSlidePosition(int position) {
@@ -100,10 +98,10 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public void setSweepPosition(int position) {
         switch (position) {
             case 1:
-                getHardware().tiltServoLeft.setPosition(getSettings().tiltServoDownPosition);
+                getHardware().tiltServo.setPosition(getSettings().tiltServoDownPosition);
                 break;
             case 2:
-                getHardware().tiltServoLeft.setPosition(getSettings().tiltServoUpPosition);
+                getHardware().tiltServo.setPosition(getSettings().tiltServoUpPosition);
                 break;
         }
     }
@@ -124,7 +122,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         changeSlidePosition(control.sweepSlidePosition);
         //slideWithPower(control.sweepSlidePosition,false);
 
-        currentSlidePos = getHardware().sliderMotor.getCurrentPosition();
+        currentSlidePos = getHardware().horizSliderMotor.getCurrentPosition();
         currentLiftPos = getHardware().bucketLiftMotor.getCurrentPosition();
     }
 

@@ -2,14 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveTeleop;
-import org.firstinspires.ftc.teamcode.parts.intake2.IntakeTeleop2;
-import org.firstinspires.ftc.teamcode.parts.intake2.Intake2;
+import org.firstinspires.ftc.teamcode.parts.intake.Intake;
+import org.firstinspires.ftc.teamcode.parts.intake.IntakeTeleop;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.XRelativeSolver;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
@@ -20,14 +21,15 @@ import java.text.DecimalFormat;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Vector3;
 
-@TeleOp(name="1 TeleopDive", group="Linear Opmode")
-public class TeleopDive extends LinearOpMode {
+@TeleOp(name="Flipper Teleop", group="Linear Opmode")
+public class FlipTeleopDive extends LinearOpMode {
     double tileSide = 23.5;
     Drive drive;
     Robot robot;
     PositionSolver positionSolver;
     PositionTracker pt;
     Vector3 fieldStartPos = new Vector3(0,0,180);
+
     public void initTeleop(){
         new DriveTeleop(this.drive);
     }
@@ -49,11 +51,13 @@ public class TeleopDive extends LinearOpMode {
 
         EncoderTracker et = new EncoderTracker(pt);
         pt.positionSourceId = EncoderTracker.class;
+
+//        Add Pinpoint here
 //        Pinpoint odo = new Pinpoint(robot);
 //        pt.positionSourceId = Pinpoint.class;
 
-        Intake2 intake = new Intake2(robot);
-        new IntakeTeleop2(intake);
+        Intake intake = new Intake(robot);
+        new IntakeTeleop(intake);
 
         robot.init();
 

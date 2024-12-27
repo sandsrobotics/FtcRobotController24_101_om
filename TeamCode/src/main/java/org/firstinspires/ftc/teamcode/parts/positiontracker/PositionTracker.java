@@ -37,7 +37,7 @@ public class PositionTracker extends LoopedPartImpl<Robot, PositionTrackerSettin
 
     public PositionTracker(Robot robot) {
         super(robot, "position tracker", robot.startTaskManager);
-        setConfig(PositionTrackerSettings.makeDefault(), PositionTrackerHardware.makeDefault(robot, BHI260IMU.class));
+        setConfig(PositionTrackerSettings.makeDefault(), PositionTrackerHardware.makeDefault(robot));
     }
 
     public PositionTracker(Robot robot, PositionTrackerSettings positionTrackerSettings, PositionTrackerHardware positionTrackerHardware) {

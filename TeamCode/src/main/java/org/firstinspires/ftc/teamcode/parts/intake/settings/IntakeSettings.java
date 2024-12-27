@@ -14,8 +14,8 @@ public class IntakeSettings {
     public final int tolerance;
 
     public IntakeSettings(int minSlidePosition, int maxSlidePosition, int maxSlideSpeed, double tiltServoDownPosition,
-                          int maxDownLiftSpeed, int maxUpLiftSpeed, int minLiftPosition, int maxLiftPosition,
-                          double tiltServoUpPosition, double minRegisterVal, int tolerance) {
+                          double tiltServoUpPosition, int maxDownLiftSpeed, int maxUpLiftSpeed, int minLiftPosition, int maxLiftPosition,
+                          double minRegisterVal, int tolerance) {
         this.minSlidePosition = minSlidePosition;
         this.maxSlidePosition = maxSlidePosition;
         this.maxSlideSpeed = maxSlideSpeed;
@@ -35,11 +35,11 @@ public class IntakeSettings {
                 1520,
                 50,
                 0.9,
+                0,
                 150,
                 150,
                 0,
                 3000,
-                0,
                 0.05,
                 20);
     }
