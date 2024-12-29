@@ -12,10 +12,12 @@ public class IntakeSettings {
     public final int maxLiftPosition;
     public final double minRegisterVal;
     public final int tolerance;
+    public final int bucketMaxPos;
+    public final int bucketMinPos;
 
     public IntakeSettings(int minSlidePosition, int maxSlidePosition, int maxSlideSpeed, double tiltServoDownPosition,
                           double tiltServoUpPosition, int maxDownLiftSpeed, int maxUpLiftSpeed, int minLiftPosition, int maxLiftPosition,
-                          double minRegisterVal, int tolerance) {
+                          double minRegisterVal, int tolerance, int bucketMinPos, int bucketMaxPos) {
         this.minSlidePosition = minSlidePosition;
         this.maxSlidePosition = maxSlidePosition;
         this.maxSlideSpeed = maxSlideSpeed;
@@ -27,6 +29,8 @@ public class IntakeSettings {
         this.maxUpLiftSpeed = maxUpLiftSpeed;
         this.minLiftPosition = minLiftPosition;
         this.maxLiftPosition = maxLiftPosition;
+        this.bucketMinPos = bucketMinPos;
+        this.bucketMaxPos = bucketMaxPos;
     }
 
     public static IntakeSettings makeDefault(){
@@ -41,6 +45,9 @@ public class IntakeSettings {
                 0,
                 3000,
                 0.05,
-                20);
+                20,
+                4500,
+                10);
     }
 }
+

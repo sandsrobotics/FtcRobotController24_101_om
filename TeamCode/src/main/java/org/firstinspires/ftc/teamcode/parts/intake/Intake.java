@@ -10,8 +10,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public int slideTargetPosition;
     double motorPower = 0;
     private int currentSlidePos;
-    private int currentLiftPos;
-
+    //private int currentLiftPos;
+    private int currentBucketPos;
     //***** Constructors *****
     public Intake(Robot parent) {
         super(parent, "Slider", () -> new IntakeControl(0, 0, 0, 0));
@@ -79,6 +79,14 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         }
     }
 
+    private void setBucketLiftPosition(int position) {
+        if (position == -1) { // go down
+            setBucketLiftPositionUnsafe(getSettings().minLiftPosition);
+        } else if ( position == 1) { // go up
+            setBucketLiftPositionUnsafe(getSettings().bucketMaxPos);
+        }
+    }
+
     private void setBucketLiftPositionUnsafe(int position) {
         getHardware().bucketLiftMotor.setTargetPosition(position);
     }
@@ -91,8 +99,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         return currentSlidePos;
     }
 
-    public int getRobotLiftPosition() {
-        return currentLiftPos;
+    public int getBucketLiftPosition() {
+        return currentBucketPos;
     }
 
     public void setSweepPosition(int position) {
@@ -120,10 +128,12 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         sweepWithPower(control.sweeperPower);
         setSweepPosition(control.sweepLiftPosition);
         changeSlidePosition(control.sweepSlidePosition);
+        setBucketLiftPosition(control.bucketLiftPosition);
+
         //slideWithPower(control.sweepSlidePosition,false);
 
         currentSlidePos = getHardware().horizSliderMotor.getCurrentPosition();
-        currentLiftPos = getHardware().bucketLiftMotor.getCurrentPosition();
+        currentBucketPos = getHardware().bucketLiftMotor.getCurrentPosition();
     }
 
     @Override

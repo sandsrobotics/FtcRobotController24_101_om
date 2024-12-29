@@ -24,7 +24,7 @@ public class IntakeTeleopSettings {
 
         return new IntakeTeleopSettings(
             ()-> gamepad.right_bumper ? -1 : gamepad.left_bumper ? 1 : 0,  // sweepSpeedSupplier
-            () -> gamepad.a ? 1 : gamepad.y ? 2 : 0, //sweep lift supplier
+            () -> gamepad.y ? 1 : gamepad.a ? 2 : 0, //sweep lift supplier
             () -> gamepad.x ? 0 : gamepad.b ? 1 : -1, //sweep slide supplier
 //            () -> gamepad.dpad_left ? -1 : gamepad.dpad_right ? 1 : 0, // sweep slide Supplier
             () -> gamepad.dpad_down ? -1 : gamepad.dpad_up ? 1 : 0 // bucketLift Supplier

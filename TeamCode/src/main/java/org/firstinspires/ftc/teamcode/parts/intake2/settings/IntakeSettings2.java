@@ -16,11 +16,14 @@ public class IntakeSettings2 {
     public final double maxServoLeftSlide;
     public final double minServoRightSlide;
     public final double maxServoRightSlide;
-
+    public final double intakeArmMin;
+    public final double intakeArmMax;
+    public final double intakeArmDefault;
     public IntakeSettings2(int minSlidePosition, int maxSlidePosition, int maxSlideSpeed, double tiltServoDownPosition,
                            double tiltServoUpPosition, int maxDownLiftSpeed, int maxUpLiftSpeed, int minLiftPosition,
                            int maxLiftPosition, double minRegisterVal, int tolerance, double minServoLeftSlide,
-                           double maxServoLeftSlide, double minServoRightSlide, double maxServoRightSlide) {
+                           double maxServoLeftSlide, double minServoRightSlide, double maxServoRightSlide,
+                           double intakeArmMin, double intakeArmMax, double intakeArmDefault) {
         this.minSlidePosition = minSlidePosition;
         this.maxSlidePosition = maxSlidePosition;
         this.maxSlideSpeed = maxSlideSpeed;
@@ -36,6 +39,9 @@ public class IntakeSettings2 {
         this.maxServoLeftSlide = maxServoLeftSlide;
         this.minServoRightSlide = minServoRightSlide;
         this.maxServoRightSlide = maxServoRightSlide;
+        this.intakeArmMin = intakeArmMin;
+        this.intakeArmMax = intakeArmMax;
+        this.intakeArmDefault = intakeArmDefault;
     }
 
     public static IntakeSettings2 makeDefault(){
@@ -54,7 +60,10 @@ public class IntakeSettings2 {
                 0.276,
                 0.61,
                 0.281,
-                0.59); // in
+                0.59,
+                0.21,
+                0.62,
+                0.52); // in
         // max is in - min is out
     }
 }

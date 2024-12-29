@@ -9,6 +9,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public int slideTargetPosition;
     double motorPower = 0;
     private double currentSlidePos = 0.5;
+    private double currentIntakeHeightPos = 0.5;
     private int currentLiftPos;
 
     //***** Constructors *****
@@ -61,16 +62,30 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         }
     }
 
+    public void incrementIntakeUpDown(int position) {
+        switch (position) {
+            case 1:
+                if (currentIntakeHeightPos <= getSettings().intakeArmMax)
+                    currentIntakeHeightPos += .01;
+                break;
+            case 2:
+                if (currentIntakeHeightPos >= getSettings().intakeArmMin)
+                    currentIntakeHeightPos -= .01;
+                break;
+        }
+        getHardware().tiltServoLeft.setPosition(currentIntakeHeightPos);
+    }
+
     public void incrementAndSlide(int position) {
         switch (position) {
             case 1:
-                currentSlidePos += .01;
+                currentIntakeHeightPos += .01;
                 break;
             case 2:
-                currentSlidePos -= .01;
+                currentIntakeHeightPos -= .01;
                 break;
         }
-        getHardware().sliderServoLeft.setPosition(currentSlidePos);
+        getHardware().tiltServoLeft.setPosition(currentIntakeHeightPos);
     }
 
 
@@ -103,7 +118,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     @Override
     public void onInit() {
-
+        currentIntakeHeightPos = getSettings().intakeArmDefault;
     }
 
     @Override
@@ -113,7 +128,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     @Override
     public void onRun(IntakeControl2 control) {
         spinIntakeWithPower(control.sweeperPower); // two servo intake spin fwd/reverse
-        setIntakeUpDown(control.sweepLiftPosition); // intake angle up and down
+        //setIntakeUpDown(control.sweepLiftPosition); // intake angle up and down all the way
+        incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
         setHorizontalSlidePosition(control.sweepSlidePosition); // intake slide in/out all the way
 
         // test code for end of match lift to lower level
@@ -126,6 +142,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         //Todo: Slide in/out infinite positions
 
         currentLiftPos = getHardware().robotLiftMotor.getCurrentPosition();
+        parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
     }
 
     @Override
