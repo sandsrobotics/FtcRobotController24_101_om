@@ -10,11 +10,12 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     double motorPower = 0;
     private double currentSlidePos = 0.5;
     private double currentIntakeHeightPos = 0.5;
+    private double currentRotationPos = 0.0;
     private int currentLiftPos;
 
     //***** Constructors *****
     public Intake2(Robot parent) {
-        super(parent, "Slider", () -> new IntakeControl2(0, 0, 0, 0, 0,0,0));
+        super(parent, "Slider", () -> new IntakeControl2(0, 0, 0, 0, 0,0,0, 0));
         setConfig(
                 IntakeSettings2.makeDefault(),
                 IntakeHardware2.makeDefault(parent.opMode.hardwareMap)
@@ -22,7 +23,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public Intake2(Robot parent, IntakeSettings2 settings, IntakeHardware2 hardware) {
-        super(parent, "slider", () -> new IntakeControl2(0, 0, 0, 0,0,0,0));
+        super(parent, "slider", () -> new IntakeControl2(0, 0, 0, 0,0,0,0, 0));
         setConfig(settings, hardware);
     }
 
@@ -62,6 +63,13 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         }
     }
 
+    public void incrementRotationServo(int direction) {
+        double step = getSettings().rotationServoStep;
+        double newPos = currentRotationPos + (direction * step);
+        currentRotationPos = Math.max(getSettings().rotationServoMin, Math.min(getSettings().rotationServoMax, newPos));
+        getHardware().rotationServo.setPosition(currentRotationPos);
+    }
+
     public void incrementIntakeUpDown(int position) {
         switch (position) {
             case 1:
@@ -87,7 +95,6 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         }
         getHardware().tiltServoLeft.setPosition(currentIntakeHeightPos);
     }
-
 
     public void setHorizontalSlidePosition(int position) {
         switch (position) {
@@ -119,6 +126,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     @Override
     public void onInit() {
         currentIntakeHeightPos = getSettings().intakeArmDefault;
+        currentRotationPos = 0.0;
     }
 
     @Override
@@ -131,6 +139,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         //setIntakeUpDown(control.sweepLiftPosition); // intake angle up and down all the way
         incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
         setHorizontalSlidePosition(control.sweepSlidePosition); // intake slide in/out all the way
+        incrementRotationServo(control.rotationServoDirection); // Rotate servo incrementally
 
         // test code for end of match lift to lower level
         setRobotLiftPosition(control.robotliftPosition, control.robotlift0Position, control.robotlifthangPosition);
@@ -143,6 +152,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
         currentLiftPos = getHardware().robotLiftMotor.getCurrentPosition();
         parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
+        parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
     }
 
     @Override
@@ -155,4 +165,3 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         //drive.removeController(ContollerNames.distanceContoller);
     }
 }
-

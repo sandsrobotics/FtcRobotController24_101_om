@@ -19,11 +19,16 @@ public class IntakeSettings2 {
     public final double intakeArmMin;
     public final double intakeArmMax;
     public final double intakeArmDefault;
+    public final double rotationServoMin;
+    public final double rotationServoMax;
+    public final double rotationServoStep;
+
     public IntakeSettings2(int minSlidePosition, int maxSlidePosition, int maxSlideSpeed, double tiltServoDownPosition,
                            double tiltServoUpPosition, int maxDownLiftSpeed, int maxUpLiftSpeed, int minLiftPosition,
                            int maxLiftPosition, double minRegisterVal, int tolerance, double minServoLeftSlide,
                            double maxServoLeftSlide, double minServoRightSlide, double maxServoRightSlide,
-                           double intakeArmMin, double intakeArmMax, double intakeArmDefault) {
+                           double intakeArmMin, double intakeArmMax, double intakeArmDefault,
+                           double rotationServoMin, double rotationServoMax, double rotationServoStep) {
         this.minSlidePosition = minSlidePosition;
         this.maxSlidePosition = maxSlidePosition;
         this.maxSlideSpeed = maxSlideSpeed;
@@ -42,9 +47,12 @@ public class IntakeSettings2 {
         this.intakeArmMin = intakeArmMin;
         this.intakeArmMax = intakeArmMax;
         this.intakeArmDefault = intakeArmDefault;
+        this.rotationServoMin = rotationServoMin;
+        this.rotationServoMax = rotationServoMax;
+        this.rotationServoStep = rotationServoStep;
     }
 
-    public static IntakeSettings2 makeDefault(){
+    public static IntakeSettings2 makeDefault() {
         return new IntakeSettings2(
                 0,
                 1520,
@@ -63,7 +71,10 @@ public class IntakeSettings2 {
                 0.59,
                 0.21,
                 0.62,
-                0.52); // in
-        // max is in - min is out
+                0.52,
+                0,
+                1,
+                0.01 // Step increment for rotation servo //0.21
+        );
     }
 }
