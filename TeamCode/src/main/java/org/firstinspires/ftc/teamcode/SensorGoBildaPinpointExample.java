@@ -58,7 +58,7 @@ For support, contact tech@gobilda.com
  */
 
 @TeleOp(name="goBILDA® PinPoint Odometry Example", group="Linear OpMode")
-@Disabled
+//@Disabled
 
 public class SensorGoBildaPinpointExample extends LinearOpMode {
 
@@ -82,7 +82,7 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
         backwards is a negative number.
          */
         //odo.setOffsets(-84.0, -168.0); //these are tuned for 3110-0002-0001 Product Insight #1
-        odo.setOffsets(-87.0, -5.0);
+        odo.setOffsets(-80.0, 44.0);
 
         /*
         Set the kind of pods used by your robot. If you're using goBILDA odometry pods, select either

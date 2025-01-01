@@ -8,21 +8,17 @@ import org.firstinspires.ftc.teamcode.lib.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTicket;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import java.util.Locale;
-import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.LoopedPartImpl;
 import om.self.ezftc.utils.Vector3;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
-public class Pinpoint extends LoopedPartImpl<Robot, ObjectUtils.Null, ObjectUtils.Null> {
+public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, ObjectUtils.Null> {
     GoBildaPinpointDriver odo; // Declare OpMode member for the Odometery Computer
     double oldTime = 0;
-    PositionTracker positionTracker;
-    Robot robot;
 
-    public Pinpoint(Robot parent) {
-        super(parent, "tag");
-        robot = parent;
+    public Pinpoint(PositionTracker parent) {
+        super(parent, "Pinpoint");
     }
 
     @Override
@@ -39,16 +35,14 @@ public class Pinpoint extends LoopedPartImpl<Robot, ObjectUtils.Null, ObjectUtil
         Pose2D pos = odo.getPosition();
 
         String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
-        telemetry.addData("Position", data);
+        parent.parent.opMode.telemetry.addData("Position", data);
 
             /*
             gets the current Velocity (x & y in mm/sec and heading in degrees/sec) and prints it.
              */
         Pose2D vel = odo.getVelocity();
         String velocity = String.format(Locale.US, "{XVel: %.3f, YVel: %.3f, HVel: %.3f}", vel.getX(DistanceUnit.MM), vel.getY(DistanceUnit.MM), vel.getHeading(AngleUnit.DEGREES));
-        telemetry.addData("Velocity", velocity);
-        telemetry.update();
-        positionTracker.addPositionTicket(Pinpoint.class, new PositionTicket(posToVector(pos)));
+        parent.addPositionTicket(Pinpoint.class, new PositionTicket(posToVector(pos)));
     }
 
     @Override
@@ -62,7 +56,7 @@ public class Pinpoint extends LoopedPartImpl<Robot, ObjectUtils.Null, ObjectUtil
     public void onInit() {
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        odo = robot.opMode.hardwareMap.get(GoBildaPinpointDriver.class, "odo");
+        odo = parent.parent.opMode.hardwareMap.get(GoBildaPinpointDriver.class, "odo");
 
         /*
         Set the odometry pod positions relative to the point that the odometry computer tracks around.
@@ -73,7 +67,7 @@ public class Pinpoint extends LoopedPartImpl<Robot, ObjectUtils.Null, ObjectUtil
         backwards is a negative number.
          */
         //odo.setOffsets(-84.0, -168.0); //these are tuned for 3110-0002-0001 Product Insight #1
-        odo.setOffsets(-87.0, -5.0);
+        odo.setOffsets(-80.0, 44.0);
 
         /*
         Set the kind of pods used by your robot. If you're using goBILDA odometry pods, select either
@@ -105,7 +99,6 @@ public class Pinpoint extends LoopedPartImpl<Robot, ObjectUtils.Null, ObjectUtil
 
     @Override
     public void onStart() {
-        positionTracker = getBeanManager().getBestMatch(PositionTracker.class, false);
     }
 
     @Override

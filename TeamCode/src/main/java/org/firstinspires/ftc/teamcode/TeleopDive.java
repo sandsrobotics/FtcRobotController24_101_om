@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.XRelativeSolver;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.hardware.PositionTrackerHardware;
+import org.firstinspires.ftc.teamcode.parts.positiontracker.pinpoint.Pinpoint;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.settings.PositionTrackerSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.encodertracking.EncoderTracker;
 import java.text.DecimalFormat;
@@ -43,14 +44,15 @@ public class TeleopDive extends LinearOpMode {
         drive = new Drive(robot);
         initTeleop();
 
-        PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false, 100, new Vector3(2,2,2), fieldStartPos);
+        PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
+                100, new Vector3(2,2,2), fieldStartPos);
         pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));
         XRelativeSolver solver = new XRelativeSolver(drive);
 
-        EncoderTracker et = new EncoderTracker(pt);
-        pt.positionSourceId = EncoderTracker.class;
-//        Pinpoint odo = new Pinpoint(robot);
-//        pt.positionSourceId = Pinpoint.class;
+//        EncoderTracker et = new EncoderTracker(pt);
+//        pt.positionSourceId = EncoderTracker.class;
+        Pinpoint odo = new Pinpoint(pt);
+        pt.positionSourceId = Pinpoint.class;
 
         Intake2 intake = new Intake2(robot);
         new IntakeTeleop2(intake);
@@ -58,8 +60,7 @@ public class TeleopDive extends LinearOpMode {
         robot.init();
 
         while (!isStarted()) {
-            telemetry.addData("Not Started", "Not Started");
-            dashboard.sendTelemetryPacket(packet);
+            telemetry.addData("position", pt.getCurrentPosition());
             telemetry.update();
         }
         robot.start();

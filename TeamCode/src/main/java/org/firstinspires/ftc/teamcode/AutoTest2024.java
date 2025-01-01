@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolv
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.hardware.PositionTrackerHardware;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.odometry.Odometry;
+import org.firstinspires.ftc.teamcode.parts.positiontracker.pinpoint.Pinpoint;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.settings.PositionTrackerSettings;
 import org.firstinspires.ftc.teamcode.parts.teamprop.TeamProp;
 
@@ -75,19 +76,23 @@ public class AutoTest2024 extends LinearOpMode{
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false, 100, new Vector3(2,2,2), startPosition);
         pts = pts.withPosition(customStartPos != null ? customStartPos : transformFunc.apply(pts.startPosition));
         pt = new PositionTracker(robot, pts, PositionTrackerHardware.makeDefault(robot));
-        new Odometry(pt);
-        pt.positionSourceId = Odometry.class;
+        Pinpoint odo = new Pinpoint(pt);
+        pt.positionSourceId = Pinpoint.class;
         positionSolver = new PositionSolver(drive);
         // w/ ku = .2 and tu = 1.56, P = .12, I = .154, D = .0234
         DecimalFormat df = new DecimalFormat("#0.0");
 
         robot.init();
 
-        while (!isStarted()) {}
+        while (!isStarted()) {
+            dashboardTelemetry.addData("position", pt.getCurrentPosition());
+            telemetry.update();
+        }
 
         robot.start();
 
         if(shutdownps) positionSolver.triggerEvent(Robot.Events.STOP);
+
         Group container = new Group("container", robot.taskManager);
         TimedTask autoTask = new TimedTask("auto task", container);
         positionSolver.setNewTarget(pt.getCurrentPosition(), true);
@@ -101,7 +106,7 @@ public class AutoTest2024 extends LinearOpMode{
             dashboardTelemetry.addData("position", pt.getCurrentPosition());
             telemetry.addData("position", pt.getCurrentPosition());
             telemetry.addData("tile position", fieldToTile(pt.getCurrentPosition()));
-            robot.opMode.telemetry.addData("time", System.currentTimeMillis() - start);
+            telemetry.addData("time", System.currentTimeMillis() - start);
             dashboardTelemetry.update();
             telemetry.update();
         }
