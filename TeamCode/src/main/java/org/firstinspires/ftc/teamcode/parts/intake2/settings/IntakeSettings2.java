@@ -65,17 +65,17 @@ public class IntakeSettings2 {
                 3000,
                 0.05,
                 20,
-                0.470,
-                0.778,
-                0.470,
-                0.778,
+                0.559,
+                0.781,
+                0.559,
+                0.781,
                 0.21,
                 0.62,
                 0.52,
                 0,
                 1,
                 0.01 // Step increment for rotation servo //0.21
-                //minright;.281 minleft;.276
+                // minServo = slide out MaxServo = slide in
         );
     }
 }

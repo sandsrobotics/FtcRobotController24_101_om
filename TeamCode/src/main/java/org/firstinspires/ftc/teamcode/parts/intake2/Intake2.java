@@ -1,16 +1,22 @@
 package org.firstinspires.ftc.teamcode.parts.intake2;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.teamcode.parts.intake2.hardware.IntakeHardware2;
 import org.firstinspires.ftc.teamcode.parts.intake2.settings.IntakeSettings2;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
+import om.self.supplier.consumer.EdgeConsumer;
 
 public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHardware2, IntakeControl2> {
     public int slideTargetPosition;
     double motorPower = 0;
     private double currentSlidePos = 0.5;
+    private double currentHorizontalSlidePos = getSettings().maxServoLeftSlide;
     private double currentIntakeHeightPos = 0.5; //getSettings().intakeArmDefault;
     private int currentLiftPos;
+    private final EdgeConsumer homingBucketZero = new EdgeConsumer();
+    private final EdgeConsumer homingLiftZero = new EdgeConsumer();
 
     //***** Constructors *****
     public Intake2(Robot parent) {
@@ -76,16 +82,19 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         getHardware().tiltServoLeft.setPosition(currentIntakeHeightPos);
     }
 
-    public void incrementAndSlide(int position) {
+    public void incrementHorizontalSlide(int position) {
         switch (position) {
             case 1:
-                currentIntakeHeightPos += .01;
+                if (currentHorizontalSlidePos <= getSettings().maxServoLeftSlide)
+                    currentHorizontalSlidePos += .01;
                 break;
             case 2:
-                currentIntakeHeightPos -= .01;
+                if (currentHorizontalSlidePos >= getSettings().minServoLeftSlide)
+                    currentHorizontalSlidePos -= .01;
                 break;
         }
-        getHardware().tiltServoLeft.setPosition(currentIntakeHeightPos);
+        getHardware().sliderServoLeft.setPosition(currentHorizontalSlidePos);
+        getHardware().sliderServoRight.setPosition(currentHorizontalSlidePos);
     }
 
 
@@ -126,6 +135,16 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     @Override
     public void onInit() {
         currentIntakeHeightPos = getSettings().intakeArmDefault;
+        //homing bucket lift setup
+        homingBucketZero.setOnRise(() -> {
+            getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        });
+        //homing robot lift setup
+        homingLiftZero.setOnRise(() -> {
+            getHardware().robotLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            getHardware().robotLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        });
     }
 
     @Override
@@ -135,13 +154,14 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     @Override
     public void onRun(IntakeControl2 control) {
         spinIntakeWithPower(control.sweeperPower); // two servo intake spin fwd/reverse
-        //setIntakeUpDown(control.sweepLiftPosition); // intake angle up and down all the way
         incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
         setHorizontalSlidePosition(control.sweepSlidePosition); // intake slide in/out all the way
+        //Todo: test code needs control refactoring
+        setRobotLiftPosition(control.robotliftPosition, control.robotlift0Position, control.robotlifthangPosition);
+        //incrementHorizontalSlide(control.);
         //incrementalBucketUpDown(control.bucketLiftPosition); // bucket lift
 
         // test code for end of match lift to lower level
-        setRobotLiftPosition(control.robotliftPosition, control.robotlift0Position, control.robotlifthangPosition);
 
         //Todo: Lift tower up and down, score
         //Todo: Zero lift tower on digital input
@@ -149,6 +169,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         //Todo: Bucket angle set
         //Todo: Slide in/out infinite positions
 
+        homingBucketZero.accept(!getHardware().bucketLiftZeroSwitch.getState());
+        homingLiftZero.accept(!getHardware().robotLiftZeroSwitch.getState());
         currentLiftPos = getHardware().robotLiftMotor.getCurrentPosition();
         parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
     }
