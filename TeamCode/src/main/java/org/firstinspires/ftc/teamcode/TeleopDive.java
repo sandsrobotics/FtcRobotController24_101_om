@@ -16,19 +16,19 @@ import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.hardware.PositionTrackerHardware;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.pinpoint.Pinpoint;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.settings.PositionTrackerSettings;
-import org.firstinspires.ftc.teamcode.parts.positiontracker.encodertracking.EncoderTracker;
 import java.text.DecimalFormat;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Vector3;
+import static om.self.ezftc.utils.Constants.tileSide;
 
 @TeleOp(name="1 TeleopDive", group="Linear Opmode")
 public class TeleopDive extends LinearOpMode {
-    double tileSide = 23.5;
     Drive drive;
     Robot robot;
     PositionSolver positionSolver;
     PositionTracker pt;
     Vector3 fieldStartPos = new Vector3(0,0,180);
+    Pinpoint odo;
     public void initTeleop(){
         new DriveTeleop(this.drive);
     }
@@ -44,14 +44,21 @@ public class TeleopDive extends LinearOpMode {
         drive = new Drive(robot);
         initTeleop();
 
+//        startPosition = new Vector3(2.0 * 23.5, -62, -90);
+//        PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
+//                100, new Vector3(2,2,2), startPosition);
+//        pts = pts.withPosition(customStartPos != null ? customStartPos : transformFunc.apply(pts.startPosition));
+//        pt = new PositionTracker(robot, pts, PositionTrackerHardware.makeDefault(robot));
+//        odo = new Pinpoint(pt);
+//        pt.positionSourceId = Pinpoint.class;
+//        positionSolver = new PositionSolver(drive);
+//        DecimalFormat df = new DecimalFormat("#0.0");
+
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
                 100, new Vector3(2,2,2), fieldStartPos);
         pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));
         XRelativeSolver solver = new XRelativeSolver(drive);
-
-//        EncoderTracker et = new EncoderTracker(pt);
-//        pt.positionSourceId = EncoderTracker.class;
-        Pinpoint odo = new Pinpoint(pt);
+        odo = new Pinpoint(pt);
         pt.positionSourceId = Pinpoint.class;
 
         Intake2 intake = new Intake2(robot);

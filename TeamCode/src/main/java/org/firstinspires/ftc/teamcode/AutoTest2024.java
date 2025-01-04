@@ -5,30 +5,25 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
-import org.firstinspires.ftc.teamcode.parts.led.Led;
+import org.firstinspires.ftc.teamcode.parts.intake2.Intake2;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
+import org.firstinspires.ftc.teamcode.parts.positionsolver.XRelativeSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolverSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.hardware.PositionTrackerHardware;
-import org.firstinspires.ftc.teamcode.parts.positiontracker.odometry.Odometry;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.pinpoint.Pinpoint;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.settings.PositionTrackerSettings;
-import org.firstinspires.ftc.teamcode.parts.teamprop.TeamProp;
-
 import java.text.DecimalFormat;
 import java.util.function.Function;
-
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Constants;
 import om.self.ezftc.utils.Vector3;
 import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
-
 import static om.self.ezftc.utils.Constants.tileSide;
 
 @Config
@@ -39,10 +34,9 @@ public class AutoTest2024 extends LinearOpMode{
     public boolean shutdownps;
     PositionSolver positionSolver;
     PositionTracker pt;
-    TeamProp tp;
-    Led leds;
-
     Vector3 startPosition;
+    Pinpoint odo;
+    Intake2 intake;
 
     public void initAuto(){
         transformFunc = (v) -> v;
@@ -52,9 +46,7 @@ public class AutoTest2024 extends LinearOpMode{
         return Constants.tileToInch(transformFunc.apply(tiles));
     }
 
-    private Vector3 tileToInchAutoNoZ(Vector3 tiles){
-        return Constants.tileToInch(transformFunc.apply(tiles)).withZ(tiles.Z);
-    }
+    private Vector3 tileToInchAutoNoZ(Vector3 tiles){ return Constants.tileToInch(transformFunc.apply(tiles)).withZ(tiles.Z); }
 
     public Vector3 fieldToTile(Vector3 p){
         return new Vector3(p.X / tileSide, p.Y / tileSide, p.Z);
@@ -70,35 +62,35 @@ public class AutoTest2024 extends LinearOpMode{
         Robot robot = new Robot(this);
         Drive drive = new Drive(robot);
         new BulkRead(robot);
+       intake = new Intake2(robot);
 
-        // ToDo set start position from center
-        startPosition = new Vector3(2.0 * 23.5, -62, -90);
-        PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false, 100, new Vector3(2,2,2), startPosition);
-        pts = pts.withPosition(customStartPos != null ? customStartPos : transformFunc.apply(pts.startPosition));
-        pt = new PositionTracker(robot, pts, PositionTrackerHardware.makeDefault(robot));
-        Pinpoint odo = new Pinpoint(pt);
+        Vector3 fieldStartPos = new Vector3(0,0,-90);
+        PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
+                100, new Vector3(2,2,2), fieldStartPos);
+        pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));
+        odo = new Pinpoint(pt);
         pt.positionSourceId = Pinpoint.class;
-        positionSolver = new PositionSolver(drive);
-        // w/ ku = .2 and tu = 1.56, P = .12, I = .154, D = .0234
+        positionSolver = new PositionSolver(drive); // removed so it won't rotate 90deg clockwise
         DecimalFormat df = new DecimalFormat("#0.0");
-
         robot.init();
 
         while (!isStarted()) {
-            dashboardTelemetry.addData("position", pt.getCurrentPosition());
+            telemetry.addData("position (pt)", pt.getCurrentPosition());
             telemetry.update();
         }
 
+        odo.setPosition(fieldStartPos);
         robot.start();
 
         if(shutdownps) positionSolver.triggerEvent(Robot.Events.STOP);
 
+        // Setting up group container, task queue, and setting positionSolver target
         Group container = new Group("container", robot.taskManager);
-        TimedTask autoTask = new TimedTask("auto task", container);
-        positionSolver.setNewTarget(pt.getCurrentPosition(), true);
+        TimedTask autoTasks = new TimedTask("auto task", container);
+        //positionSolver.setNewTarget(pt.getCurrentPosition(), true);
 
-        // Here is where we schedule the tasks for the autonomous run.
-        testAuto(autoTask);
+        // Here is where we schedule the tasks for the autonomous run (testAuto function below run loop)
+        testAuto(autoTasks);
 
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
@@ -113,10 +105,9 @@ public class AutoTest2024 extends LinearOpMode{
         robot.stop();
     }
 
-    private void testAuto(TimedTask autoTask) {
-        Vector3 stack = new Vector3(1.0, -2.0, -90);
-        autoTask.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
-
-        positionSolver.addMoveToTaskExNoWait(tileToInchAuto(stack), autoTask);
+    private void testAuto(TimedTask autoTasks) {
+        Vector3 stack = new Vector3(1.0, 1.0, 0);
+        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.slowSettings));
+        positionSolver.addMoveToTaskExNoWait(tileToInchAuto(stack), autoTasks);
     }
 }

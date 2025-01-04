@@ -29,9 +29,7 @@ public class IntakeTeleop2 extends LoopedPartImpl<Intake2, IntakeTeleopSettings2
     public void onBeanLoad() {}
 
     @Override
-    public void onInit() {
-
-    }
+    public void onInit() {}
 
     @Override
     public void onStart() {

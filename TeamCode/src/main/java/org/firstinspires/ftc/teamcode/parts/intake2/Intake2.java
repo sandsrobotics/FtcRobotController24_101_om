@@ -108,11 +108,11 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     public void setHorizontalSlidePosition(int position) {
         switch (position) {
-            case 0:
+            case 1:
                 getHardware().sliderServoLeft.setPosition(getSettings().minServoLeftSlide);
                 getHardware().sliderServoRight.setPosition(getSettings().minServoRightSlide);
                 break;
-            case 1:
+            case -1:
                 getHardware().sliderServoLeft.setPosition(getSettings().maxServoLeftSlide);
                 getHardware().sliderServoRight.setPosition(getSettings().maxServoRightSlide);
                 break;
@@ -144,6 +144,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public void onInit() {
         currentIntakeHeightPos = getSettings().intakeArmDefault;
         currentRotationPos = 0.0;
+        setHorizontalSlidePosition(-1); // pull slide in on init
+        incrementIntakeUpDown(0); // default straight up position
+
         //homing bucket lift setup
         homingBucketZero.setOnRise(() -> {
             getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -165,7 +168,6 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         spinIntakeWithPower(control.sweeperPower); // two servo intake spin fwd/reverse
         incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
         setHorizontalSlidePosition(control.sweepSlidePosition); // intake slide in/out all the way
-        //Todo: test code needs control refactoring
 
         //Todo: Lift tower up and down, score
         //Todo: Zero lift tower on digital input
@@ -181,6 +183,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             incrementRotationServo(control.rotationServoDirection);
         }
 
+        //Todo: test code needs control refactoring
         setRobotLiftPosition(control.robotliftPosition, control.robotlift0Position, control.robotlifthangPosition);
         homingBucketZero.accept(!getHardware().bucketLiftZeroSwitch.getState());
         homingLiftZero.accept(!getHardware().robotLiftZeroSwitch.getState());

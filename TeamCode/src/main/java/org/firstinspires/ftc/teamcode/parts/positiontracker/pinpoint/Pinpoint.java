@@ -21,6 +21,10 @@ public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, 
         super(parent, "Pinpoint");
     }
 
+    public void setPosition(Vector3 vector) {
+        odo.setPosition(vector3ToPose2D(vector));
+    }
+
     @Override
     public void onRun() {
         /*
@@ -42,7 +46,7 @@ public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, 
              */
         Pose2D vel = odo.getVelocity();
         String velocity = String.format(Locale.US, "{XVel: %.3f, YVel: %.3f, HVel: %.3f}", vel.getX(DistanceUnit.MM), vel.getY(DistanceUnit.MM), vel.getHeading(AngleUnit.DEGREES));
-        parent.addPositionTicket(Pinpoint.class, new PositionTicket(posToVector(pos)));
+        parent.addPositionTicket(Pinpoint.class, new PositionTicket(posToVector3(pos)));
     }
 
     @Override
@@ -95,6 +99,7 @@ public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, 
          */
         //odo.recalibrateIMU();
         odo.resetPosAndIMU();
+        //odo.setPosition(vector3ToPose2D(parent.getCurrentPosition()));
     }
 
     @Override
@@ -104,7 +109,11 @@ public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, 
     @Override
     public void onStop() {}
 
-    private Vector3 posToVector(Pose2D pos) {
+    private Vector3 posToVector3(Pose2D pos) {
         return (new Vector3(pos.getX(DistanceUnit.INCH),pos.getY(DistanceUnit.INCH),pos.getHeading(AngleUnit.DEGREES)));
+    }
+
+    private Pose2D vector3ToPose2D(Vector3 vector) {
+        return(new Pose2D(DistanceUnit.INCH,vector.X,vector.Y,AngleUnit.DEGREES, vector.Z));
     }
 }

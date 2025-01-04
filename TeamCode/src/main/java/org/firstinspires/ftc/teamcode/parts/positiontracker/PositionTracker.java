@@ -111,6 +111,8 @@ public class PositionTracker extends LoopedPartImpl<Robot, PositionTrackerSettin
             positionSourceId = EncoderTracker.class;
         else if(getBeanManager().getBestMatch(Odometry.class, true, true) != null)
             positionSourceId = Odometry.class;
+        else if(getBeanManager().getBestMatch(Pinpoint.class, true, true) != null)
+            positionSourceId = Pinpoint.class;
 
         //TODO something better
     }
@@ -147,7 +149,9 @@ public class PositionTracker extends LoopedPartImpl<Robot, PositionTrackerSettin
 
     @Override
     public void onRun() {
-        updateAngle();
+        if(positionSourceId !=Pinpoint.class) {
+            updateAngle();
+        }
 
         if(positionSourceId != null && tickets.containsKey(positionSourceId)){
             lastUpdateTime = System.currentTimeMillis();
