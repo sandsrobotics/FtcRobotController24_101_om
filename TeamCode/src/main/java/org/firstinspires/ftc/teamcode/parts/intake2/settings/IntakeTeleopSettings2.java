@@ -14,13 +14,15 @@ public class IntakeTeleopSettings2 {
     public final Supplier<Integer> robotLift0Supplier;
     public final Supplier<Integer> robotLifthangSupplier;
     public final Supplier<Integer> rotationServoSupplier;
+    public final Supplier<Float> strafeSpeedSupplier;
 //    public final Supplier<Boolean> robotLiftPrepSupplier;
 //    public final Supplier<Boolean> robotLiftNowSupplier;
 
     public IntakeTeleopSettings2(Supplier<Integer> sweepSpeedSupplier, Supplier<Integer> sweepLiftSupplier,
                                  Supplier<Integer> sweepSlideSupplier, Supplier<Integer> bucketLiftSupplier,
                                  Supplier<Integer> robotLiftSupplier, Supplier<Integer> robotLift0Supplier,
-                                 Supplier<Integer> robotLifthangSupplier, Supplier<Integer> rotationServoSupplier) {
+                                 Supplier<Integer> robotLifthangSupplier, Supplier<Integer> rotationServoSupplier,
+                                 Supplier<Float> strafeSpeedSupplier) {
 //                                 Supplier<Boolean> robotLiftPrepSupplier, Supplier<Boolean> robotLiftNowSupplier) {
         this.sweepSpeedSupplier = sweepSpeedSupplier;
         this.sweepLiftSupplier = sweepLiftSupplier;
@@ -30,6 +32,7 @@ public class IntakeTeleopSettings2 {
         this.robotLift0Supplier = robotLift0Supplier;
         this.robotLifthangSupplier = robotLifthangSupplier;
         this.rotationServoSupplier = rotationServoSupplier;
+        this.strafeSpeedSupplier = strafeSpeedSupplier;
 //        this.robotLiftPrepSupplier = robotLiftPrepSupplier;
 //        this.robotLiftNowSupplier = robotLiftNowSupplier;
     }
@@ -52,7 +55,8 @@ public class IntakeTeleopSettings2 {
                 () -> gamepad2.dpad_down ? -1 : 0, // robotLiftSupplier
                 () -> gamepad2.a ? 1 : 0, // robotLift0Supplier
                 () -> gamepad2.x ? -1 : 0, // robotLifthangSupplier
-                () -> gamepad.dpad_left ? -1 : gamepad.dpad_right ? 1 : 0 // rotationServoSupplier
+                () -> gamepad.dpad_left ? -1 : gamepad.dpad_right ? 1 : 0, // rotationServoSupplier
+                () -> gamepad2.left_stick_x // strafe speed
 //                liftPrep::isRisingEdge,
 //                liftNow::isRisingEdge
         );

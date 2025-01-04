@@ -64,7 +64,9 @@ public class AutoTest2024 extends LinearOpMode{
         new BulkRead(robot);
        intake = new Intake2(robot);
 
-        Vector3 fieldStartPos = new Vector3(0,0,-90);
+//        Vector3 fieldStartPos = new Vector3(0,0,-90);
+        Vector3 fieldStartPos = new Vector3(2.0 * 23.5, -62, -90);
+
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
                 100, new Vector3(2,2,2), fieldStartPos);
         pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));
@@ -106,7 +108,7 @@ public class AutoTest2024 extends LinearOpMode{
     }
 
     private void testAuto(TimedTask autoTasks) {
-        Vector3 stack = new Vector3(1.0, 1.0, 0);
+        Vector3 stack = new Vector3(1.0, -2.0, -90);
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.slowSettings));
         positionSolver.addMoveToTaskExNoWait(tileToInchAuto(stack), autoTasks);
     }

@@ -2,11 +2,17 @@ package org.firstinspires.ftc.teamcode.parts.intake2;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.parts.drive.Drive;
+import org.firstinspires.ftc.teamcode.parts.drive.DriveControl;
 import org.firstinspires.ftc.teamcode.parts.intake2.hardware.IntakeHardware2;
 import org.firstinspires.ftc.teamcode.parts.intake2.settings.IntakeSettings2;
+import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
+
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
 import om.self.supplier.consumer.EdgeConsumer;
+
+import static java.lang.Math.abs;
 
 public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHardware2, IntakeControl2> {
     public int slideTargetPosition;
@@ -18,10 +24,13 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     private int currentLiftPos;
     private final EdgeConsumer homingBucketZero = new EdgeConsumer();
     private final EdgeConsumer homingLiftZero = new EdgeConsumer();
+    private Drive drive;
+    private PositionTracker pt;
+    private float strafePower = 0;
 
     //***** Constructors *****
     public Intake2(Robot parent) {
-        super(parent, "Slider", () -> new IntakeControl2(0, 0, 0, 0, 0,0,0,0));
+        super(parent, "Slider", () -> new IntakeControl2(0, 0, 0, 0, 0,0,0,0, 0));
         setConfig(
                 IntakeSettings2.makeDefault(),
                 IntakeHardware2.makeDefault(parent.opMode.hardwareMap)
@@ -29,7 +38,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public Intake2(Robot parent, IntakeSettings2 settings, IntakeHardware2 hardware) {
-        super(parent, "slider", () -> new IntakeControl2(0, 0, 0, 0,0,0,0,0));
+        super(parent, "slider", () -> new IntakeControl2(0, 0, 0, 0,0,0,0,0,0));
         setConfig(settings, hardware);
     }
 
@@ -47,7 +56,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public boolean isLiftInTolerance() {
-        return Math.abs(slideTargetPosition - getSlidePosition()) <= getSettings().tolerance;
+        return abs(slideTargetPosition - getSlidePosition()) <= getSettings().tolerance;
     }
 
     public double getSlidePosition() {
@@ -133,11 +142,16 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         }
     }
 
-
     public void incrementalBucketUpDown(int position) {
         if (position == 1)
             setRobotLiftPositionUnsafe(getRobotLiftPosition() - 50);
         //setBucketLiftPositionUnsafe
+    }
+
+    public void strafeRobot(DriveControl control) {
+        if(abs(strafePower) > .01) {
+            control.power = control.power.addX(strafePower/3);
+        }
     }
 
     @Override
@@ -183,6 +197,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             incrementRotationServo(control.rotationServoDirection);
         }
 
+        strafePower = control.strafePower;
         //Todo: test code needs control refactoring
         setRobotLiftPosition(control.robotliftPosition, control.robotlift0Position, control.robotlifthangPosition);
         homingBucketZero.accept(!getHardware().bucketLiftZeroSwitch.getState());
@@ -195,12 +210,18 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     @Override
     public void onStart() {
-        //drive = getBeanManager().getBestMatch(Drive.class, false);
+        drive = getBeanManager().getBestMatch(Drive.class, false);
+        //pt = getBeanManager().getBestMatch(PositionTracker.class, false);
+        drive.addController(ContollerNames.distanceContoller, this::strafeRobot);
     }
 
     @Override
     public void onStop() {
-        //drive.removeController(ContollerNames.distanceContoller);
+        drive.removeController(ContollerNames.distanceContoller);
+    }
+
+    public static final class ContollerNames {
+        public static final String distanceContoller = "distance controller";
     }
 }
 

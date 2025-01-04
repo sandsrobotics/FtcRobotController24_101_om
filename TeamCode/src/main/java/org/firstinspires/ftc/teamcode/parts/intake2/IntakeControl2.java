@@ -9,10 +9,11 @@ public class IntakeControl2 {
     public int robotlift0Position;
     public int robotlifthangPosition;
     public int rotationServoDirection;
+    public float strafePower;
 
     public IntakeControl2(int sweeperPower, int sweeperLiftPosition, int sweepSlidePosition,
                           int bucketLiftPosition, int robotLiftPosition, int robotLift0Position,
-                          int robotLifthangPosition, int rotationServoDirection) {
+                          int robotLifthangPosition, int rotationServoDirection, float strafePower) {
         this.sweeperPower = sweeperPower;
         this.sweepLiftPosition = sweeperLiftPosition;
         this.sweepSlidePosition = sweepSlidePosition;
@@ -21,5 +22,6 @@ public class IntakeControl2 {
         this.robotlift0Position = robotLift0Position;
         this.robotlifthangPosition = robotLifthangPosition;
         this.rotationServoDirection = rotationServoDirection;
+        this.strafePower = strafePower;
     }
 }
