@@ -37,11 +37,6 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         );
     }
 
-    public Intake2(Robot parent, IntakeSettings2 settings, IntakeHardware2 hardware) {
-        super(parent, "slider", () -> new IntakeControl2(0, 0, 0, 0,0,0,0,0,0));
-        setConfig(settings, hardware);
-    }
-
     public void spinIntakeWithPower(double power) {
         getHardware().intakeWheelServoLeft.setPower(power);
         getHardware().intakeWheelServoRight.setPower(power);
@@ -67,17 +62,6 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         return currentLiftPos;
     }
 
-    public void setIntakeUpDown(int position) {
-        switch (position) {
-            case 1:
-                getHardware().tiltServoLeft.setPosition(getSettings().tiltServoDownPosition);
-                break;
-            case 2:
-                getHardware().tiltServoLeft.setPosition(getSettings().tiltServoUpPosition);
-                break;
-        }
-    }
-
     public void incrementRotationServo(int direction) {
         double step = getSettings().rotationServoStep;
         double newPos = currentRotationPos + (direction * step);
@@ -85,35 +69,33 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         getHardware().rotationServo.setPosition(currentRotationPos);
     }
 
-    public void incrementIntakeUpDown(int position) {
-        switch (position) {
-            case 1:
-                if (currentIntakeHeightPos <= getSettings().intakeArmMax)
-                    currentIntakeHeightPos += .01;
-                break;
-            case 2:
-                if (currentIntakeHeightPos >= getSettings().intakeArmMin)
-                    currentIntakeHeightPos -= .01;
-                break;
-        }
+    public void incrementIntakeUpDown(int direction) {
+        double adjustment = 0.01 * Math.signum(direction);
+        currentIntakeHeightPos = Math.max(
+                getSettings().intakeArmMin,
+                Math.min(
+                        getSettings().intakeArmMax,
+                        currentIntakeHeightPos + adjustment
+                )
+        );
+
         getHardware().tiltServoLeft.setPosition(currentIntakeHeightPos);
     }
 
-    public void incrementHorizontalSlide(int position) {
-        switch (position) {
-            case 1:
-                if (currentHorizontalSlidePos <= getSettings().maxServoLeftSlide)
-                    currentHorizontalSlidePos += .01;
-                break;
-            case 2:
-                if (currentHorizontalSlidePos >= getSettings().minServoLeftSlide)
-                    currentHorizontalSlidePos -= .01;
-                break;
-        }
+    public void incrementHorizontalSlide(int direction) {
+        double adjustment = 0.01 * Math.signum(direction);
+
+        currentHorizontalSlidePos = Math.max(
+                getSettings().minServoLeftSlide,
+                Math.min(
+                        getSettings().maxServoLeftSlide,
+                        currentHorizontalSlidePos + adjustment
+                )
+        );
+
         getHardware().sliderServoLeft.setPosition(currentHorizontalSlidePos);
         getHardware().sliderServoRight.setPosition(currentHorizontalSlidePos);
     }
-
 
     public void setHorizontalSlidePosition(int position) {
         switch (position) {
@@ -128,6 +110,25 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         }
     }
 
+    public void setBucketLiftPosition(int position) {
+        switch (position) {
+            case 1: // Move to maximum position
+                getHardware().bucketLiftMotor.setTargetPosition(getSettings().maxLiftPosition);
+                getHardware().bucketLiftMotor.setPower(1); // Power to move
+                break;
+            case -1: // Move to minimum position
+                getHardware().bucketLiftMotor.setTargetPosition(getSettings().minLiftPosition);
+                getHardware().bucketLiftMotor.setPower(1); // Power to move
+                break;
+        }
+    }
+    public void setDropperServoPosition(double position) {
+        if (position == 1) { // Move to max position
+            getHardware().dropperServo.setPosition(getSettings().dropperServoMax); // Assuming 1.0 is the max position
+        } else { // Reset or hold position
+            getHardware().dropperServo.setPosition(0.38); // Default to 0.0 or a neutral position
+        }
+    }
     public void setRobotLiftPosition(int lift, int zero, int hang) {
         if (lift == 1){
             setRobotLiftPositionUnsafe(5000); // top
@@ -179,9 +180,15 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     @Override
     public void onRun(IntakeControl2 control) {
+
         spinIntakeWithPower(control.sweeperPower); // two servo intake spin fwd/reverse
         incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
-        setHorizontalSlidePosition(control.sweepSlidePosition); // intake slide in/out all the way
+        incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
+        setBucketLiftPosition(control.bucketLiftPosition);
+
+        if (getHardware().bucketLiftMotor.getCurrentPosition() >= 400) {
+            setDropperServoPosition(0.38);
+        }
 
         //Todo: Lift tower up and down, score
         //Todo: Zero lift tower on digital input
@@ -205,6 +212,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         currentLiftPos = getHardware().robotLiftMotor.getCurrentPosition(); //0.32
         parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
         parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
+        parent.opMode.telemetry.addData("bucketLiftMotor postion", getHardware().bucketLiftMotor.getCurrentPosition());
     }
 
 

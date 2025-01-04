@@ -49,16 +49,15 @@ public class IntakeTeleopSettings2 {
 
         return new IntakeTeleopSettings2(
                 () -> gamepad.right_bumper ? -1 : gamepad.left_bumper ? 1 : 0,  // sweepSpeedSupplier
-                () -> gamepad.a ? 1 : gamepad.y ? 2 : 0, // sweepLiftSupplier
+                () -> gamepad.a ? -1 : gamepad.y ? 1 : 0, // sweepLiftSupplier
                 () -> gamepad.b ? -1 : gamepad.x ? 1 : 0, // horizontal SlideSupplier -1 = in
-                () -> gamepad.dpad_down ? -1 : gamepad.dpad_up ? 1 : 0, // bucketLiftSupplier
-                () -> gamepad2.dpad_down ? -1 : 0, // robotLiftSupplier
-                () -> gamepad2.a ? 1 : 0, // robotLift0Supplier
-                () -> gamepad2.x ? -1 : 0, // robotLifthangSupplier
+                () -> gamepad2.a ? 1 : gamepad2.b ? -1 : 0, // bucketLiftSupplier
+                () -> gamepad2.x ? 1 : 0, // robotLiftSupplier now triggers setRobotLiftPosition
+                () -> 0, // robotLift0Supplier (disabled, always 0)
+                () -> gamepad2.y ? 1 : 0, // dropperServo control
                 () -> gamepad.dpad_left ? -1 : gamepad.dpad_right ? 1 : 0, // rotationServoSupplier
                 () -> gamepad2.left_stick_x // strafe speed
-//                liftPrep::isRisingEdge,
-//                liftNow::isRisingEdge
         );
+
     }
 }

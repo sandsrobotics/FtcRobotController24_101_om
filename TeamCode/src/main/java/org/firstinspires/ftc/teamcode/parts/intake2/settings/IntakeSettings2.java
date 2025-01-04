@@ -22,13 +22,14 @@ public class IntakeSettings2 {
     public final double rotationServoMin;
     public final double rotationServoMax;
     public final double rotationServoStep;
+    public final double dropperServoMax;
 
     public IntakeSettings2(int minSlidePosition, int maxSlidePosition, int maxSlideSpeed, double tiltServoDownPosition,
                            double tiltServoUpPosition, int maxDownLiftSpeed, int maxUpLiftSpeed, int minLiftPosition,
                            int maxLiftPosition, double minRegisterVal, int tolerance, double minServoLeftSlide,
                            double maxServoLeftSlide, double minServoRightSlide, double maxServoRightSlide,
                            double intakeArmMin, double intakeArmMax, double intakeArmDefault,
-                           double rotationServoMin, double rotationServoMax, double rotationServoStep) {
+                           double rotationServoMin, double rotationServoMax, double rotationServoStep, double dropperServoMax) {
         this.minSlidePosition = minSlidePosition;
         this.maxSlidePosition = maxSlidePosition;
         this.maxSlideSpeed = maxSlideSpeed;
@@ -50,6 +51,7 @@ public class IntakeSettings2 {
         this.rotationServoMin = rotationServoMin;
         this.rotationServoMax = rotationServoMax;
         this.rotationServoStep = rotationServoStep;
+        this.dropperServoMax = dropperServoMax;
     }
 
     public static IntakeSettings2 makeDefault() {
@@ -62,7 +64,7 @@ public class IntakeSettings2 {
                 150,
                 150,
                 0,
-                3000,
+                4000,
                 0.05,
                 20,
                 0.559,
@@ -74,8 +76,8 @@ public class IntakeSettings2 {
                 0.52,
                 0,
                 1,
-                0.01 // Step increment for rotation servo //0.21
-                // minServo = slide out MaxServo = slide in
+                0.01,
+                0.0
         );
     }
 }
