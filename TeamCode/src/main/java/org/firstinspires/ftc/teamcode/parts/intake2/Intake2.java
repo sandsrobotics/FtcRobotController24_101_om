@@ -1,17 +1,14 @@
 package org.firstinspires.ftc.teamcode.parts.intake2;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveControl;
 import org.firstinspires.ftc.teamcode.parts.intake2.hardware.IntakeHardware2;
 import org.firstinspires.ftc.teamcode.parts.intake2.settings.IntakeSettings2;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
-
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
 import om.self.supplier.consumer.EdgeConsumer;
-
 import static java.lang.Math.abs;
 
 public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHardware2, IntakeControl2> {
@@ -23,14 +20,13 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     private double currentHorizontalSlidePos = 0.781;
     private int currentLiftPos;
     private final EdgeConsumer homingBucketZero = new EdgeConsumer();
-    private final EdgeConsumer homingLiftZero = new EdgeConsumer();
     private Drive drive;
-    private PositionTracker pt;
     private float strafePower = 0;
+    protected Intake2Tasks tasks;
 
     //***** Constructors *****
     public Intake2(Robot parent) {
-        super(parent, "Slider", () -> new IntakeControl2(0, 0, 0, 0, 0,0,0,0, 0));
+        super(parent, "Slider", () -> new IntakeControl2(0, 0, 0, 0, 0, 0, 0, 0, 0));
         setConfig(
                 IntakeSettings2.makeDefault(),
                 IntakeHardware2.makeDefault(parent.opMode.hardwareMap)
@@ -122,6 +118,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
                 break;
         }
     }
+
     public void setDropperServoPosition(double position) {
         if (position == 1) { // Move to max position
             getHardware().dropperServo.setPosition(getSettings().dropperServoMax); // Assuming 1.0 is the max position
@@ -129,14 +126,15 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             getHardware().dropperServo.setPosition(0.38); // Default to 0.0 or a neutral position
         }
     }
+
     public void setRobotLiftPosition(int lift, int zero, int hang) {
-        if (lift == 1){
+        if (lift == 1) {
             setRobotLiftPositionUnsafe(5000); // top
-        } else if (lift == -1){
+        } else if (lift == -1) {
             setRobotLiftPositionUnsafe(0); // bottom
-        } else if(zero == 1) {
+        } else if (zero == 1) {
             setRobotLiftPositionUnsafe(getRobotLiftPosition() - 50);
-        } else if(hang == -1){
+        } else if (hang == -1) {
             setRobotLiftPositionUnsafe(943);
         } else {
             setRobotLiftPositionUnsafe(getRobotLiftPosition());
@@ -150,8 +148,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public void strafeRobot(DriveControl control) {
-        if(abs(strafePower) > .01) {
-            control.power = control.power.addX(strafePower/3);
+        if (abs(strafePower) > .01) {
+            control.power = control.power.addX(strafePower / 3);
         }
     }
 
@@ -161,16 +159,12 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         currentRotationPos = 0.0;
         setHorizontalSlidePosition(-1); // pull slide in on init
         incrementIntakeUpDown(0); // default straight up position
-
+        tasks = new Intake2Tasks(this, parent);
+        tasks.constructAutoHome();
         //homing bucket lift setup
         homingBucketZero.setOnRise(() -> {
             getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        });
-        //homing robot lift setup
-        homingLiftZero.setOnRise(() -> {
-            getHardware().robotLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            getHardware().robotLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         });
     }
 
@@ -190,11 +184,21 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             setDropperServoPosition(0.38);
         }
 
-        //Todo: Lift tower up and down, score
-        //Todo: Zero lift tower on digital input
-        //Todo: Zero robot lift on digital input
-        //Todo: Bucket angle set
+        //Todo: Lift tower up and down, bucket disabled near bottom enabled and positioned near the top
+        // 1) below say 400 bucket disabled pwmDisable()
+        // 2) button:  move bucket lift up after a (400 ish) pwmEnable() bucket and rotate to be level with floor
+        // 3) another button: - tip bucket up to deliver
+        // 4) return bucket rotation to low angle above 400
+        // 5) at 400 disable bucket servo pwmDisable()
+        // 5) lower bucket lift to zero
+
         //Todo: Slide in/out infinite positions
+
+        //Todo: raise robot lift hooks ready height above low bar
+        //Todo: lower robot lift hooks just enough to lift robot
+
+        // Note:  getHardware().dropperServo.getController().pwmDisable(); .pwmEnable on the way up
+
 
         // Check intake height and adjust rotation servo
         if (currentIntakeHeightPos >= 0.3) {
@@ -205,22 +209,20 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         }
 
         strafePower = control.strafePower;
-        //Todo: test code needs control refactoring
+        //Todo: test code needs control refactoring - rearrange controller A and B to suit drivers
         setRobotLiftPosition(control.robotliftPosition, control.robotlift0Position, control.robotlifthangPosition);
         homingBucketZero.accept(!getHardware().bucketLiftZeroSwitch.getState());
-        homingLiftZero.accept(!getHardware().robotLiftZeroSwitch.getState());
         currentLiftPos = getHardware().robotLiftMotor.getCurrentPosition(); //0.32
         parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
         parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
         parent.opMode.telemetry.addData("bucketLiftMotor postion", getHardware().bucketLiftMotor.getCurrentPosition());
     }
 
-
     @Override
     public void onStart() {
         drive = getBeanManager().getBestMatch(Drive.class, false);
-        //pt = getBeanManager().getBestMatch(PositionTracker.class, false);
         drive.addController(ContollerNames.distanceContoller, this::strafeRobot);
+        tasks.startAutoHome();
     }
 
     @Override
@@ -232,4 +234,3 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         public static final String distanceContoller = "distance controller";
     }
 }
-

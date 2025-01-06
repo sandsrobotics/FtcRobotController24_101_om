@@ -15,6 +15,7 @@ public class IntakeTeleopSettings2 {
     public final Supplier<Integer> robotLifthangSupplier;
     public final Supplier<Integer> rotationServoSupplier;
     public final Supplier<Float> strafeSpeedSupplier;
+    public final Supplier<Boolean> autoHomeSupplier;
 //    public final Supplier<Boolean> robotLiftPrepSupplier;
 //    public final Supplier<Boolean> robotLiftNowSupplier;
 
@@ -22,7 +23,7 @@ public class IntakeTeleopSettings2 {
                                  Supplier<Integer> sweepSlideSupplier, Supplier<Integer> bucketLiftSupplier,
                                  Supplier<Integer> robotLiftSupplier, Supplier<Integer> robotLift0Supplier,
                                  Supplier<Integer> robotLifthangSupplier, Supplier<Integer> rotationServoSupplier,
-                                 Supplier<Float> strafeSpeedSupplier) {
+                                 Supplier<Float> strafeSpeedSupplier, Supplier<Boolean> autoHomeSupplier) {
 //                                 Supplier<Boolean> robotLiftPrepSupplier, Supplier<Boolean> robotLiftNowSupplier) {
         this.sweepSpeedSupplier = sweepSpeedSupplier;
         this.sweepLiftSupplier = sweepLiftSupplier;
@@ -33,6 +34,7 @@ public class IntakeTeleopSettings2 {
         this.robotLifthangSupplier = robotLifthangSupplier;
         this.rotationServoSupplier = rotationServoSupplier;
         this.strafeSpeedSupplier = strafeSpeedSupplier;
+        this.autoHomeSupplier = autoHomeSupplier;
 //        this.robotLiftPrepSupplier = robotLiftPrepSupplier;
 //        this.robotLiftNowSupplier = robotLiftNowSupplier;
     }
@@ -56,7 +58,8 @@ public class IntakeTeleopSettings2 {
                 () -> 0, // robotLift0Supplier (disabled, always 0)
                 () -> gamepad2.y ? 1 : 0, // dropperServo control
                 () -> gamepad.dpad_left ? -1 : gamepad.dpad_right ? 1 : 0, // rotationServoSupplier
-                () -> gamepad2.left_stick_x // strafe speed
+                () -> gamepad2.left_stick_x, // strafe speed
+                new EdgeSupplier(()-> gamepad.back).getRisingEdgeSupplier()
         );
 
     }

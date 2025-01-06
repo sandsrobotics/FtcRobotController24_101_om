@@ -59,9 +59,9 @@ public class IntakeHardware2 {
 
         MotorSettings intakeWheelServoLeftSettings = new MotorSettings(ServoSettings.Number.THREE_B, DcMotorSimple.Direction.FORWARD);
         MotorSettings intakeWheelServoRightSettings = new MotorSettings(ServoSettings.Number.ONE_B, DcMotorSimple.Direction.REVERSE);
-        DigitalChannel bucketLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital0");
+        DigitalChannel bucketLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital1");
         bucketLiftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
-        DigitalChannel robotLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital1");
+        DigitalChannel robotLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital0");
         robotLiftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
 
         return new IntakeHardware2(

@@ -48,6 +48,8 @@ public class IntakeTeleop2 extends LoopedPartImpl<Intake2, IntakeTeleopSettings2
 
     @Override
     public void onRun() {
+        if(settings.autoHomeSupplier.get()) // back button
+            parent.tasks.startAutoHome();
     }
 
     @Override
