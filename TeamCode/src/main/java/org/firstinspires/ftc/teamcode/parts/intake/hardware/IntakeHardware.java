@@ -16,31 +16,31 @@ public class IntakeHardware {
     public final DcMotorEx horizSliderMotor;
     public final Servo tiltServo;
     public final CRServo intakeFlipperServo;
-    public final DigitalChannel liftZeroSwitch;
+    public final DigitalChannel bucketLiftZeroSwitch;
 
     public IntakeHardware(DcMotorEx bucketLiftMotor, DcMotorEx slideMotor, Servo tiltServo,
-                          CRServo intakeFlipperServo, DigitalChannel liftZeroSwitch) {
+                          CRServo intakeFlipperServo, DigitalChannel bucketLiftZeroSwitch) {
         this.bucketLiftMotor = bucketLiftMotor;
         this.horizSliderMotor = slideMotor;
         this.tiltServo = tiltServo;
         this.intakeFlipperServo = intakeFlipperServo;
-        this.liftZeroSwitch = liftZeroSwitch;
+        this.bucketLiftZeroSwitch = bucketLiftZeroSwitch;
     }
 //beans
-    public static IntakeHardware makeDefault(HardwareMap hardwareMap) {
+    public static IntakeHardware makeDefault(HardwareMap hardwareMap)  {
         MotorSettings bucketLiftMotorSettings =new MotorSettings(MotorSettings.Number.ONE_B, DcMotorSimple.Direction.REVERSE, DcMotorEx.ZeroPowerBehavior.BRAKE, DcMotorEx.RunMode.RUN_TO_POSITION, bucketHoldPower);
         MotorSettings slideMotorSettings = new MotorSettings(MotorSettings.Number.ZERO_B, DcMotorSimple.Direction.FORWARD, DcMotorEx.ZeroPowerBehavior.BRAKE, DcMotorEx.RunMode.RUN_TO_POSITION, slideHoldPower);
         ServoSettings tiltServoSettings = new ServoSettings(ServoSettings.Number.FOUR, Servo.Direction.FORWARD);ServoSettings tiltServoRightSettings = new ServoSettings(ServoSettings.Number.FIVE, Servo.Direction.FORWARD);
         MotorSettings intakeFlipperServoSettings = new MotorSettings(ServoSettings.Number.ZERO, DcMotorSimple.Direction.FORWARD);MotorSettings intakeWheelServoRightSettings = new MotorSettings(ServoSettings.Number.TWO, DcMotorSimple.Direction.REVERSE);
-        DigitalChannel liftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital0");
-        liftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
+        DigitalChannel bucketLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital2");
+        bucketLiftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
 
         return new IntakeHardware(
                 bucketLiftMotorSettings.makeExMotor(hardwareMap),
                 slideMotorSettings.makeExMotor(hardwareMap),
                 tiltServoSettings.makeServo(hardwareMap),
                 intakeFlipperServoSettings.makeCRServo(hardwareMap),
-                liftZeroSwitch
+                bucketLiftZeroSwitch
         );
     }
 }

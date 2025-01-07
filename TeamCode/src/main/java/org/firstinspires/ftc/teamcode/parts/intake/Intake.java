@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.parts.intake;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
+import org.firstinspires.ftc.teamcode.parts.intake2.Intake2Tasks;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
 
@@ -12,6 +13,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     private int currentSlidePos;
     //private int currentLiftPos;
     private int currentBucketPos;
+    private IntakeTasks tasks;
     //***** Constructors *****
     public Intake(Robot parent) {
         super(parent, "Slider", () -> new IntakeControl(0, 0, 0, 0));
@@ -117,6 +119,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     @Override
     public void onInit() {
         setMotorsToRunConfig();
+        tasks = new IntakeTasks(this, parent);
+        tasks.constructAutoHome();
     }
 
     @Override
@@ -139,6 +143,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     @Override
     public void onStart() {
         //drive = getBeanManager().getBestMatch(Drive.class, false);
+        tasks.startAutoHome();
     }
 
     @Override
