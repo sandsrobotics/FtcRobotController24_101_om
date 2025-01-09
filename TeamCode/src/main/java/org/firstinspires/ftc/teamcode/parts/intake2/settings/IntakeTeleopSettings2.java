@@ -16,15 +16,15 @@ public class IntakeTeleopSettings2 {
     public final Supplier<Integer> rotationServoSupplier;
     public final Supplier<Float> strafeSpeedSupplier;
     public final Supplier<Boolean> autoHomeSupplier;
-//    public final Supplier<Boolean> robotLiftPrepSupplier;
-//    public final Supplier<Boolean> robotLiftNowSupplier;
+    public final Supplier<Integer> dropperServoSupplier;
+    public final Supplier<Integer> robotLiftToZeroSupplier;
 
     public IntakeTeleopSettings2(Supplier<Integer> sweepSpeedSupplier, Supplier<Integer> sweepLiftSupplier,
                                  Supplier<Integer> sweepSlideSupplier, Supplier<Integer> bucketLiftSupplier,
                                  Supplier<Integer> robotLiftSupplier, Supplier<Integer> robotLift0Supplier,
                                  Supplier<Integer> robotLifthangSupplier, Supplier<Integer> rotationServoSupplier,
-                                 Supplier<Float> strafeSpeedSupplier, Supplier<Boolean> autoHomeSupplier) {
-//                                 Supplier<Boolean> robotLiftPrepSupplier, Supplier<Boolean> robotLiftNowSupplier) {
+                                 Supplier<Float> strafeSpeedSupplier, Supplier<Boolean> autoHomeSupplier,
+                                 Supplier<Integer> dropperServoSupplier, Supplier<Integer> robotLiftToZeroSupplier) {
         this.sweepSpeedSupplier = sweepSpeedSupplier;
         this.sweepLiftSupplier = sweepLiftSupplier;
         this.sweepSlideSupplier = sweepSlideSupplier;
@@ -35,32 +35,27 @@ public class IntakeTeleopSettings2 {
         this.rotationServoSupplier = rotationServoSupplier;
         this.strafeSpeedSupplier = strafeSpeedSupplier;
         this.autoHomeSupplier = autoHomeSupplier;
-//        this.robotLiftPrepSupplier = robotLiftPrepSupplier;
-//        this.robotLiftNowSupplier = robotLiftNowSupplier;
+        this.dropperServoSupplier = dropperServoSupplier;
+        this.robotLiftToZeroSupplier = robotLiftToZeroSupplier;
     }
 
     public static IntakeTeleopSettings2 makeDefault(Robot robot) {
         Gamepad gamepad = robot.opMode.gamepad1;
         Gamepad gamepad2 = robot.opMode.gamepad2;
 
-//        EdgeSupplier liftPrep = new EdgeSupplier();
-//        liftPrep.setBase(() -> gamepad2.dpad_up);
-//
-//        EdgeSupplier liftNow = new EdgeSupplier();
-//        liftNow.setBase(() -> gamepad2.dpad_down);
-
         return new IntakeTeleopSettings2(
                 () -> gamepad.right_bumper ? -1 : gamepad.left_bumper ? 1 : 0,  // sweepSpeedSupplier
                 () -> gamepad.a ? -1 : gamepad.y ? 1 : 0, // sweepLiftSupplier
                 () -> gamepad.b ? -1 : gamepad.x ? 1 : 0, // horizontal SlideSupplier -1 = in
                 () -> gamepad2.a ? 1 : gamepad2.b ? -1 : 0, // bucketLiftSupplier
-                () -> gamepad2.x ? 1 : 0, // robotLiftSupplier now triggers setRobotLiftPosition
-                () -> 0, // robotLift0Supplier (disabled, always 0)
-                () -> gamepad2.y ? 1 : 0, // dropperServo control
+                () -> gamepad2.x ? 1 : 0, // robotLiftSupplier
+                () -> 0, // robotLift0Supplier
+                () -> gamepad2.y ? 1 : 0, // robotLifthangSupplier
                 () -> gamepad.dpad_left ? -1 : gamepad.dpad_right ? 1 : 0, // rotationServoSupplier
-                () -> gamepad2.left_stick_x, // strafe speed
-                new EdgeSupplier(()-> gamepad.back).getRisingEdgeSupplier()
+                () -> gamepad2.left_stick_x, // strafeSpeedSupplier
+                new EdgeSupplier(() -> gamepad.back).getRisingEdgeSupplier(), // autoHomeSupplier
+                () -> gamepad2.dpad_right ? 1 : gamepad2.dpad_left ? -1 : 0, // dropperServoSupplier
+                () -> gamepad2.right_bumper ? 1 : 0 // robotLiftToZeroSupplier
         );
-
     }
 }

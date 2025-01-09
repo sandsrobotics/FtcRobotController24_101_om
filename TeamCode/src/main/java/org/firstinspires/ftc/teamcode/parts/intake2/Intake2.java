@@ -26,7 +26,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     //***** Constructors *****
     public Intake2(Robot parent) {
-        super(parent, "Slider", () -> new IntakeControl2(0, 0, 0, 0, 0, 0, 0, 0, 0));
+        super(parent, "Slider", () -> new IntakeControl2(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
         setConfig(
                 IntakeSettings2.makeDefault(),
                 IntakeHardware2.makeDefault(parent.opMode.hardwareMap)
@@ -109,21 +109,11 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public void setBucketLiftPosition(int position) {
         switch (position) {
             case 1: // Move to maximum position
-                getHardware().bucketLiftMotor.setTargetPosition(getSettings().maxLiftPosition);
-                getHardware().bucketLiftMotor.setPower(1); // Power to move
+                tasks.startAutoBucketLift();
                 break;
             case -1: // Move to minimum position
-                getHardware().bucketLiftMotor.setTargetPosition(getSettings().minLiftPosition);
-                getHardware().bucketLiftMotor.setPower(1); // Power to move
+                tasks.startAutoBucketDropper();
                 break;
-        }
-    }
-
-    public void setDropperServoPosition(double position) {
-        if (position == 1) { // Move to max position
-            getHardware().dropperServo.setPosition(getSettings().dropperServoMax); // Assuming 1.0 is the max position
-        } else { // Reset or hold position
-            getHardware().dropperServo.setPosition(0.38); // Default to 0.0 or a neutral position
         }
     }
 
@@ -146,6 +136,12 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             setRobotLiftPositionUnsafe(getRobotLiftPosition() - 50);
         //setBucketLiftPositionUnsafe
     }
+    public void moveRobotLiftToZero(int direction) {
+        if (direction == 1) { // Right bumper pressed
+            getHardware().robotLiftMotor.setTargetPosition(0);
+            getHardware().robotLiftMotor.setPower(1); // Power to move
+        }
+    }
 
     public void strafeRobot(DriveControl control) {
         if (abs(strafePower) > .01) {
@@ -161,6 +157,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         incrementIntakeUpDown(0); // default straight up position
         tasks = new Intake2Tasks(this, parent);
         tasks.constructAutoHome();
+        tasks.constructAutoBucketLift();
+        tasks.constructAutoBucketDropper();
         //homing bucket lift setup
         homingBucketZero.setOnRise(() -> {
             getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -179,10 +177,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
         incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
         setBucketLiftPosition(control.bucketLiftPosition);
-
-        if (getHardware().bucketLiftMotor.getCurrentPosition() >= 400) {
-            setDropperServoPosition(0.38);
-        }
+        moveRobotLiftToZero(control.robotLiftToZero);
 
         //Todo: Lift tower up and down, bucket disabled near bottom enabled and positioned near the top
         // 1) below say 400 bucket disabled pwmDisable()
@@ -216,6 +211,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
         parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
         parent.opMode.telemetry.addData("bucketLiftMotor postion", getHardware().bucketLiftMotor.getCurrentPosition());
+        parent.opMode.telemetry.addData("dropperservo postion", getHardware().dropperServo.getPosition());
     }
 
     @Override
