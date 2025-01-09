@@ -62,7 +62,7 @@ public class AutoTest2024 extends LinearOpMode{
         Robot robot = new Robot(this);
         Drive drive = new Drive(robot);
         new BulkRead(robot);
-       intake = new Intake2(robot);
+        intake = new Intake2(robot);
 
 //        Vector3 fieldStartPos = new Vector3(0,0,-90);
         Vector3 fieldStartPos = new Vector3(0.5 * 23.5, -62, -90);
@@ -108,8 +108,9 @@ public class AutoTest2024 extends LinearOpMode{
     }
 
     private void testAuto(TimedTask autoTasks) {
-        Vector3 redbar = new Vector3(11.75, -33, -90);
+        Vector3 redbar = new Vector3(11.75, -34, -90);
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.slowSettings));
+        autoTasks.addStep(()-> intake.setHorizontalSlidePosition(-1));
         positionSolver.addMoveToTaskExNoWait(redbar, autoTasks);
     }
 }

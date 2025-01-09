@@ -58,7 +58,7 @@ public class TeleopDive extends LinearOpMode {
                 100, new Vector3(2,2,2), fieldStartPos);
         pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));
         XRelativeSolver solver = new XRelativeSolver(drive);
-        odo = new Pinpoint(pt);
+        odo = new Pinpoint(pt,false);
         pt.positionSourceId = Pinpoint.class;
 
         Intake2 intake = new Intake2(robot);
@@ -67,7 +67,7 @@ public class TeleopDive extends LinearOpMode {
         robot.init();
 
         while (!isStarted()) {
-            telemetry.addData("position", pt.getCurrentPosition());
+            telemetry.addData("position", odo.getPosition());
             telemetry.update();
         }
         robot.start();
@@ -77,7 +77,6 @@ public class TeleopDive extends LinearOpMode {
             robot.run();
             telemetry.addData("position", pt.getCurrentPosition());
             telemetry.addData("tile position", fieldToTile(pt.getCurrentPosition()));
-            telemetry.addData("relative position", pt.getRelativePosition());
             telemetry.addData("Slide Position", intake.getSlidePosition());
             telemetry.addData("time", System.currentTimeMillis() - start);
             telemetry.addData("Robot lift Position", intake.getRobotLiftPosition());

@@ -16,6 +16,12 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, ObjectUtils.Null> {
     GoBildaPinpointDriver odo; // Declare OpMode member for the Odometery Computer
     double oldTime = 0;
+    Boolean reset = true;
+
+    public Pinpoint(PositionTracker parent, Boolean reset) {
+        super(parent, "Pinpoint");
+        this.reset = reset;
+    }
 
     public Pinpoint(PositionTracker parent) {
         super(parent, "Pinpoint");
@@ -24,6 +30,7 @@ public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, 
     public void setPosition(Vector3 vector) {
         odo.setPosition(vector3ToPose2D(vector));
     }
+    public Vector3 getPosition() {return posToVector3(odo.getPosition());}
 
     @Override
     public void onRun() {
@@ -39,7 +46,7 @@ public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, 
         Pose2D pos = odo.getPosition();
 
         String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
-        parent.parent.opMode.telemetry.addData("Position", data);
+        //parent.parent.opMode.telemetry.addData("Position", data);
 
             /*
             gets the current Velocity (x & y in mm/sec and heading in degrees/sec) and prints it.
@@ -98,7 +105,7 @@ public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, 
         an incorrect starting value for x, y, and heading.
          */
         //odo.recalibrateIMU();
-        odo.resetPosAndIMU();
+        if (reset) odo.resetPosAndIMU();
         //odo.setPosition(vector3ToPose2D(parent.getCurrentPosition()));
     }
 
