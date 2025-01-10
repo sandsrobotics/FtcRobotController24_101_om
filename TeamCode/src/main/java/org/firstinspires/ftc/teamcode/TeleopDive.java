@@ -44,16 +44,6 @@ public class TeleopDive extends LinearOpMode {
         drive = new Drive(robot);
         initTeleop();
 
-//        startPosition = new Vector3(2.0 * 23.5, -62, -90);
-//        PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
-//                100, new Vector3(2,2,2), startPosition);
-//        pts = pts.withPosition(customStartPos != null ? customStartPos : transformFunc.apply(pts.startPosition));
-//        pt = new PositionTracker(robot, pts, PositionTrackerHardware.makeDefault(robot));
-//        odo = new Pinpoint(pt);
-//        pt.positionSourceId = Pinpoint.class;
-//        positionSolver = new PositionSolver(drive);
-//        DecimalFormat df = new DecimalFormat("#0.0");
-
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
                 100, new Vector3(2,2,2), fieldStartPos);
         pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));

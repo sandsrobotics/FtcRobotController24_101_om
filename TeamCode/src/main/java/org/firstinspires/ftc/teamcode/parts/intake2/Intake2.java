@@ -167,6 +167,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         currentRotationPos = 0.0;
         setHorizontalSlidePosition(-1); // pull slide in on init
         incrementIntakeUpDown(0); // default straight up position
+        drive = getBeanManager().getBestMatch(Drive.class, false);
+        pt = getBeanManager().getBestMatch(PositionTracker.class, false);
         tasks = new Intake2Tasks(this, parent);
         tasks.constructAutoHome();
         tasks.constructAutoBucketLift();
@@ -231,10 +233,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     @Override
     public void onStart() {
-        drive = getBeanManager().getBestMatch(Drive.class, false);
         drive.addController(ContollerNames.distanceContoller, this::strafeRobot);
         tasks.startAutoHome();
-        pt = getBeanManager().getBestMatch(PositionTracker.class, false);
     }
 
     @Override
