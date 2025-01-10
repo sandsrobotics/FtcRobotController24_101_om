@@ -75,6 +75,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
                         currentIntakeHeightPos + adjustment
                 )
         );
+        if (direction == 2007) {
+            currentIntakeHeightPos = 0;
+        }
 
         getHardware().tiltServoLeft.setPosition(currentIntakeHeightPos);
     }
@@ -229,6 +232,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
         parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
         parent.opMode.telemetry.addData("bucketLiftMotor postion", getHardware().bucketLiftMotor.getCurrentPosition());
+        currentSlidePos = getHardware().bucketLiftMotor.getCurrentPosition();
     }
 
     @Override
