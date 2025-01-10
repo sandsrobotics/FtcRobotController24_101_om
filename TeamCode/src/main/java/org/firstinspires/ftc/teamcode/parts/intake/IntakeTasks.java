@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.parts.intake;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake2.Intake2;
@@ -27,8 +28,8 @@ public class IntakeTasks {
             robot.opMode.telemetry.addData("homing", intake.getHardware().bucketLiftZeroSwitch.getState());
         }, () -> intake.getHardware().bucketLiftZeroSwitch.getState(), 10000);
         autoHomeTask.addStep(() -> {
-            intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            intake.getHardware().bucketLiftMotor.setTargetPosition(0);
+            intake.getHardware().v_SlideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            intake.getHardware().v_SlideMotor.setTargetPosition(0);
             intake.slideTargetPosition = 0;
             setMotorsToRunConfig();
         });
@@ -40,13 +41,13 @@ public class IntakeTasks {
 
     private void setSlideToHomeConfig() {
         double power = -0.125;
-        intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        intake.getHardware().bucketLiftMotor.setPower(power);
+        intake.getHardware().v_SlideMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        intake.getHardware().v_SlideMotor.setPower(power);
     }
 
     private void setMotorsToRunConfig() {
-        intake.getHardware().bucketLiftMotor.setPower(IntakeHardware.slideHoldPower);
-        intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        intake.getHardware().v_SlideMotor.setPower(IntakeHardware.slideHoldPower);
+        intake.getHardware().v_SlideMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
     /***********************************************************************************/

@@ -6,6 +6,9 @@ import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
 import org.firstinspires.ftc.teamcode.parts.intake2.Intake2Tasks;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import java.util.function.Supplier;
+import om.self.ezftc.core.Robot;
 
 public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardware, IntakeControl> {
     public int slideTargetPosition;
@@ -16,7 +19,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     private IntakeTasks tasks;
     //***** Constructors *****
     public Intake(Robot parent) {
-        super(parent, "Slider", () -> new IntakeControl(0, 0, 0, 0));
+        super(parent, "Slider", () -> new IntakeControl(0, 0, 0,
+                0, 0, 0));
         setConfig(
                 IntakeSettings.makeDefault(),
                 IntakeHardware.makeDefault(parent.opMode.hardwareMap)
@@ -24,7 +28,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public Intake(Robot parent, IntakeSettings settings, IntakeHardware hardware) {
-        super(parent, "slider", () -> new IntakeControl(0, 0, 0, 0));
+        super(parent, "slider", () -> new IntakeControl(0, 0, 0,
+                0, 0, 0));
         setConfig(settings, hardware);
     }
 
@@ -59,7 +64,6 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         else
             setSlidePosition(getSlidePosition() + (int) power);
     }
-
     public void sweepWithPower(double power) {
         getHardware().intakeFlipperServo.setPower(power);
     }
@@ -90,7 +94,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     private void setBucketLiftPositionUnsafe(int position) {
-        getHardware().bucketLiftMotor.setTargetPosition(position);
+        getHardware().v_SlideMotor.setTargetPosition(position);
     }
 
     public boolean isLiftInTolerance() {
@@ -100,10 +104,36 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public int getSlidePosition() {
         return currentSlidePos;
     }
-
+    public double getSpecimanClawMax() {
+        return getSettings().SpecimanClawMax;
+    }
+    public double getSpecimanClawMin() {
+        return  getSettings().specimanClawMin;
+    }
+    private void setSpecimanClaw(int position) {
+        if (position==-1) {//open specimanServo
+            getHardware().specimanClawServo.setPosition(getSpecimanClawMax());
+        } else if ( position == 1) { // close specimanServo
+            getHardware().specimanClawServo.setPosition(getSpecimanClawMin());
+        }
+    }
+    public int getV_Slide_Max() {
+        return getSettings().v_Slide_Max;
+    }
+    public int getV_Slide_Min() {
+        return getSettings().v_Slide_Min;
+    }
+    private void setV_SlideMotor(float position) {
+        if (position==-1) {
+            getHardware().v_SlideMotor.setTargetPosition(getV_Slide_Min());
+        } else if ( position == 1) {
+            getHardware().v_SlideMotor.setTargetPosition(getV_Slide_Max());
+        }
+    }
     public int getBucketLiftPosition() {
         return currentBucketPos;
     }
+
 
     public void setSweepPosition(int position) {
         switch (position) {
@@ -113,6 +143,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             case 2:
                 getHardware().tiltServo.setPosition(getSettings().tiltServoUpPosition);
                 break;
+
         }
     }
 
@@ -133,11 +164,12 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         setSweepPosition(control.sweepLiftPosition);
         changeSlidePosition(control.sweepSlidePosition);
         setBucketLiftPosition(control.bucketLiftPosition);
+        setSpecimanClaw(control.specimanClawSupplier);
 
         //slideWithPower(control.sweepSlidePosition,false);
 
         currentSlidePos = getHardware().horizSliderMotor.getCurrentPosition();
-        currentBucketPos = getHardware().bucketLiftMotor.getCurrentPosition();
+        currentBucketPos = getHardware().v_SlideMotor.getCurrentPosition();
     }
 
     @Override

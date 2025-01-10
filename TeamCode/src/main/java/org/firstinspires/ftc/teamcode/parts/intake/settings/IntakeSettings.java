@@ -14,10 +14,15 @@ public class IntakeSettings {
     public final int tolerance;
     public final int bucketMaxPos;
     public final int bucketMinPos;
+    public final double specimanClawMin;
+    public final double SpecimanClawMax;
+    public final int v_Slide_Max;
+    public final int v_Slide_Min;
 
     public IntakeSettings(int minSlidePosition, int maxSlidePosition, int maxSlideSpeed, double tiltServoDownPosition,
                           double tiltServoUpPosition, int maxDownLiftSpeed, int maxUpLiftSpeed, int minLiftPosition, int maxLiftPosition,
-                          double minRegisterVal, int tolerance, int bucketMinPos, int bucketMaxPos) {
+                          double minRegisterVal, int tolerance, int bucketMinPos, int bucketMaxPos, double specimanClawMin, double SpecimanClawMax,
+                          int v_Slide_Max, int v_Slide_Min) {
         this.minSlidePosition = minSlidePosition;
         this.maxSlidePosition = maxSlidePosition;
         this.maxSlideSpeed = maxSlideSpeed;
@@ -31,6 +36,10 @@ public class IntakeSettings {
         this.maxLiftPosition = maxLiftPosition;
         this.bucketMinPos = bucketMinPos;
         this.bucketMaxPos = bucketMaxPos;
+        this.SpecimanClawMax = SpecimanClawMax;
+        this.specimanClawMin = specimanClawMin;
+        this.v_Slide_Min = v_Slide_Min;
+        this.v_Slide_Max = v_Slide_Max;
     }
 
     public static IntakeSettings makeDefault(){
@@ -47,7 +56,12 @@ public class IntakeSettings {
                 0.05,
                 20,
                 4500,
-                10);
+                10,
+                .385,
+                .597,
+                10,
+                3000
+        );
     }
 }
 
