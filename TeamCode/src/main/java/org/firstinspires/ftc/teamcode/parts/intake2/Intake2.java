@@ -20,9 +20,10 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     private double currentHorizontalSlidePos = 0.781;
     private int currentLiftPos;
     private final EdgeConsumer homingBucketZero = new EdgeConsumer();
-    private Drive drive;
+    protected Drive drive;
     private float strafePower = 0;
     protected Intake2Tasks tasks;
+    protected PositionTracker pt;
 
     //***** Constructors *****
     public Intake2(Robot parent) {
@@ -106,6 +107,17 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         }
     }
 
+    public void setSpecimenServoPosition(int position) {
+        switch (position) {
+            case 1: // Open position
+                tasks.startAutoSpecimenPickup();
+                break;
+            case -1: // Close position
+                tasks.startAutoSpecimenHang();
+                break;
+        }
+    }
+
     public void setBucketLiftPosition(int position) {
         switch (position) {
             case 1: // Move to maximum position
@@ -159,6 +171,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         tasks.constructAutoHome();
         tasks.constructAutoBucketLift();
         tasks.constructAutoBucketDropper();
+        tasks.constructAutoSpecimenPickup();
+        tasks.constructAutoSpecimenHang();
+
         //homing bucket lift setup
         homingBucketZero.setOnRise(() -> {
             getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -178,6 +193,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
         setBucketLiftPosition(control.bucketLiftPosition);
         moveRobotLiftToZero(control.robotLiftToZero);
+        setSpecimenServoPosition(control.specimenServoPosition);
 
         //Todo: Lift tower up and down, bucket disabled near bottom enabled and positioned near the top
         // 1) below say 400 bucket disabled pwmDisable()
@@ -211,7 +227,6 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
         parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
         parent.opMode.telemetry.addData("bucketLiftMotor postion", getHardware().bucketLiftMotor.getCurrentPosition());
-        parent.opMode.telemetry.addData("dropperservo postion", getHardware().dropperServo.getPosition());
     }
 
     @Override
@@ -219,6 +234,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         drive = getBeanManager().getBestMatch(Drive.class, false);
         drive.addController(ContollerNames.distanceContoller, this::strafeRobot);
         tasks.startAutoHome();
+        pt = getBeanManager().getBestMatch(PositionTracker.class, false);
     }
 
     @Override

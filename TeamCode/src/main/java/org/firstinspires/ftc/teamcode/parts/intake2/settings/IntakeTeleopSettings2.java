@@ -16,7 +16,7 @@ public class IntakeTeleopSettings2 {
     public final Supplier<Integer> rotationServoSupplier;
     public final Supplier<Float> strafeSpeedSupplier;
     public final Supplier<Boolean> autoHomeSupplier;
-    public final Supplier<Integer> dropperServoSupplier;
+    public final Supplier<Integer> specimenServoSupplier;
     public final Supplier<Integer> robotLiftToZeroSupplier;
 
     public IntakeTeleopSettings2(Supplier<Integer> sweepSpeedSupplier, Supplier<Integer> sweepLiftSupplier,
@@ -24,7 +24,7 @@ public class IntakeTeleopSettings2 {
                                  Supplier<Integer> robotLiftSupplier, Supplier<Integer> robotLift0Supplier,
                                  Supplier<Integer> robotLifthangSupplier, Supplier<Integer> rotationServoSupplier,
                                  Supplier<Float> strafeSpeedSupplier, Supplier<Boolean> autoHomeSupplier,
-                                 Supplier<Integer> dropperServoSupplier, Supplier<Integer> robotLiftToZeroSupplier) {
+                                 Supplier<Integer> specimenServoSupplier, Supplier<Integer> robotLiftToZeroSupplier) {
         this.sweepSpeedSupplier = sweepSpeedSupplier;
         this.sweepLiftSupplier = sweepLiftSupplier;
         this.sweepSlideSupplier = sweepSlideSupplier;
@@ -35,7 +35,7 @@ public class IntakeTeleopSettings2 {
         this.rotationServoSupplier = rotationServoSupplier;
         this.strafeSpeedSupplier = strafeSpeedSupplier;
         this.autoHomeSupplier = autoHomeSupplier;
-        this.dropperServoSupplier = dropperServoSupplier;
+        this.specimenServoSupplier = specimenServoSupplier;
         this.robotLiftToZeroSupplier = robotLiftToZeroSupplier;
     }
 
@@ -46,7 +46,7 @@ public class IntakeTeleopSettings2 {
         return new IntakeTeleopSettings2(
                 () -> gamepad.right_bumper ? -1 : gamepad.left_bumper ? 1 : 0,  // sweepSpeedSupplier
                 () -> gamepad.a ? -1 : gamepad.y ? 1 : 0, // sweepLiftSupplier
-                () -> gamepad.b ? -1 : gamepad.x ? 1 : 0, // horizontal SlideSupplier -1 = in
+                () -> gamepad.x ? -1 : gamepad.b ? 1 : 0, // horizontal SlideSupplier -1 = in
                 () -> gamepad2.a ? 1 : gamepad2.b ? -1 : 0, // bucketLiftSupplier
                 () -> gamepad2.x ? 1 : 0, // robotLiftSupplier
                 () -> 0, // robotLift0Supplier
@@ -54,7 +54,7 @@ public class IntakeTeleopSettings2 {
                 () -> gamepad.dpad_left ? -1 : gamepad.dpad_right ? 1 : 0, // rotationServoSupplier
                 () -> gamepad2.left_stick_x, // strafeSpeedSupplier
                 new EdgeSupplier(() -> gamepad.back).getRisingEdgeSupplier(), // autoHomeSupplier
-                () -> gamepad2.dpad_right ? 1 : gamepad2.dpad_left ? -1 : 0, // dropperServoSupplier
+                () -> gamepad2.dpad_right ? 1 : gamepad2.dpad_left ? -1 : 0, // specimenServoSupplier
                 () -> gamepad2.right_bumper ? 1 : 0 // robotLiftToZeroSupplier
         );
     }

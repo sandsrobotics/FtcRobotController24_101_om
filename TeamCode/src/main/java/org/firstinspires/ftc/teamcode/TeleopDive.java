@@ -63,7 +63,6 @@ public class TeleopDive extends LinearOpMode {
 
         Intake2 intake = new Intake2(robot);
         new IntakeTeleop2(intake);
-
         robot.init();
 
         while (!isStarted()) {
