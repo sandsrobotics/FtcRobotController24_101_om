@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.lib;
+package org.firstinspires.ftc.teamcode.lib.i2c;
 
 import android.graphics.Color;
 
+import com.qualcomm.hardware.lynx.LynxI2cDeviceSynch;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerNotifier;
 import com.qualcomm.robotcore.hardware.I2cAddr;
@@ -10,11 +11,14 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynchSimple;
 import com.qualcomm.robotcore.hardware.I2cWaitControl;
 import com.qualcomm.robotcore.hardware.configuration.annotations.DeviceProperties;
 import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
+import com.qualcomm.robotcore.util.RobotLog;
+
+import java.lang.reflect.Field;
 
 import androidx.annotation.ColorInt;
 
 @I2cDeviceType()
-@DeviceProperties(name = "QWIIC LED Stick LK", description = "Sparkfun QWIIC LED Stick", xmlTag = "QWIIC_LED_STICK_LK")
+@DeviceProperties(name = "QWIIC LED Stick LK", description = "Sparkfun QWIIC LED Stick LK", xmlTag = "QWIIC_LED_STICK_LK")
 public class QwiicLEDStickLK extends I2cDeviceSynchDevice<I2cDeviceSynchSimple> implements OpModeManagerNotifier.Notifications {
 
     private enum Commands {
@@ -250,10 +254,24 @@ public class QwiicLEDStickLK extends I2cDeviceSynchDevice<I2cDeviceSynchSimple> 
 
     private final static I2cAddr ADDRESS_I2C_DEFAULT = I2cAddr.create7bit(0x23);
 
+    private static final String TAG = "QwiicLED";
+
     public QwiicLEDStickLK(I2cDeviceSynchSimple deviceClient) {
         super(deviceClient, true);
 
         this.deviceClient.setI2cAddress(ADDRESS_I2C_DEFAULT);
+
+        /* Attempt to set the I2C speed for this channel to 400 kHz */
+        try {
+            Field field = getField(this.getClass(), "deviceClient");
+            field.setAccessible(true);
+            LynxI2cDeviceSynch device1 = (LynxI2cDeviceSynch) field.get(this);
+            device1.setBusSpeed(LynxI2cDeviceSynch.BusSpeed.FAST_400K);
+            RobotLog.vv(TAG, device1.getDeviceName()+" > "+device1.getUserConfiguredName()+" > "+device1.getConnectionInfo());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
         super.registerArmingStateCallback(false);
     }
 
@@ -270,6 +288,20 @@ public class QwiicLEDStickLK extends I2cDeviceSynchDevice<I2cDeviceSynchSimple> 
     @Override
     public void onOpModePostStop(OpMode opMode) {
         turnAllOff();
+    }
+
+    public static Field getField(Class clazz, String fieldName) {
+        try {
+            Field f = clazz.getDeclaredField(fieldName);
+            f.setAccessible(true);
+            return f;
+        } catch (NoSuchFieldException e) {
+            Class superClass = clazz.getSuperclass();
+            if (superClass != null) {
+                return getField(superClass, fieldName);
+            }
+        }
+        return null;
     }
 
 }

@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.intake2.Intake2;
+import org.firstinspires.ftc.teamcode.parts.intake2.IntakeTeleop2;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.XRelativeSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolverSettings;
@@ -76,6 +77,7 @@ public class AutoTest2024 extends LinearOpMode{
         pt.positionSourceId = Pinpoint.class;
         positionSolver = new PositionSolver(drive); // removed so it won't rotate 90deg clockwise
         DecimalFormat df = new DecimalFormat("#0.0");
+
         robot.init();
 
         while (!isStarted()) {
@@ -121,32 +123,38 @@ public class AutoTest2024 extends LinearOpMode{
         Vector3 beforethirdsample = new Vector3(44.5, -11.75, 180);
         Vector3 atthirdsample = new Vector3(61, -11.75, 180);
         Vector3 observationzone3 = new Vector3(61, -52.5, 180);
+        Vector3 beforespecimen2 = new Vector3(46, -52.5, 180);
+        Vector3 rotationbeforespecimen2 = new Vector3(46, -52.5, 90);
+        Vector3 atspecimen2 = new Vector3(46, -52.5, 180);
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
         autoTasks.addStep(()-> intake.setHorizontalSlidePosition(-1));
         positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
         autoTasks.addDelay(2000);
         positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
-//        autoTasks.addDelay(2000);
+        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(rightbeforesample, autoTasks);
-//        autoTasks.addDelay(2000);
         positionSolver.addMoveToTaskEx(atfirstsample, autoTasks);
-//        autoTasks.addDelay(2000);
         positionSolver.addMoveToTaskEx(observationzone1, autoTasks);
-//        autoTasks.addDelay(2000);
+
         positionSolver.addMoveToTaskEx(beforesecondsample, autoTasks);
-//        autoTasks.addDelay(2000);
         positionSolver.addMoveToTaskEx(atsecondsample, autoTasks);
-//        autoTasks.addDelay(2000);
         positionSolver.addMoveToTaskEx(observationzone2, autoTasks);
-//        autoTasks.addDelay(2000);
         positionSolver.addMoveToTaskEx(beforethirdsample, autoTasks);
-//        autoTasks.addDelay(2000);
         positionSolver.addMoveToTaskEx(atthirdsample, autoTasks);
-//        autoTasks.addDelay(2000);
         positionSolver.addMoveToTaskEx(observationzone3, autoTasks);
-//        autoTasks.addDelay(2000);
+    }
+
+    private void testAuto2(TimedTask autoTasks) {
+        Vector3 specimenbar = new Vector3(11.75, -32.75, -90);
+        Vector3 afterfirstredbar = new Vector3(36, -40, -90);
+        Vector3 specimenpickup = new Vector3(45, -60.5, 90);
 
 
-
+        autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1));
+        positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
+        positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
+        positionSolver.addMoveToTaskEx(specimenpickup, autoTasks);
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
+        //intake.tasks.startAutoSpecimenPickup();
     }
 }

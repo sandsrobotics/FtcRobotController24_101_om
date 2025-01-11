@@ -3,6 +3,8 @@ package om.self.ezftc.utils.hardware.servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.lib.ServoSSR;
+
 import om.self.ezftc.utils.hardware.Valuable;
 
 public class ServoSettings {
@@ -31,6 +33,12 @@ public class ServoSettings {
 
     public Servo makeServo(HardwareMap hardwareMap){
         Servo servo = hardwareMap.get(Servo.class, number.value);
+        updateServo(servo);
+        return servo;
+    }
+
+    public ServoSSR makeServoSSR(HardwareMap hardwareMap){
+        ServoSSR servo = new ServoSSR(hardwareMap.get(Servo.class, number.value));
         updateServo(servo);
         return servo;
     }

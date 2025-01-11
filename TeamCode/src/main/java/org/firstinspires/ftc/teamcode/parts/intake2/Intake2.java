@@ -22,7 +22,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     private final EdgeConsumer homingBucketZero = new EdgeConsumer();
     protected Drive drive;
     private float strafePower = 0;
-    protected Intake2Tasks tasks;
+    public Intake2Tasks tasks;
     protected PositionTracker pt;
 
     //***** Constructors *****
@@ -67,6 +67,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public void incrementIntakeUpDown(int direction) {
+        //TODO: fix this so it doesn't take these huge numbers and divide them down
         double adjustment = 0.01 * Math.signum(direction);
         currentIntakeHeightPos = Math.max(
                 getSettings().intakeArmMin,
@@ -75,6 +76,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
                         currentIntakeHeightPos + adjustment
                 )
         );
+        //TODO: why do we need this IF condition?
         if (direction == 2007) {
             currentIntakeHeightPos = 0;
         }
@@ -127,7 +129,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
                 tasks.startAutoBucketLift();
                 break;
             case -1: // Move to minimum position
-                tasks.startAutoBucketDropper();
+                // check to make sure bucket is up clear of intake first
+                if(getHardware().bucketLiftMotor.getCurrentPosition()>500) tasks.startAutoBucketDropper();
                 break;
         }
     }
@@ -199,22 +202,10 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         setBucketLiftPosition(control.bucketLiftPosition);
         moveRobotLiftToZero(control.robotLiftToZero);
         setSpecimenServoPosition(control.specimenServoPosition);
-
-        //Todo: Lift tower up and down, bucket disabled near bottom enabled and positioned near the top
-        // 1) below say 400 bucket disabled pwmDisable()
-        // 2) button:  move bucket lift up after a (400 ish) pwmEnable() bucket and rotate to be level with floor
-        // 3) another button: - tip bucket up to deliver
-        // 4) return bucket rotation to low angle above 400
-        // 5) at 400 disable bucket servo pwmDisable()
-        // 5) lower bucket lift to zero
-
-        //Todo: Slide in/out infinite positions
+        setRobotLiftPosition(control.robotliftPosition, control.robotlift0Position, control.robotlifthangPosition);
 
         //Todo: raise robot lift hooks ready height above low bar
         //Todo: lower robot lift hooks just enough to lift robot
-
-        // Note:  getHardware().dropperServo.getController().pwmDisable(); .pwmEnable on the way up
-
 
         // Check intake height and adjust rotation servo
         if (currentIntakeHeightPos >= 0.3) {
@@ -226,7 +217,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
         strafePower = control.strafePower;
         //Todo: test code needs control refactoring - rearrange controller A and B to suit drivers
-        setRobotLiftPosition(control.robotliftPosition, control.robotlift0Position, control.robotlifthangPosition);
+
         homingBucketZero.accept(!getHardware().bucketLiftZeroSwitch.getState());
         currentLiftPos = getHardware().robotLiftMotor.getCurrentPosition(); //0.32
         parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);

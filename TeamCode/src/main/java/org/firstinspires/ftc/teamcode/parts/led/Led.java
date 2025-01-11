@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.parts.led;
 import android.graphics.Color;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.firstinspires.ftc.teamcode.lib.QwiicLEDStickLK;
+import org.firstinspires.ftc.teamcode.lib.i2c.QwiicLEDStickLK;
 
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.LoopedPartImpl;

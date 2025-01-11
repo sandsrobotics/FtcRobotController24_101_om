@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.lib.QwiicLEDStickLK;
+import org.firstinspires.ftc.teamcode.lib.i2c.QwiicLEDStickLK;
 @Disabled
 @TeleOp (name="ZZ_TestBot_LED_CS", group="Test")
 public class ZZ_TestBot_LED_CS extends LinearOpMode {

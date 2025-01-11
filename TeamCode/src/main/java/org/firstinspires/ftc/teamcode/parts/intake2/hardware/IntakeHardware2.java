@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.lib.ServoSSR;
+
 import om.self.ezftc.utils.hardware.motor.MotorSettings;
 import om.self.ezftc.utils.hardware.servo.ServoSettings;
 
@@ -24,12 +27,12 @@ public class IntakeHardware2 {
     public final DigitalChannel robotLiftZeroSwitch;
     public final DigitalChannel bucketLiftZeroSwitch;
     public final Servo dropperServo;
-    public final Servo specimenServo;
+    public final ServoSSR specimenServo;
 
     public IntakeHardware2(DcMotorEx bucketLiftMotor, DcMotorEx robotLiftMotor, Servo sliderServoLeft,
                            Servo sliderServoRight, Servo tiltServoLeft, Servo tiltServoRight, Servo rotationServo,
                            CRServo intakeWheelServoLeft, CRServo intakeWheelServoRight, DigitalChannel liftZeroSwitch,
-                           DigitalChannel bucketLiftZeroSwitch, Servo dropperServo, Servo specimenServo) {
+                           DigitalChannel bucketLiftZeroSwitch, Servo dropperServo, ServoSSR specimenServo) {
         this.bucketLiftMotor = bucketLiftMotor;
         this.robotLiftMotor = robotLiftMotor;
         this.sliderServoLeft = sliderServoLeft;
@@ -77,7 +80,7 @@ public class IntakeHardware2 {
                 bucketLiftZeroSwitch,
                 robotLiftZeroSwitch,
                 dropperServoSettings.makeServo(hardwareMap),
-                specimenServoSettings.makeServo(hardwareMap)
+                specimenServoSettings.makeServoSSR(hardwareMap)
         );
     }
 }
