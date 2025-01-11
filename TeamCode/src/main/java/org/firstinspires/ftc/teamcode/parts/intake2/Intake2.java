@@ -117,9 +117,13 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             case 1: // Open position
                 tasks.startAutoSpecimenPickup();
                 break;
-            case -1: // Close position
+            case 2: // Close position
+                getHardware().bucketLiftMotor.setTargetPosition(getSettings().specimenHangPosition);
+                break;
+            case -1: // Open position
                 tasks.startAutoSpecimenHang();
                 break;
+
         }
     }
 
@@ -201,7 +205,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
         setBucketLiftPosition(control.bucketLiftPosition);
         moveRobotLiftToZero(control.robotLiftToZero);
-        setSpecimenServoPosition(control.specimenServoPosition);
+        getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition);
         setRobotLiftPosition(control.robotliftPosition, control.robotlift0Position, control.robotlifthangPosition);
 
         //Todo: raise robot lift hooks ready height above low bar
