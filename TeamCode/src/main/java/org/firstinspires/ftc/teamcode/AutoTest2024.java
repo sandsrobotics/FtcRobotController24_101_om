@@ -5,6 +5,8 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
@@ -27,7 +29,7 @@ import om.self.task.other.TimedTask;
 import static om.self.ezftc.utils.Constants.tileSide;
 
 @Config
-@Autonomous(name="1 Josh AutoTest2024", group="Test")
+@TeleOp(name="1 AutoTest2024", group="Test")
 public class AutoTest2024 extends LinearOpMode{
     public Function<Vector3, Vector3> transformFunc;
     public Vector3 customStartPos;
@@ -108,9 +110,43 @@ public class AutoTest2024 extends LinearOpMode{
     }
 
     private void testAuto(TimedTask autoTasks) {
-        Vector3 redbar = new Vector3(11.75, -34, -90);
-        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.slowSettings));
+        Vector3 specimenbar = new Vector3(11.75, -32.75, -90);
+        Vector3 afterfirstredbar = new Vector3(36, -40, -90);
+        Vector3 rightbeforesample = new Vector3(36, -11.75, -90);
+        Vector3 atfirstsample = new Vector3(44.5, -11.75, 180);
+        Vector3 observationzone1 = new Vector3(44.5, -52.5, 180);
+        Vector3 beforesecondsample = new Vector3(44.5, -11.75, 180);
+        Vector3 atsecondsample = new Vector3(54.5, -11.75, 180);
+        Vector3 observationzone2 = new Vector3(54.5, -52.5, 180);
+        Vector3 beforethirdsample = new Vector3(44.5, -11.75, 180);
+        Vector3 atthirdsample = new Vector3(61, -11.75, 180);
+        Vector3 observationzone3 = new Vector3(61, -52.5, 180);
+        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
         autoTasks.addStep(()-> intake.setHorizontalSlidePosition(-1));
-        positionSolver.addMoveToTaskExNoWait(redbar, autoTasks);
+        positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
+        autoTasks.addDelay(2000);
+        positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
+//        autoTasks.addDelay(2000);
+        positionSolver.addMoveToTaskEx(rightbeforesample, autoTasks);
+//        autoTasks.addDelay(2000);
+        positionSolver.addMoveToTaskEx(atfirstsample, autoTasks);
+//        autoTasks.addDelay(2000);
+        positionSolver.addMoveToTaskEx(observationzone1, autoTasks);
+//        autoTasks.addDelay(2000);
+        positionSolver.addMoveToTaskEx(beforesecondsample, autoTasks);
+//        autoTasks.addDelay(2000);
+        positionSolver.addMoveToTaskEx(atsecondsample, autoTasks);
+//        autoTasks.addDelay(2000);
+        positionSolver.addMoveToTaskEx(observationzone2, autoTasks);
+//        autoTasks.addDelay(2000);
+        positionSolver.addMoveToTaskEx(beforethirdsample, autoTasks);
+//        autoTasks.addDelay(2000);
+        positionSolver.addMoveToTaskEx(atthirdsample, autoTasks);
+//        autoTasks.addDelay(2000);
+        positionSolver.addMoveToTaskEx(observationzone3, autoTasks);
+//        autoTasks.addDelay(2000);
+
+
+
     }
 }
