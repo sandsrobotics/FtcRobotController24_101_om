@@ -54,14 +54,15 @@ public class Intake2Tasks {
         autoBucketLiftTask.addStep(() -> {
             intake.incrementIntakeUpDown(2007); //CHANGE NUMBER. NUMBER IF STATEMENT IS SET IN INCREMENTINTAKEUPDOWN
         });
-        autoBucketLiftTask.addDelay(1500);
+        autoBucketLiftTask.addDelay(500);
         autoBucketLiftTask.addStep(() -> {
-            intake.incrementIntakeUpDown(0);
+            intake.incrementIntakeUpDown(2007);
             intake.getHardware().dropperServo.getController().pwmDisable();
         });
         autoBucketLiftTask.addStep( ()-> {
             intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().maxLiftPosition);
-        }, () -> intake.getHardware().bucketLiftMotor.getCurrentPosition() > 600);
+        });
+        autoBucketLiftTask.addDelay(1000);
         autoBucketLiftTask.addStep( ()->{
             intake.getHardware().dropperServo.getController().pwmEnable();
             intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin);
@@ -74,11 +75,11 @@ public class Intake2Tasks {
             intake.getHardware().dropperServo.getController().pwmEnable();
             intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMax);
         });
-        autoBucketDropperTask.addDelay(1500);
+        autoBucketDropperTask.addDelay(500);
         autoBucketDropperTask.addStep( ()-> {
             intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin);
         }, () -> intake.getHardware().dropperServo.getPosition() == intake.getSettings().dropperServoMin);
-        autoBucketDropperTask.addDelay(500);
+        autoBucketDropperTask.addDelay(800);
         autoBucketDropperTask.addStep(() -> {
             intake.getHardware().dropperServo.getController().pwmDisable();
         });
@@ -90,6 +91,7 @@ public class Intake2Tasks {
     public void constructAutoSpecimenPickup() {
         autoSpecimenPickupTask.autoStart = false;
         autoSpecimenPickupTask.addStep(() -> {
+            intake.incrementIntakeUpDown(2007);
             intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition);
         });
         autoSpecimenPickupTask.addDelay(1000);
@@ -99,19 +101,6 @@ public class Intake2Tasks {
     }
     public void constructAutoSpecimenHang() {
         autoSpecimenHangTask.autoStart = false;
-        Vector3 currentpos = intake.pt.getCurrentPosition();
-        autoSpecimenHangTask.addStep(() -> {
-            intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().specimenHangPosition);
-        });
-
-        autoSpecimenHangTask.addDelay(1000);
-
-        autoSpecimenHangTask.addStep(() -> {
-            currentpos.addY(-2);
-            intake.drive.moveRobot(currentpos);
-        });
-
-        autoSpecimenHangTask.addDelay(1000);
 
         autoSpecimenHangTask.addStep( ()-> {
             intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().specimenServoOpenHeight);
