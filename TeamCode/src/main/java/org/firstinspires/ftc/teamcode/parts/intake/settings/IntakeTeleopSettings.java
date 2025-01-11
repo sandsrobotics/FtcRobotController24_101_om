@@ -9,13 +9,16 @@ public class IntakeTeleopSettings {
     public final Supplier<Integer> sweepLiftSupplier;
     public final Supplier<Integer> sweepSlideSupplier;
     public final Supplier<Integer> bucketLiftSupplier;
+    public final Supplier<Integer> intakeSupplier;
 
     public IntakeTeleopSettings(Supplier<Integer> sweepSpeedSupplier, Supplier<Integer> sweepLiftSupplier,
-                                Supplier<Integer> sweepSlideSupplier, Supplier<Integer> bucketLiftSupplier){
+                                Supplier<Integer> sweepSlideSupplier, Supplier<Integer> bucketLiftSupplier,
+                                Supplier<Integer> intakeSupplier){
         this.sweepSpeedSupplier = sweepSpeedSupplier;
         this.sweepLiftSupplier = sweepLiftSupplier;
         this.sweepSlideSupplier = sweepSlideSupplier;
         this.bucketLiftSupplier = bucketLiftSupplier;
+        this.intakeSupplier = intakeSupplier;
     }
 
     public static IntakeTeleopSettings makeDefault(Robot robot){
@@ -27,7 +30,8 @@ public class IntakeTeleopSettings {
             () -> gamepad.y ? 1 : gamepad.a ? 2 : 0, //sweep lift supplier
             () -> gamepad.x ? 0 : gamepad.b ? 1 : -1, //sweep slide supplier
 //            () -> gamepad.dpad_left ? -1 : gamepad.dpad_right ? 1 : 0, // sweep slide Supplier
-            () -> gamepad.dpad_down ? -1 : gamepad.dpad_up ? 1 : 0 // bucketLift Supplier
+            () -> gamepad.dpad_down ? -1 : gamepad.dpad_up ? 1 : 0, // bucketLift Supplier
+            () -> gamepad2.a ? 1 : gamepad2.b ? -1 : 0 //intake deploy/safe
         );
     }
 }

@@ -9,9 +9,9 @@ import om.self.ezftc.core.part.ControllablePart;
 
 public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardware, IntakeControl> {
     public int slideTargetPosition;
+    public int liftTargetPosition;
     double motorPower = 0;
     private int currentSlidePos;
-    //private int currentLiftPos;
     private int currentBucketPos;
     private IntakeTasks tasks;
     //***** Constructors *****
@@ -60,9 +60,9 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             setSlidePosition(getSlidePosition() + (int) power);
     }
 
-    public void sweepWithPower(double power) {
-        getHardware().intakeFlipperServo.setPower(power);
-    }
+//    public void sweepWithPower(double power) {
+//        getHardware().intakeFlipperServo.setPower(power);
+//    }
 
     public void setSlidePosition(int position) {
         setSlidePositionUnsafe(Math.min(getSettings().maxSlidePosition, Math.max(getSettings().minSlidePosition, position)));
@@ -93,8 +93,12 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         getHardware().bucketLiftMotor.setTargetPosition(position);
     }
 
-    public boolean isLiftInTolerance() {
+    public boolean isSlideInTolerance() {
         return Math.abs(slideTargetPosition - getSlidePosition()) <= getSettings().tolerance;
+    }
+
+    public boolean isLiftInTolerance() {
+        return Math.abs(liftTargetPosition - getBucketLiftPosition()) <= getSettings().tolerance;
     }
 
     public int getSlidePosition() {
@@ -105,22 +109,24 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         return currentBucketPos;
     }
 
-    public void setSweepPosition(int position) {
-        switch (position) {
-            case 1:
-                getHardware().tiltServo.setPosition(getSettings().tiltServoDownPosition);
-                break;
-            case 2:
-                getHardware().tiltServo.setPosition(getSettings().tiltServoUpPosition);
-                break;
-        }
-    }
+//    public void setSweepPosition(int position) {
+//        switch (position) {
+//            case 1:
+//                getHardware().tiltServo.setPosition(getSettings().tiltServoDownPosition);
+//                break;
+//            case 2:
+//                getHardware().tiltServo.setPosition(getSettings().tiltServoUpPosition);
+//                break;
+//        }
+//    }
 
     @Override
     public void onInit() {
         setMotorsToRunConfig();
         tasks = new IntakeTasks(this, parent);
         tasks.constructAutoHome();
+        tasks.constructSafeTask();
+        tasks.constructPrepareToIntakeTask();
     }
 
     @Override
@@ -129,8 +135,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 
     @Override
     public void onRun(IntakeControl control) {
-        sweepWithPower(control.sweeperPower);
-        setSweepPosition(control.sweepLiftPosition);
+//        sweepWithPower(control.sweeperPower);
+//        setSweepPosition(control.sweepLiftPosition);
         changeSlidePosition(control.sweepSlidePosition);
         setBucketLiftPosition(control.bucketLiftPosition);
 
