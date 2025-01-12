@@ -147,7 +147,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
            getHardware().v_SlideMotor.setTargetPosition(2800);
         }
         else if (position==-1) {
-            getHardware().v_SlideMotor.setTargetPosition(0);
+            getHardware().v_SlideMotor.setTargetPosition(20);
             if (getSettings().v_Slide_pos < getV_Slide_Max()) {
                 getSettings().v_Slide_pos = getSettings().v_Slide_pos - 30;
             }
