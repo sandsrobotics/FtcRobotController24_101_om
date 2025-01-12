@@ -20,7 +20,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     //***** Constructors *****
     public Intake(Robot parent) {
         super(parent, "Slider", () -> new IntakeControl(0, 0, 0,
-                0, 0, 0));
+                0, 0, 0,0));
         setConfig(
                 IntakeSettings.makeDefault(),
                 IntakeHardware.makeDefault(parent.opMode.hardwareMap)
@@ -29,7 +29,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 
     public Intake(Robot parent, IntakeSettings settings, IntakeHardware hardware) {
         super(parent, "slider", () -> new IntakeControl(0, 0, 0,
-                0, 0, 0));
+                0, 0, 0,0));
         setConfig(settings, hardware);
     }
 
@@ -117,21 +117,50 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             getHardware().specimanClawServo.setPosition(getSpecimanClawMin());
         }
     }
+    public double getIntakeAngleMin() {
+        return  getSettings().intakeAngleMin;
+
+    }
+    public double getIntakeAngleMax() {
+        return getSettings().intakeAngleMax;
+    }
+    private void setIntakeAngle(int position) {
+        if (position==1) {
+            getHardware().intakeAngleServo.setPosition(getIntakeAngleMin());
+
+        }
+        else if (position==-1) {
+            getHardware().intakeAngleServo.setPosition(getIntakeAngleMax());
+        }
+    }
     public int getV_Slide_Max() {
         return getSettings().v_Slide_Max;
     }
     public int getV_Slide_Min() {
         return getSettings().v_Slide_Min;
     }
-    private void setV_SlideMotor(float position) {
-        if (position==-1) {
-            getHardware().v_SlideMotor.setTargetPosition(getV_Slide_Min());
+    private void setV_Slide(int position) {
+        if (position == 2) {
+            getHardware().v_SlideMotor.setTargetPosition(50);
+        }
+        else if (position==-2) {
+           getHardware().v_SlideMotor.setTargetPosition(2800);
+        }
+        else if (position==-1) {
+            getHardware().v_SlideMotor.setTargetPosition(0);
+            if (getSettings().v_Slide_pos < getV_Slide_Max()) {
+                getSettings().v_Slide_pos = getSettings().v_Slide_pos - 30;
+            }
         } else if ( position == 1) {
-            getHardware().v_SlideMotor.setTargetPosition(getV_Slide_Max());
+            getHardware().v_SlideMotor.setTargetPosition(1440);
+            if (getSettings().v_Slide_pos > getV_Slide_Min()) {
+                getSettings().v_Slide_pos = 1440;
+
         }
     }
-    public int getBucketLiftPosition() {
-        return currentBucketPos;
+
+    //public int getBucketLiftPosition() {
+       // return currentBucketPos;
     }
 
 
@@ -165,6 +194,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         changeSlidePosition(control.sweepSlidePosition);
         setBucketLiftPosition(control.bucketLiftPosition);
         setSpecimanClaw(control.specimanClawSupplier);
+        setV_Slide((int) control.v_SlideSupplier);
+        setIntakeAngle((int) control.intakeAngleSupplier);
 
         //slideWithPower(control.sweepSlidePosition,false);
 

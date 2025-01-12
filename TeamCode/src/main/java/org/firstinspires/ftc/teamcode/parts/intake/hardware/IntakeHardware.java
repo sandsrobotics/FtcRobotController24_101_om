@@ -19,16 +19,19 @@ public class IntakeHardware {
     public final CRServo intakeFlipperServo;
     public final DigitalChannel bucketLiftZeroSwitch;
     public final Servo specimanClawServo;
+    public final Servo intakeAngleServo;
 
 
     public IntakeHardware(DcMotorEx v_SlideMotor, DcMotorEx slideMotor, Servo tiltServo,
-                          CRServo intakeFlipperServo, DigitalChannel bucketLiftZeroSwitch, Servo specimanClaw) {
+                          CRServo intakeFlipperServo, DigitalChannel bucketLiftZeroSwitch, Servo specimanClaw,
+                          Servo intakeAngleServo) {
         this.v_SlideMotor = v_SlideMotor;
         this.horizSliderMotor = slideMotor;
         this.tiltServo = tiltServo;
         this.intakeFlipperServo = intakeFlipperServo;
         this.bucketLiftZeroSwitch = bucketLiftZeroSwitch;
         this.specimanClawServo = specimanClaw;
+        this.intakeAngleServo = intakeAngleServo;
     }
 //beans
     public static IntakeHardware makeDefault(HardwareMap hardwareMap)  {
@@ -39,6 +42,7 @@ public class IntakeHardware {
         DigitalChannel bucketLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital2");
         bucketLiftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
         ServoSettings specimanClawServoSettings = new ServoSettings(ServoSettings.Number.ONE, Servo.Direction.FORWARD);
+        ServoSettings intakeAngleServoSettings = new ServoSettings(ServoSettings.Number.TWO, Servo.Direction.FORWARD);
 
 
         return new IntakeHardware(
@@ -47,7 +51,8 @@ public class IntakeHardware {
                 tiltServoSettings.makeServo(hardwareMap),
                 intakeFlipperServoSettings.makeCRServo(hardwareMap),
                 bucketLiftZeroSwitch,
-                specimanClawServoSettings.makeServo(hardwareMap)
+                specimanClawServoSettings.makeServo(hardwareMap),
+                intakeAngleServoSettings.makeServo(hardwareMap)
         );
     }
 }
