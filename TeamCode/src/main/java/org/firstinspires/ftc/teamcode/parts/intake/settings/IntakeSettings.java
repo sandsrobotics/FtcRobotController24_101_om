@@ -49,6 +49,7 @@ public class IntakeSettings {
 
     public final int positionLiftMin             = 10;
     public final int positionLiftMax             = 3000;  //4200; //4350;
+    public final int positionLiftReady           = 1500;
     public final int positionLiftGetSpecimen     = 10;     //todo: finalize number
     public final int positionLiftHangReady       = 1700;  //2500;   //todo: get number
     public final int positionLiftHangRelease     = 1400;  //2000;   //todo: get number

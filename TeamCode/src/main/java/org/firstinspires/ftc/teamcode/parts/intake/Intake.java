@@ -127,6 +127,10 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         tasks.constructAutoHome();
         tasks.constructSafeTask();
         tasks.constructPrepareToIntakeTask();
+        tasks.constructTransfer();
+        tasks.constructPrepareToDepositTask();
+        tasks.constructDepositTask();
+        tasks.constructAutoIntakeTask();
     }
 
     @Override
