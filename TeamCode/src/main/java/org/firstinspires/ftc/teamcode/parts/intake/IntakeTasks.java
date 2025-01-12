@@ -37,6 +37,10 @@ public class IntakeTasks {
         autoIntakeTask = new TimedTask(TaskNames.autoIntake, movementTask);
     }
 
+    public void startAutoHome() { autoHomeTask.reset(); }
+    public void startPrepareToIntake() { prepareToIntakeTask.restart(); }
+    public void startSafe() { safeTask.restart(); }
+
     public void constructPrepareToIntakeTask() {
         prepareToIntakeTask.autoStart = false;
         // todo: kill other related tasks
@@ -105,10 +109,6 @@ public class IntakeTasks {
             intake.slideTargetPosition = 0;
             setMotorsToRunConfig();
         });
-    }
-
-    public void startAutoHome() {
-        autoHomeTask.restart();
     }
 
     private void setSlideToHomeConfig() {
