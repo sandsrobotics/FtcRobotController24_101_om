@@ -102,10 +102,18 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public void setIntakePosition(int position) {
-        if (position == -1) { // safe
-            tasks.startSafe();
+        if (position == 2) { // safe
+            tasks.safeTask.restart();
         } else if ( position == 1) { // go up
-            tasks.startPrepareToIntake();
+            tasks.prepareToIntakeTask.restart();
+        }else if ( position == 3) { // go up
+            tasks.autoIntakeTask.restart();
+        }else if ( position == 4) { // go up
+            tasks.transferTask.restart();
+        }else if ( position == 5) { // go up
+            tasks.prepareToDepositTask.restart();
+        }else if ( position == 6) { // go up
+            tasks.depositTask.restart();
         }
     }
 

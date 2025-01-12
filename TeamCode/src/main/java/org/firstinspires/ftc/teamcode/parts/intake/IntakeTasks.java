@@ -9,19 +9,19 @@ import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
 
 public class IntakeTasks {
-    private final Group movementTask;
-    private final TimedTask autoHomeTask;
-    private final TimedTask prepareToIntakeTask;
-    private final TimedTask safeTask;
-    private final TimedTask transferTask;
-    private final TimedTask hangSpecimenTask;
-    private final TimedTask prepareToHangSpecimenTask;
-    private final TimedTask prepareToDepositTask;
-    private final TimedTask depositTask;
-    private final TimedTask autoIntakeTask;
-    private final TimedTask prepareToTransferTask;
-    private final TimedTask checkSampleTask;
-    private final TimedTask ejectBadSample;
+    public final Group movementTask;
+    public final TimedTask autoHomeTask;
+    public final TimedTask prepareToIntakeTask;
+    public final TimedTask safeTask;
+    public final TimedTask transferTask;
+    public final TimedTask hangSpecimenTask;
+    public final TimedTask prepareToHangSpecimenTask;
+    public final TimedTask prepareToDepositTask;
+    public final TimedTask depositTask;
+    public final TimedTask autoIntakeTask;
+    public final TimedTask prepareToTransferTask;
+    public final TimedTask checkSampleTask;
+    public final TimedTask ejectBadSample;
     private Intake intake;
     private Robot robot;
 
