@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.parts.intake;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake2.Intake2;
@@ -10,6 +11,14 @@ import om.self.task.other.TimedTask;
 public class IntakeTasks {
     private final Group movementTask;
     private final TimedTask autoHomeTask;
+    private final TimedTask prepareToIntakeTask;
+    private final TimedTask safeTask;
+    private final TimedTask transferTask;
+    private final TimedTask hangSpecimenTask;
+    private final TimedTask prepareToHangSpecimenTask;
+    private final TimedTask prepareToDepositTask;
+    private final TimedTask depositTask;
+    private final TimedTask autoIntakeTask;
     private Intake intake;
     private Robot robot;
 
@@ -17,8 +26,72 @@ public class IntakeTasks {
         this.intake = intake;
         this.robot = robot;
         movementTask = new Group("auto movement", intake.getTaskManager());
-        autoHomeTask = new TimedTask(org.firstinspires.ftc.teamcode.parts.intake2.Intake2Tasks.TaskNames.autoHome, movementTask);
+        autoHomeTask = new TimedTask(TaskNames.autoHome, movementTask);
+        prepareToIntakeTask = new TimedTask(TaskNames.prepareToIntake, movementTask);
+        safeTask = new TimedTask(TaskNames.safe, movementTask);
+        transferTask = new TimedTask(TaskNames.transfer, movementTask);
+        hangSpecimenTask = new TimedTask(TaskNames.hangSpecimen, movementTask);
+        prepareToHangSpecimenTask = new TimedTask(TaskNames.prepareToHangSpecimen, movementTask);
+        prepareToDepositTask = new TimedTask(TaskNames.prepareToDeposit, movementTask);
+        depositTask = new TimedTask(TaskNames.deposit, movementTask);
+        autoIntakeTask = new TimedTask(TaskNames.autoIntake, movementTask);
     }
+
+    public void constructPrepareToIntakeTask() {
+        prepareToIntakeTask.autoStart = false;
+        // todo: kill other related tasks
+        prepareToIntakeTask.addStep(() -> {
+                    intake.getHardware().flipper.setPosition(intake.getSettings().spintakeSafe);
+                    intake.getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                    intake.getHardware().horizSliderMotor.setTargetPosition(intake.getSettings().positionSlideStartIntake);
+                    intake.slideTargetPosition = intake.getSettings().positionSlideStartIntake;
+                    intake.getHardware().horizSliderMotor.setPower(1);
+                }, () ->
+                    intake.isSlideInTolerance()
+        );
+        prepareToIntakeTask.addStep(() -> {
+                    intake.getHardware().flipper.setPosition(intake.getSettings().spintakeAlmostFloor);
+                }, () ->
+                    intake.getHardware().flipper.isDone()
+        );
+    }
+
+    public void constructSafeTask() {
+        safeTask.autoStart = false;
+        safeTask.addStep( () -> {
+            intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen);
+            intake.getHardware().flipper.setPosition(intake.getSettings().spintakeParked);
+            intake.getHardware().chute.setPosition(intake.getSettings().chuteParked);
+            intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
+            intake.getHardware().horizSliderMotor.setTargetPosition(intake.getSettings().positionSlideMin);
+            intake.slideTargetPosition = intake.getSettings().positionSlideMin;
+            intake.getHardware().horizSliderMotor.setPower(1);
+            intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftMin);
+            intake.liftTargetPosition = intake.getSettings().positionLiftMin;
+            intake.getHardware().bucketLiftMotor.setPower(1);
+        }, () ->
+            intake.isSlideInTolerance() &&
+                    intake.isLiftInTolerance() &&
+                    intake.getHardware().flipper.isDone() &&
+                    intake.getHardware().chute.isDone()
+        );
+        safeTask.addStep( () -> {
+            intake.getHardware().flipper.disable();
+            intake.getHardware().chute.disable();
+                });
+    };
+
+
+//        autoBucketLiftTask.addStep( ()-> {
+//            intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().maxLiftPosition);
+//        }, () -> intake.getHardware().bucketLiftMotor.getCurrentPosition() > 600);
+                //setSpintakeServo(spintakeSafe)
+        //intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin);
+//        autoBucketDropperTask.addStep(() -> {
+//            intake.getHardware().dropperServo.getController().pwmEnable();
+//            intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMax);
+//        });
 
     public void constructAutoHome() {
         autoHomeTask.autoStart = false;
@@ -49,9 +122,23 @@ public class IntakeTasks {
         intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
+//    public static boolean isSlideInTolerance(int pos) {return Math.abs(motorSlide.getCurrentPosition() - pos) < toleranceSlide;}
+//    public static boolean isSlideInTolerance() {return isSlideInTolerance(slideTargetPosition);}
+//    public static boolean isLiftInTolerance(int pos) {return Math.abs(motorLift.getCurrentPosition() - pos) < toleranceLift;}
+//    public static boolean isLiftInTolerance() {return isLiftInTolerance(liftTargetPosition);}
+
     /***********************************************************************************/
     public static final class TaskNames {
         public final static String autoHome = "auto home";
+        public final static String prepareToIntake = "prepare to intake";
+        public final static String safe = "safe";
+        public final static String transfer = "transfer";
+        public final static String hangSpecimen = "hang specimen";
+        public final static String prepareToHangSpecimen = "prepare to hang specimen";
+        public final static String prepareToDeposit = "prepare to deposit";
+        public final static String deposit = "deposit";
+        public final static String autoIntake = "auto intake";
+//        public final static String
     }
 
     public static final class Events {
