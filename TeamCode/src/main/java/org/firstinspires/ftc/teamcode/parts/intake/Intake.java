@@ -16,7 +16,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     private IntakeTasks tasks;
     //***** Constructors *****
     public Intake(Robot parent) {
-        super(parent, "Slider", () -> new IntakeControl(0, 0, 0, 0));
+        super(parent, "Slider", () -> new IntakeControl(0, 0, 0, 0,0));
         setConfig(
                 IntakeSettings.makeDefault(),
                 IntakeHardware.makeDefault(parent.opMode.hardwareMap)
@@ -24,7 +24,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public Intake(Robot parent, IntakeSettings settings, IntakeHardware hardware) {
-        super(parent, "slider", () -> new IntakeControl(0, 0, 0, 0));
+        super(parent, "slider", () -> new IntakeControl(0, 0, 0, 0,0));
         setConfig(settings, hardware);
     }
 
@@ -101,6 +101,14 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         return Math.abs(liftTargetPosition - getBucketLiftPosition()) <= getSettings().tolerance;
     }
 
+    public void setIntakePosition(int position) {
+        if (position == -1) { // safe
+            tasks.startSafe();
+        } else if ( position == 1) { // go up
+            tasks.startPrepareToIntake();
+        }
+    }
+
     public int getSlidePosition() {
         return currentSlidePos;
     }
@@ -119,6 +127,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 //                break;
 //        }
 //    }
+
+
 
     @Override
     public void onInit() {
@@ -143,6 +153,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 //        setSweepPosition(control.sweepLiftPosition);
         changeSlidePosition(control.sweepSlidePosition);
         setBucketLiftPosition(control.bucketLiftPosition);
+        setIntakePosition(control.intakePosition);
 
         //slideWithPower(control.sweepSlidePosition,false);
 

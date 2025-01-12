@@ -176,4 +176,9 @@ public class AutoTest2024 extends LinearOpMode{
         positionSolver.addMoveToTaskEx(specimenpickup, autoTasks);
         autoTasks.addStep(() ->intake.tasks.startAutoSpecimenPickup());
     }
+
+    private void testBucketAuto(TimedTask autoTasks) {
+        Vector3 specimenpickup = new Vector3(45, -60.5, 90);
+        
+    }
 }
