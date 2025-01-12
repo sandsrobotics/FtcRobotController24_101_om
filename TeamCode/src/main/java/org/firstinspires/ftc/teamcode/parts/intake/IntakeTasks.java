@@ -9,16 +9,19 @@ import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
 
 public class IntakeTasks {
-    private final Group movementTask;
-    private final TimedTask autoHomeTask;
-    private final TimedTask prepareToIntakeTask;
-    private final TimedTask safeTask;
-    private final TimedTask transferTask;
-    private final TimedTask hangSpecimenTask;
-    private final TimedTask prepareToHangSpecimenTask;
-    private final TimedTask prepareToDepositTask;
-    private final TimedTask depositTask;
-    private final TimedTask autoIntakeTask;
+    public final Group movementTask;
+    public final TimedTask autoHomeTask;
+    public final TimedTask prepareToIntakeTask;
+    public final TimedTask safeTask;
+    public final TimedTask transferTask;
+    public final TimedTask hangSpecimenTask;
+    public final TimedTask prepareToHangSpecimenTask;
+    public final TimedTask prepareToDepositTask;
+    public final TimedTask depositTask;
+    public final TimedTask autoIntakeTask;
+    public final TimedTask prepareToTransferTask;
+    public final TimedTask checkSampleTask;
+    public final TimedTask ejectBadSample;
     private Intake intake;
     private Robot robot;
 
@@ -35,6 +38,9 @@ public class IntakeTasks {
         prepareToDepositTask = new TimedTask(TaskNames.prepareToDeposit, movementTask);
         depositTask = new TimedTask(TaskNames.deposit, movementTask);
         autoIntakeTask = new TimedTask(TaskNames.autoIntake, movementTask);
+        prepareToTransferTask = new TimedTask(TaskNames.prepareToTransfer, movementTask);
+        checkSampleTask = new TimedTask(TaskNames.checkSample, movementTask);
+        ejectBadSample = new TimedTask(TaskNames.ejectBadSample, movementTask);
     }
 
     public void startAutoHome() { autoHomeTask.reset(); }
@@ -45,6 +51,7 @@ public class IntakeTasks {
         prepareToIntakeTask.autoStart = false;
         // todo: kill other related tasks
         prepareToIntakeTask.addStep(() -> {
+                    safeTask.reset();
                     intake.getHardware().flipper.setPosition(intake.getSettings().spintakeSafe);
                     intake.getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
                     intake.getHardware().horizSliderMotor.setTargetPosition(intake.getSettings().positionSlideStartIntake);
@@ -63,6 +70,7 @@ public class IntakeTasks {
     public void constructSafeTask() {
         safeTask.autoStart = false;
         safeTask.addStep( () -> {
+            prepareToIntakeTask.reset();
             intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen);
             intake.getHardware().flipper.setPosition(intake.getSettings().spintakeParked);
             intake.getHardware().chute.setPosition(intake.getSettings().chuteParked);
@@ -85,6 +93,72 @@ public class IntakeTasks {
             intake.getHardware().chute.disable();
                 });
     };
+
+    public void constructTransfer() {
+        transferTask.autoStart = false;
+        transferTask.addStep( () -> {
+            safeTask.restart();
+            }, ()->
+            safeTask.isDone()
+        );
+        transferTask.addStep( () -> {
+            intake.getHardware().flipper.setPosition(intake.getSettings().spintakeParked);
+            intake.getHardware().chute.setPosition(intake.getSettings().chuteParked);
+            intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOut);
+        });
+        transferTask.addDelay(1500);
+        transferTask.addStep( () -> {
+            intake.getHardware().flipper.disable();
+            intake.getHardware().chute.disable();
+            intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
+        });
+    }
+    public void constructPrepareToDepositTask() {
+        prepareToDepositTask.autoStart = false;
+        prepareToDepositTask.addStep( () -> {
+            intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
+        }, ()->
+             intake.getHardware().spinner.isDone()
+                );
+        prepareToDepositTask.addStep( () -> {
+            intake.getHardware().chute.setPosition(intake.getSettings().chuteReady);
+            intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftReady);
+            intake.liftTargetPosition = intake.getSettings().positionLiftReady;
+            intake.getHardware().bucketLiftMotor.setPower(1);
+        }, ()->
+                intake.isLiftInTolerance()
+        );
+    }
+    public void constructDepositTask() {
+        depositTask.autoStart = false;
+        depositTask.addStep( () -> {
+            intake.getHardware().chute.setPosition(intake.getSettings().chuteReady);
+            intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftMax);
+            intake.liftTargetPosition = intake.getSettings().positionLiftMax;
+            intake.getHardware().bucketLiftMotor.setPower(1);
+        }, ()->intake.isLiftInTolerance() && intake.getHardware().chute.isDone()
+        );
+        depositTask.addStep( ()->{
+            intake.getHardware().chute.setPosition(intake.getSettings().chuteDeposit);
+        }, ()->intake.getHardware().chute.isDone()
+        );
+        depositTask.addDelay(500);
+        depositTask.addStep( () -> {
+            safeTask.restart();
+        });
+    }
+    public void constructAutoIntakeTask() {
+        autoIntakeTask.autoStart = false;
+        autoIntakeTask.addStep( ()->{
+            intake.getHardware().flipper.setPosition((intake.getSettings().spintakeAlmostFloor));
+            intake.getHardware().spinner.setPosition(intake.getSettings().spinnerIn);
+            //TODO: FINISH THIS TASSKSKKKKSKSK
+        });
+    }
+
+
 
 
 //        autoBucketLiftTask.addStep( ()-> {
@@ -138,6 +212,9 @@ public class IntakeTasks {
         public final static String prepareToDeposit = "prepare to deposit";
         public final static String deposit = "deposit";
         public final static String autoIntake = "auto intake";
+        public final static String checkSample = "check sample";
+        public final static String ejectBadSample = "eject the sample";
+        public final static String prepareToTransfer = "prepare the transfer";
 //        public final static String
     }
 
