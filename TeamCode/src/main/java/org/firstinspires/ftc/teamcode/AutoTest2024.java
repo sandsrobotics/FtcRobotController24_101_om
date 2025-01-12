@@ -68,7 +68,7 @@ public class AutoTest2024 extends LinearOpMode{
         intake = new Intake2(robot);
 
 //        Vector3 fieldStartPos = new Vector3(0,0,-90);
-        Vector3 fieldStartPos = new Vector3(0.5 * 23.5, -62, -90);
+        Vector3 fieldStartPos = new Vector3(14 + 3.0/8.0, -62, -90);
 
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
                 100, new Vector3(2,2,2), fieldStartPos);
@@ -178,6 +178,7 @@ public class AutoTest2024 extends LinearOpMode{
     }
 
     private void testBucketAuto(TimedTask autoTasks) {
+        Vector3 bucketstartposition = new Vector3(-14 - 3.0/8.0, -60.5, 90);
         Vector3 specimenpickup = new Vector3(45, -60.5, 90);
         
     }

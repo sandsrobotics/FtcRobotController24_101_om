@@ -67,6 +67,7 @@ public class TeleopDive extends LinearOpMode {
             telemetry.addData("position", pt.getCurrentPosition());
             telemetry.addData("tile position", fieldToTile(pt.getCurrentPosition()));
             telemetry.addData("Slide Position", intake.getSlidePosition());
+            telemetry.addData("H-Slide Position",intake.getHSlidePosition());
             telemetry.addData("time", System.currentTimeMillis() - start);
             telemetry.addData("Robot lift Position", intake.getRobotLiftPosition());
             telemetry.addData("Bucket Zero", intake.getHardware().bucketLiftZeroSwitch.getState());

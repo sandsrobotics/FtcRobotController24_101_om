@@ -55,6 +55,10 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         return currentSlidePos;
     }
 
+    public double getHSlidePosition() {
+        return currentIntakeHeightPos;
+    }
+
     public int getRobotLiftPosition() {
         return currentLiftPos;
     }
