@@ -19,6 +19,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     private double currentRotationPos = 0.0;
     private double currentHorizontalSlidePos = 0.781;
     private int currentLiftPos;
+    // Watch for bucket lift zero
     private final EdgeConsumer homingBucketZero = new EdgeConsumer();
     protected Drive drive;
     private float strafePower = 0;
@@ -194,6 +195,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         homingBucketZero.setOnRise(() -> {
             getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            getHardware().bucketLiftMotor.setTargetPosition(0);
+            slideTargetPosition = 0;
         });
     }
 
@@ -232,6 +235,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
         parent.opMode.telemetry.addData("bucketLiftMotor postion", getHardware().bucketLiftMotor.getCurrentPosition());
         currentSlidePos = getHardware().bucketLiftMotor.getCurrentPosition();
+        homingBucketZero.accept(getHardware().bucketLiftZeroSwitch.getState());
     }
 
     @Override
