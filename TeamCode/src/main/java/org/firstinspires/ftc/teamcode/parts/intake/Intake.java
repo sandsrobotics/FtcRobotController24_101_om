@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.parts.intake;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
 import org.firstinspires.ftc.teamcode.parts.intake2.Intake2Tasks;
@@ -201,6 +203,11 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 
         currentSlidePos = getHardware().horizSliderMotor.getCurrentPosition();
         currentBucketPos = getHardware().bucketLiftMotor.getCurrentPosition();
+
+        if (parent.buttonMgr.getState(2, ButtonMgr.Buttons.back, ButtonMgr.State.wasPressed)) {
+            // launch an eStop function?
+            // this could look less imposing by importing ButtonMgr.Buttons and ButtonMgr.State;
+        }
     }
 
     @Override

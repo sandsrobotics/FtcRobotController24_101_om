@@ -2,6 +2,8 @@ package om.self.ezftc.core;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
+
 import om.self.beans.core.BeanManager;
 import om.self.ezftc.core.part.PartParent;
 import om.self.task.core.Group;
@@ -37,6 +39,7 @@ public class Robot implements PartParent{
 
     //other things
     public final OpMode opMode;
+    public ButtonMgr buttonMgr;
 
     public Robot(OpMode opMode) {
         this.opMode = opMode;
@@ -53,6 +56,7 @@ public class Robot implements PartParent{
         endTaskManager.runCommand(Group.Command.START);
         //add bean!!
         getBeanManager().addBean(this, null, false, true);
+        buttonMgr = new ButtonMgr(opMode);
     }
 
     @Override
@@ -91,6 +95,7 @@ public class Robot implements PartParent{
     }
 
     public void run(){
+        buttonMgr.runLoop();
         taskManager.run();
     }
 
