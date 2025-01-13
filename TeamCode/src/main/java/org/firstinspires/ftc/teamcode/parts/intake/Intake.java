@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
 import org.firstinspires.ftc.teamcode.parts.intake2.Intake2Tasks;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
+import om.self.supplier.consumer.EdgeConsumer;
 
 public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardware, IntakeControl> {
     public int slideTargetPosition;
@@ -17,6 +18,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     private int currentSlidePos;
     private int currentBucketPos;
     private IntakeTasks tasks;
+    // Watch for bucket lift zero
+    private final EdgeConsumer homingVSlideZero = new EdgeConsumer();
     //***** Constructors *****
     public Intake(Robot parent) {
         super(parent, "Slider", () -> new IntakeControl(0, 0, 0, 0,0));
@@ -185,6 +188,13 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         tasks.constructPrepareToDepositTask();
         tasks.constructDepositTask();
         tasks.constructAutoIntakeTask();
+        //homing vslide lift setup
+        homingVSlideZero.setOnRise(() -> {
+            getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            getHardware().bucketLiftMotor.setTargetPosition(0);
+            slideTargetPosition = 0;
+        });
     }
 
     @Override
@@ -208,6 +218,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             // launch an eStop function?
             // this could look less imposing by importing ButtonMgr.Buttons and ButtonMgr.State;
         }
+        homingVSlideZero.accept(getHardware().bucketLiftZeroSwitch.getState());
     }
 
     @Override
