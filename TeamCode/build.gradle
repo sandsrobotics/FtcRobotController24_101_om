@@ -38,5 +38,5 @@ dependencies {
 
     //implementation 'org.openftc:apriltag:1.1.1'
     //implementation 'org.openftc:easyopencv:1.5.3'
-    implementation 'org.openftc:i2cdrivers:1.0.0'
+    //implementation 'org.openftc:i2cdrivers:1.0.0'   //LK: unnecessary qwiic led stick driver
 }
