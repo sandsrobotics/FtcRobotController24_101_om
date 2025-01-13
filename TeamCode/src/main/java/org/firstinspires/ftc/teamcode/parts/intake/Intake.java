@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.parts.intake;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
@@ -63,6 +64,39 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 //    public void sweepWithPower(double power) {
 //        getHardware().intakeFlipperServo.setPower(power);
 //    }
+
+
+    // Some new helper code
+
+    public void setSlidePosition(int position, double power) {
+        if (position < getSettings().positionSlideMin || position > getSettings().positionSlideMax) {  // something very wrong so bail
+            stopSlide();
+            return;
+        }
+        slideTargetPosition = position;
+        stopSlide();   // ???
+        getHardware().horizSliderMotor.setTargetPosition(slideTargetPosition);
+        getHardware().horizSliderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setSlidePower(power);
+    }
+    public void setLiftPosition(int position, double power) {
+        if (position < getSettings().positionLiftMin || position > getSettings().positionLiftMax) {  // something very wrong so bail
+            stopLift();
+            return;
+        }
+        liftTargetPosition = position;
+        stopLift();   // ???
+        getHardware().bucketLiftMotor.setTargetPosition(liftTargetPosition);
+        getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setLiftPower(power);
+    }
+
+    public void stopSlide() { getHardware().horizSliderMotor.setPower(0); }
+    public void stopLift() { getHardware().bucketLiftMotor.setPower(0); }
+    public void setSlidePower (double m0) { getHardware().horizSliderMotor.setPower(m0); }
+    public void setLiftPower (double m1) { getHardware().bucketLiftMotor.setPower(m1); }
+
+    //
 
     public void setSlidePosition(int position) {
         setSlidePositionUnsafe(Math.min(getSettings().maxSlidePosition, Math.max(getSettings().minSlidePosition, position)));

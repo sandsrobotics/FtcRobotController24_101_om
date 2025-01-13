@@ -32,7 +32,7 @@ public class IntakeTeleopSettings {
 //            () -> gamepad.dpad_left ? -1 : gamepad.dpad_right ? 1 : 0, // sweep slide Supplier
             () -> gamepad.dpad_down ? -1 : gamepad.dpad_up ? 1 : 0, // bucketLift Supplier
             () -> gamepad2.y ? 1 : gamepad2.x ? 2 :gamepad2.b ? 3 : gamepad2.a ?
-                    4: gamepad2.dpad_up ? 5: gamepad.dpad_right ? 6 : 0 //intake deploy/safe
+                    4: gamepad2.dpad_up ? 5: gamepad2.dpad_right ? 6 : 0 //intake deploy/safe
         );
     }
 }

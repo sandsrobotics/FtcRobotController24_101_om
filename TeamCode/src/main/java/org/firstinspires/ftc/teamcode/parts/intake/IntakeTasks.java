@@ -51,12 +51,14 @@ public class IntakeTasks {
         prepareToIntakeTask.autoStart = false;
         // todo: kill other related tasks
         prepareToIntakeTask.addStep(() -> {
-                    safeTask.reset();
+//                    safeTask.reset();
+                    safeTask.runCommand(Group.Command.PAUSE);
                     intake.getHardware().flipper.setPosition(intake.getSettings().spintakeSafe);
-                    intake.getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                    intake.getHardware().horizSliderMotor.setTargetPosition(intake.getSettings().positionSlideStartIntake);
-                    intake.slideTargetPosition = intake.getSettings().positionSlideStartIntake;
-                    intake.getHardware().horizSliderMotor.setPower(1);
+//                    intake.getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//                    intake.getHardware().horizSliderMotor.setTargetPosition(intake.getSettings().positionSlideStartIntake);
+//                    intake.slideTargetPosition = intake.getSettings().positionSlideStartIntake;
+//                    intake.getHardware().horizSliderMotor.setPower(1);
+                    intake.setSlidePosition(intake.getSettings().positionSlideStartIntake, 1);
                 }, () ->
                     intake.isSlideInTolerance()
         );
@@ -70,18 +72,21 @@ public class IntakeTasks {
     public void constructSafeTask() {
         safeTask.autoStart = false;
         safeTask.addStep( () -> {
-            prepareToIntakeTask.reset();
+//            prepareToIntakeTask.reset();
+            prepareToIntakeTask.runCommand(Group.Command.PAUSE);
             intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen);
             intake.getHardware().flipper.setPosition(intake.getSettings().spintakeParked);
             intake.getHardware().chute.setPosition(intake.getSettings().chuteParked);
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
-            intake.getHardware().horizSliderMotor.setTargetPosition(intake.getSettings().positionSlideMin);
-            intake.slideTargetPosition = intake.getSettings().positionSlideMin;
-            intake.getHardware().horizSliderMotor.setPower(1);
-            intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftMin);
-            intake.liftTargetPosition = intake.getSettings().positionLiftMin;
-            intake.getHardware().bucketLiftMotor.setPower(1);
+//            intake.getHardware().horizSliderMotor.setTargetPosition(intake.getSettings().positionSlideMin);
+//            intake.slideTargetPosition = intake.getSettings().positionSlideMin;
+//            intake.getHardware().horizSliderMotor.setPower(1);
+            intake.setSlidePosition(intake.getSettings().positionSlideMin, 1);
+//            intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//            intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftMin);
+//            intake.liftTargetPosition = intake.getSettings().positionLiftMin;
+//            intake.getHardware().bucketLiftMotor.setPower(1);
+            intake.setLiftPosition(intake.getSettings().positionLiftMin, 1);
         }, () ->
             intake.isSlideInTolerance() &&
                     intake.isLiftInTolerance() &&
@@ -122,10 +127,11 @@ public class IntakeTasks {
                 );
         prepareToDepositTask.addStep( () -> {
             intake.getHardware().chute.setPosition(intake.getSettings().chuteReady);
-            intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftReady);
-            intake.liftTargetPosition = intake.getSettings().positionLiftReady;
-            intake.getHardware().bucketLiftMotor.setPower(1);
+//            intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//            intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftReady);
+//            intake.liftTargetPosition = intake.getSettings().positionLiftReady;
+//            intake.getHardware().bucketLiftMotor.setPower(1);
+            intake.setLiftPosition(intake.getSettings().positionLiftReady, 1);
         }, ()->
                 intake.isLiftInTolerance()
         );
@@ -134,10 +140,11 @@ public class IntakeTasks {
         depositTask.autoStart = false;
         depositTask.addStep( () -> {
             intake.getHardware().chute.setPosition(intake.getSettings().chuteReady);
-            intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftMax);
-            intake.liftTargetPosition = intake.getSettings().positionLiftMax;
-            intake.getHardware().bucketLiftMotor.setPower(1);
+//            intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//            intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftMax);
+//            intake.liftTargetPosition = intake.getSettings().positionLiftMax;
+//            intake.getHardware().bucketLiftMotor.setPower(1);
+            intake.setLiftPosition(intake.getSettings().positionLiftMax, 1);
         }, ()->intake.isLiftInTolerance() && intake.getHardware().chute.isDone()
         );
         depositTask.addStep( ()->{
