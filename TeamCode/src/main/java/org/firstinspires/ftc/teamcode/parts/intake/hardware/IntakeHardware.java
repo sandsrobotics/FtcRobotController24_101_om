@@ -33,8 +33,6 @@ public class IntakeHardware {
                           ServoSSR spinner, ServoSSR flipper, ServoSSR chute, ServoSSR pinch, NormalizedColorSensor colorSensor) {
         this.bucketLiftMotor = bucketLiftMotor;
         this.horizSliderMotor = slideMotor;
-//        this.tiltServo = tiltServo;
-//        this.intakeFlipperServo = intakeFlipperServo;
         this.bucketLiftZeroSwitch = bucketLiftZeroSwitch;
         this.slideZeroSwitch = slideZeroSwitch;
         this.spinner = spinner;
@@ -57,8 +55,6 @@ public class IntakeHardware {
         return new IntakeHardware(
                 bucketLiftMotorSettings.makeExMotor(hardwareMap),
                 slideMotorSettings.makeExMotor(hardwareMap),
-//                tiltServoSettings.makeServo(hardwareMap),
-//                intakeFlipperServoSettings.makeCRServo(hardwareMap),
                 bucketLiftZeroSwitch,
                 slideZeroSwitch,
                 new ServoSSR(hardwareMap.get(Servo.class,"servo0")),

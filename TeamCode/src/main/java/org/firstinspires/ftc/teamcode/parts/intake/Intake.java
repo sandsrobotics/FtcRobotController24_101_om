@@ -26,12 +26,12 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public boolean isYellowGood = true;
     public boolean isBlueGood = false;
     public int lastSample = -1;
-    // Watch for bucket lift zero
+    // this is part of the resets lift to 0 each time it hits the limit switch
     private final EdgeConsumer homingVSlideZero = new EdgeConsumer();
     private final EdgeConsumer homingHSlideZero = new EdgeConsumer();
     //***** Constructors *****
     public Intake(Robot parent) {
-        super(parent, "Slider", () -> new IntakeControl(0, 0, 0, 0,0));
+        super(parent, "Slider", () -> new IntakeControl(0, 0, 0, 0, 0,0 ,0, 0));
         setConfig(
                 IntakeSettings.makeDefault(),
                 IntakeHardware.makeDefault(parent.opMode.hardwareMap)
@@ -39,7 +39,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public Intake(Robot parent, IntakeSettings settings, IntakeHardware hardware) {
-        super(parent, "slider", () -> new IntakeControl(0, 0, 0, 0,0));
+        super(parent, "slider", () -> new IntakeControl(0, 0, 0, 0, 0, 0, 0, 0));
         setConfig(settings, hardware);
     }
 
@@ -78,7 +78,6 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 //    public void sweepWithPower(double power) {
 //        getHardware().intakeFlipperServo.setPower(power);
 //    }
-
 
     // Some new helper code
 
@@ -146,7 +145,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public boolean isLiftInTolerance() {
-        return Math.abs(liftTargetPosition - getBucketLiftPosition()) <= getSettings().tolerance;
+        return Math.abs(liftTargetPosition - currentBucketPos) <= getSettings().tolerance;
     }
 
     public void setIntakePosition(int position) {
@@ -176,20 +175,35 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         return currentSlidePos;
     }
 
-    public int getBucketLiftPosition() {
-        return currentBucketPos;
+    public double getSpecimanClawMax() {
+        return getSettings().SpecimanClawMax;
+    }
+    public double getSpecimanClawMin() {
+        return  getSettings().specimanClawMin;
+    }
+    private void setSpecimanClaw(int position) {
+        if (position==-1) {//open specimanServo
+            getHardware().pinch.setPosition(getSpecimanClawMax());
+        } else if ( position == 1) { // close specimanServo
+            getHardware().pinch.setPosition(getSpecimanClawMin());
+        }
     }
 
-//    public void setSweepPosition(int position) {
-//        switch (position) {
-//            case 1:
-//                getHardware().tiltServo.setPosition(getSettings().tiltServoDownPosition);
-//                break;
-//            case 2:
-//                getHardware().tiltServo.setPosition(getSettings().tiltServoUpPosition);
-//                break;
-//        }
-//    }
+    public double getIntakeAngleMin() {
+        return  getSettings().intakeAngleMin;
+
+    }
+    public double getIntakeAngleMax() {
+        return getSettings().intakeAngleMax;
+    }
+    private void setIntakeAngle(int position) {
+        if (position==1) {
+            getHardware().flipper.setPosition(getIntakeAngleMin());
+        }
+        else if (position==-1) {
+            getHardware().flipper.setPosition(getIntakeAngleMax());
+        }
+    }
 
     public void eStop() {
         // stop all tasks in the intake group
@@ -208,6 +222,29 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         tasks.movementTask.runCommand(Group.Command.PAUSE);
         tasks.movementTask.getActiveRunnables().clear();    // this is the magic sauce... must be used after the PAUSE or it will stop working
     }
+    public int getV_Slide_Min() {
+        return getSettings().v_Slide_Min;
+    }
+
+    private void setV_Slide(int position) {
+        if (position == 2) {
+            getHardware().bucketLiftMotor.setTargetPosition(50);
+        }
+        else if (position==-2) {
+            getHardware().bucketLiftMotor.setTargetPosition(2800);
+        }
+        else if (position==-1) {
+//            getHardware().v_SlideMotor.setTargetPosition(20);
+//            if (getSettings().v_Slide_pos < getV_Slide_Max()) {
+//                getSettings().v_Slide_pos = getSettings().v_Slide_pos - 30; // can't modify a setting
+//            }
+        } else if ( position == 1) {
+//            getHardware().v_SlideMotor.setTargetPosition(1440);
+//            if (getSettings().v_Slide_pos > getV_Slide_Min()) {
+//                getSettings().v_Slide_pos = 1440; // can't modify a setting
+//            }
+        }
+    }
 
     @Override
     public void onInit() {
@@ -222,7 +259,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         tasks.constructAutoIntakeTask();
 //        tasks.constructEjectBadSampleTask();
 //        tasks.constructPrepareToTransferTask();
-        //homing vslide lift setup
+
+        // this is part of the resets lift to 0 each time it hits the limit switch
         homingVSlideZero.setOnRise(() -> {
             getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //            getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -248,8 +286,9 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         changeSlidePosition(control.sweepSlidePosition);
         setBucketLiftPosition(control.bucketLiftPosition);
         setIntakePosition(control.intakePosition);
-
-        //slideWithPower(control.sweepSlidePosition,false);
+        //setSpecimanClaw(control.pinchPosition); // jas
+        //setV_Slide(control.v_SlidePosition); // jas
+        //setIntakeAngle(control.intakeAngleSupplier); // jas
 
         currentSlidePos = getHardware().horizSliderMotor.getCurrentPosition();
         currentBucketPos = getHardware().bucketLiftMotor.getCurrentPosition();

@@ -47,7 +47,10 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
                 (int) settings.sweepLiftSupplier.get(),
                 (int) settings.sweepSlideSupplier.get(),
                 (int) settings.bucketLiftSupplier.get(),
-                (int) settings.intakeSupplier.get()
+                (int) settings.intakeSupplier.get(),
+                (int) settings.pinchSupplier.get(),
+                (int) settings.v_SlideSupplier.get(),
+                (int) settings.intakeAngleSupplier.get()
         ), true);
     }
 
