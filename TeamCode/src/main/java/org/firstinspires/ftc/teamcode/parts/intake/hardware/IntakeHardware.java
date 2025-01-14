@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.lib.ServoSSR;
@@ -23,12 +24,13 @@ public class IntakeHardware {
     public final ServoSSR flipper;
     public final ServoSSR chute;
     public final ServoSSR pinch;
+    public final NormalizedColorSensor colorSensor;
 
     public final DigitalChannel bucketLiftZeroSwitch;
     public final DigitalChannel slideZeroSwitch;
 
     public IntakeHardware(DcMotorEx bucketLiftMotor, DcMotorEx slideMotor, DigitalChannel bucketLiftZeroSwitch, DigitalChannel slideZeroSwitch,
-                          ServoSSR spinner, ServoSSR flipper, ServoSSR chute, ServoSSR pinch) {
+                          ServoSSR spinner, ServoSSR flipper, ServoSSR chute, ServoSSR pinch, NormalizedColorSensor colorSensor) {
         this.bucketLiftMotor = bucketLiftMotor;
         this.horizSliderMotor = slideMotor;
 //        this.tiltServo = tiltServo;
@@ -39,6 +41,7 @@ public class IntakeHardware {
         this.flipper = flipper;
         this.chute = chute;
         this.pinch = pinch;
+        this.colorSensor = colorSensor;
     }
 //beans
     public static IntakeHardware makeDefault(HardwareMap hardwareMap)  {
@@ -61,7 +64,8 @@ public class IntakeHardware {
                 new ServoSSR(hardwareMap.get(Servo.class,"servo0")),
                 new ServoSSR(hardwareMap.get(Servo.class, "servo2")),
                 new ServoSSR(hardwareMap.get(Servo.class, "servo4")),
-                new ServoSSR(hardwareMap.get(Servo.class, "servo1"))
+                new ServoSSR(hardwareMap.get(Servo.class, "servo1")),
+                hardwareMap.get(NormalizedColorSensor.class, "color")
         );
     }
 }

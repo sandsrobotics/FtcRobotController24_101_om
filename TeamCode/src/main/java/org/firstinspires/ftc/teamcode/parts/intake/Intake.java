@@ -1,8 +1,13 @@
 package org.firstinspires.ftc.teamcode.parts.intake;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
 import om.self.ezftc.core.Robot;
@@ -17,6 +22,10 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     private int currentSlidePos;
     private int currentBucketPos;
     public IntakeTasks tasks;
+    public boolean isRedGood = true;
+    public boolean isYellowGood = true;
+    public boolean isBlueGood = false;
+    public int lastSample = -1;
     // Watch for bucket lift zero
     private final EdgeConsumer homingVSlideZero = new EdgeConsumer();
     private final EdgeConsumer homingHSlideZero = new EdgeConsumer();
@@ -211,6 +220,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         tasks.constructPrepareToDepositTask();
         tasks.constructDepositTask();
         tasks.constructAutoIntakeTask();
+//        tasks.constructEjectBadSampleTask();
+//        tasks.constructPrepareToTransferTask();
         //homing vslide lift setup
         homingVSlideZero.setOnRise(() -> {
             getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -257,5 +268,35 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public void onStop() {
         //drive.removeController(ContollerNames.distanceContoller);
     }
+
+//    public double getDistance() {
+//        return ((DistanceSensor) getHardware().colorSensor).getDistance(DistanceUnit.CM);
+//    }
+//
+//    public boolean isSampleGood() {
+//        return isSampleGood(getSampleType());
+//    }
+//    public boolean isSampleGood(int sample) {
+//        if (sample==1 && isRedGood) return true;
+//        if (sample==2 && isYellowGood) return true;
+//        if (sample==3 && isBlueGood) return true;
+//        return false;
+//    }
+//
+//    public int getSampleType() {
+//        float[] hsvValues = new float[3];
+//        NormalizedRGBA colors = getHardware().colorSensor.getNormalizedColors();
+//        Color.colorToHSV(colors.toColor(), hsvValues);
+//        int hue = (int) hsvValues[0];
+//        int type = -1;
+//        if (hue < 60) type = 1;                //red     // red sometimes triggers as 60. Better to wait for a better read?
+//        if (hue >= 65 && hue <= 160) type = 2; //yellow
+//        if (hue > 160) type = 3;               //blue
+//        if (hue == 0) type = 0;
+//        //lastHue = hue;  // for debugging
+//        //lastType = type;
+//        lastSample = type;
+//        return type;
+//    }
 }
 

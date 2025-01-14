@@ -19,7 +19,7 @@ public class IntakeTasks {
     public final TimedTask autoIntakeTask;
     public final TimedTask prepareToTransferTask;
     public final TimedTask checkSampleTask;
-    public final TimedTask ejectBadSample;
+    public final TimedTask ejectBadSampleTask;
     private final Intake intake;
     private final Robot robot;
 
@@ -38,7 +38,7 @@ public class IntakeTasks {
         autoIntakeTask = new TimedTask(TaskNames.autoIntake, movementTask);
         prepareToTransferTask = new TimedTask(TaskNames.prepareToTransfer, movementTask);
         checkSampleTask = new TimedTask(TaskNames.checkSample, movementTask);
-        ejectBadSample = new TimedTask(TaskNames.ejectBadSample, movementTask);
+        ejectBadSampleTask = new TimedTask(TaskNames.ejectBadSample, movementTask);
     }
 
     public void startAutoHome() { autoHomeTask.restart(); }
@@ -197,4 +197,28 @@ public class IntakeTasks {
     public static final class Events {
         public static  final String homeComplete = "HOME_COMPLETE";
     }
+
+//        autoIntakeTask.addStep( ()-> intake.getDistance() < 1.5);
+//        autoIntakeTask.addStep( ()-> intake.getSampleType() > 0);
+//        autoIntakeTask.addStep( ()-> {
+//        if (intake.isSampleGood(intake.lastSample)) prepareToTransferTask.restart();
+//        else ejectBadSampleTask.restart();
+//    });
+//
+//    public void constructEjectBadSampleTask() {
+//        ejectBadSampleTask.autoStart = false;
+//        ejectBadSampleTask.addStep( ()-> intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOut));
+//        ejectBadSampleTask.addDelay(1500);
+//        ejectBadSampleTask.addStep(autoIntakeTask::restart);
+//    }
+//
+//    public void constructPrepareToTransferTask() {
+//        prepareToTransferTask.autoStart = false;
+//        prepareToTransferTask.addStep( ()-> intake.getHardware().flipper.setPosition(intake.getSettings().spintakeSafe));
+//        prepareToTransferTask.addStep( ()-> intake.getHardware().spinner.setPosition(intake.getSettings().spinnerSlowOut));
+//        prepareToTransferTask.addDelay(500);
+//        prepareToTransferTask.addStep( ()-> intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff));
+//        prepareToTransferTask.addStep(transferTask::restart);
+//    }
+
 }
