@@ -3,13 +3,12 @@ package org.firstinspires.ftc.teamcode.parts.intake;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
-import org.firstinspires.ftc.teamcode.parts.intake2.Intake2Tasks;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
 import om.self.supplier.consumer.EdgeConsumer;
+import om.self.task.core.Group;
 
 public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardware, IntakeControl> {
     public int slideTargetPosition;
@@ -20,6 +19,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     private IntakeTasks tasks;
     // this is part of the resets lift to 0 each time it hits the limit switch
     private final EdgeConsumer homingVSlideZero = new EdgeConsumer();
+    private final EdgeConsumer homingHSlideZero = new EdgeConsumer();
     //***** Constructors *****
     public Intake(Robot parent) {
         super(parent, "Slider", () -> new IntakeControl(0, 0, 0, 0, 0,0 ,0, 0));
@@ -128,7 +128,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     private void setBucketLiftPositionUnsafe(int position) {
-        getHardware().v_SlideMotor.setTargetPosition(position);
+        getHardware().bucketLiftMotor.setTargetPosition(position);
     }
 
     public boolean isSlideInTolerance() {
@@ -140,19 +140,26 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public void setIntakePosition(int position) {
-        if (position == 2) { // safe
-            tasks.safeTask.restart();
-        } else if ( position == 1) { // go up
-            tasks.prepareToIntakeTask.restart();
-        }else if ( position == 3) { // go up
-            tasks.autoIntakeTask.restart();
-        }else if ( position == 4) { // go up
-            tasks.transferTask.restart();
-        }else if ( position == 5) { // go up
-            tasks.prepareToDepositTask.restart();
-        }else if ( position == 6) { // go up
-            tasks.depositTask.restart();
-        }
+        /* See alternate controls concept in IntakeTeleop */
+//        if (position == 2) { // safe
+//            stopAllIntakeTasks();
+//            tasks.safeTask.restart();
+//        } else if ( position == 1) { // go up
+//            stopAllIntakeTasks();
+//            tasks.prepareToIntakeTask.restart();
+//        }else if ( position == 3) { // go up
+//            stopAllIntakeTasks();
+//            tasks.autoIntakeTask.restart();
+//        }else if ( position == 4) { // go up
+//            stopAllIntakeTasks();
+//            tasks.transferTask.restart();
+//        }else if ( position == 5) { // go up
+//            stopAllIntakeTasks();
+//            tasks.prepareToDepositTask.restart();
+//        }else if ( position == 6) { // go up
+//            stopAllIntakeTasks();
+//            tasks.depositTask.restart();
+//        }
     }
 
     public int getSlidePosition() {
@@ -189,20 +196,33 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         }
     }
 
-    public int getV_Slide_Max() {
-        return getSettings().v_Slide_Max;
+    public void eStop() {
+        // stop all tasks in the intake group
+        stopAllIntakeTasks();
+        // stop the slides
+        stopSlide();
+        stopLift();
+        // stop all the servos
+        getHardware().spinner.stop();
+        getHardware().flipper.stop();
+        getHardware().chute.stop();
+        getHardware().pinch.stop();
     }
 
+    public void stopAllIntakeTasks() {
+        tasks.movementTask.runCommand(Group.Command.PAUSE);
+        tasks.movementTask.getActiveRunnables().clear();    // this is the magic sauce... must be used after the PAUSE or it will stop working
+    }
     public int getV_Slide_Min() {
         return getSettings().v_Slide_Min;
     }
 
     private void setV_Slide(int position) {
         if (position == 2) {
-            getHardware().v_SlideMotor.setTargetPosition(50);
+            getHardware().bucketLiftMotor.setTargetPosition(50);
         }
         else if (position==-2) {
-            getHardware().v_SlideMotor.setTargetPosition(2800);
+            getHardware().bucketLiftMotor.setTargetPosition(2800);
         }
         else if (position==-1) {
 //            getHardware().v_SlideMotor.setTargetPosition(20);
@@ -232,9 +252,15 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         // this is part of the resets lift to 0 each time it hits the limit switch
         homingVSlideZero.setOnRise(() -> {
             getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            getHardware().bucketLiftMotor.setTargetPosition(0);
-            slideTargetPosition = 0;
+//            getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            getHardware().bucketLiftMotor.setTargetPosition(0);
+//            liftTargetPosition = 0;
+            setLiftPosition(20,0.125);
+        });
+        //homing hslide slide setup
+        homingHSlideZero.setOnRise(() -> {
+            getHardware().horizSliderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            setSlidePosition(20,0.125);
         });
     }
 
@@ -254,7 +280,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         //setIntakeAngle(control.intakeAngleSupplier); // jas
 
         currentSlidePos = getHardware().horizSliderMotor.getCurrentPosition();
-        currentBucketPos = getHardware().v_SlideMotor.getCurrentPosition();
+        currentBucketPos = getHardware().bucketLiftMotor.getCurrentPosition();
 
         if (parent.buttonMgr.getState(2, ButtonMgr.Buttons.back, ButtonMgr.State.wasPressed)) {
             // launch an eStop function?
@@ -262,6 +288,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         }
         // this is part of the resets lift to 0 each time it hits the limit switch
         homingVSlideZero.accept(getHardware().bucketLiftZeroSwitch.getState());
+        homingHSlideZero.accept(getHardware().slideZeroSwitch.getState());
     }
 
     @Override
