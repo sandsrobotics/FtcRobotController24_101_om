@@ -175,6 +175,10 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         return currentSlidePos;
     }
 
+    public int getLiftPosition() {
+        return currentBucketPos;
+    }
+
     public double getSpecimanClawMax() {
         return getSettings().SpecimanClawMax;
     }

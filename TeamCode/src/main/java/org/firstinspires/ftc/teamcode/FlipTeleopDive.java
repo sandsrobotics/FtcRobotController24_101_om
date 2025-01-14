@@ -75,6 +75,7 @@ public class FlipTeleopDive extends LinearOpMode {
             telemetry.addData("tile position", fieldToTile(pt.getCurrentPosition()));
             telemetry.addData("relative position", pt.getRelativePosition());
             telemetry.addData("Slide Position", intake.getSlidePosition());
+            telemetry.addData("Lift Position", intake.getLiftPosition());
             telemetry.addData("time", System.currentTimeMillis() - start);
             dashboard.sendTelemetryPacket(packet);
             telemetry.update();
