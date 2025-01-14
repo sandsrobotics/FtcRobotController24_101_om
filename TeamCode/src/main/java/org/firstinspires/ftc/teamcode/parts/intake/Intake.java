@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.parts.intake;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
 import om.self.ezftc.core.Robot;
@@ -16,7 +17,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     double motorPower = 0;
     private int currentSlidePos;
     private int currentBucketPos;
-    private IntakeTasks tasks;
+    public IntakeTasks tasks;
     // this is part of the resets lift to 0 each time it hits the limit switch
     private final EdgeConsumer homingVSlideZero = new EdgeConsumer();
     private final EdgeConsumer homingHSlideZero = new EdgeConsumer();
