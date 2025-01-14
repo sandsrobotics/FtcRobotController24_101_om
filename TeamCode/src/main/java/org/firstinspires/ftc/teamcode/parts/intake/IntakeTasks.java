@@ -41,7 +41,7 @@ public class IntakeTasks {
         ejectBadSample = new TimedTask(TaskNames.ejectBadSample, movementTask);
     }
 
-    public void startAutoHome() { autoHomeTask.reset(); }
+    public void startAutoHome() { autoHomeTask.restart(); }
 
     public void constructPrepareToIntakeTask() {
         prepareToIntakeTask.autoStart = false;
@@ -135,27 +135,47 @@ public class IntakeTasks {
 
     public void constructAutoHome() {
         autoHomeTask.autoStart = false;
-        autoHomeTask.addStep(this::setSlideToHomeConfig);
+        autoHomeTask.addStep(()->this.setSlideToHomeConfig(1));
         autoHomeTask.addTimedStep(() -> {
             robot.opMode.telemetry.addData("homing", intake.getHardware().bucketLiftZeroSwitch.getState());
         }, () -> intake.getHardware().bucketLiftZeroSwitch.getState(), 10000);
         autoHomeTask.addStep(() -> {
             intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            intake.getHardware().bucketLiftMotor.setTargetPosition(0);
-            intake.slideTargetPosition = 0;
-            setMotorsToRunConfig();
+            intake.getHardware().bucketLiftMotor.setTargetPosition(20);
+            intake.liftTargetPosition = 20;
+            setMotorsToRunConfig(1);
+        });
+        autoHomeTask.addStep(()->this.setSlideToHomeConfig(2));
+        autoHomeTask.addTimedStep(() -> {
+            robot.opMode.telemetry.addData("homingH", intake.getHardware().slideZeroSwitch.getState());
+        }, () -> intake.getHardware().slideZeroSwitch.getState(), 10000);
+        autoHomeTask.addStep(() -> {
+            intake.getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            intake.getHardware().horizSliderMotor.setTargetPosition(20);
+            intake.slideTargetPosition = 20;
+            setMotorsToRunConfig(2);
         });
     }
 
-    private void setSlideToHomeConfig() {
+    private void setSlideToHomeConfig(int i) {
         double power = -0.125;
-        intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        intake.getHardware().bucketLiftMotor.setPower(power);
+        if (i==1) {
+            intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            intake.getHardware().bucketLiftMotor.setPower(power);
+        } else if (i==2) {
+            intake.getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            intake.getHardware().horizSliderMotor.setPower(power);
+        }
     }
 
-    private void setMotorsToRunConfig() {
-        intake.getHardware().bucketLiftMotor.setPower(IntakeHardware.slideHoldPower);
-        intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+    private void setMotorsToRunConfig(int i) {
+        if (i==1) {
+            intake.getHardware().bucketLiftMotor.setPower(IntakeHardware.slideHoldPower);
+            intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        } else if (i==2) {
+            intake.getHardware().horizSliderMotor.setPower(IntakeHardware.slideHoldPower);
+            intake.getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        }
     }
 
     /***********************************************************************************/

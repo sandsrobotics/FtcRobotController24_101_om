@@ -19,6 +19,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public IntakeTasks tasks;
     // Watch for bucket lift zero
     private final EdgeConsumer homingVSlideZero = new EdgeConsumer();
+    private final EdgeConsumer homingHSlideZero = new EdgeConsumer();
     //***** Constructors *****
     public Intake(Robot parent) {
         super(parent, "Slider", () -> new IntakeControl(0, 0, 0, 0,0));
@@ -213,9 +214,15 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         //homing vslide lift setup
         homingVSlideZero.setOnRise(() -> {
             getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            getHardware().bucketLiftMotor.setTargetPosition(0);
-            slideTargetPosition = 0;
+//            getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            getHardware().bucketLiftMotor.setTargetPosition(0);
+//            liftTargetPosition = 0;
+            setLiftPosition(20,0.125);
+        });
+        //homing hslide slide setup
+        homingHSlideZero.setOnRise(() -> {
+            getHardware().horizSliderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            setSlidePosition(20,0.125);
         });
     }
 
@@ -237,6 +244,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         currentBucketPos = getHardware().bucketLiftMotor.getCurrentPosition();
 
         homingVSlideZero.accept(getHardware().bucketLiftZeroSwitch.getState());
+        homingHSlideZero.accept(getHardware().slideZeroSwitch.getState());
     }
 
     @Override

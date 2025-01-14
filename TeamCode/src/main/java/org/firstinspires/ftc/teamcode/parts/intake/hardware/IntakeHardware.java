@@ -25,14 +25,16 @@ public class IntakeHardware {
     public final ServoSSR pinch;
 
     public final DigitalChannel bucketLiftZeroSwitch;
+    public final DigitalChannel slideZeroSwitch;
 
-    public IntakeHardware(DcMotorEx bucketLiftMotor, DcMotorEx slideMotor, DigitalChannel bucketLiftZeroSwitch, ServoSSR spinner,
-                          ServoSSR flipper, ServoSSR chute, ServoSSR pinch) {
+    public IntakeHardware(DcMotorEx bucketLiftMotor, DcMotorEx slideMotor, DigitalChannel bucketLiftZeroSwitch, DigitalChannel slideZeroSwitch,
+                          ServoSSR spinner, ServoSSR flipper, ServoSSR chute, ServoSSR pinch) {
         this.bucketLiftMotor = bucketLiftMotor;
         this.horizSliderMotor = slideMotor;
 //        this.tiltServo = tiltServo;
 //        this.intakeFlipperServo = intakeFlipperServo;
         this.bucketLiftZeroSwitch = bucketLiftZeroSwitch;
+        this.slideZeroSwitch = slideZeroSwitch;
         this.spinner = spinner;
         this.flipper = flipper;
         this.chute = chute;
@@ -46,6 +48,8 @@ public class IntakeHardware {
 //        MotorSettings intakeFlipperServoSettings = new MotorSettings(ServoSettings.Number.ZERO, DcMotorSimple.Direction.FORWARD);MotorSettings intakeWheelServoRightSettings = new MotorSettings(ServoSettings.Number.TWO, DcMotorSimple.Direction.REVERSE);
         DigitalChannel bucketLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital2");
         bucketLiftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
+        DigitalChannel slideZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital0");
+        bucketLiftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
 
         return new IntakeHardware(
                 bucketLiftMotorSettings.makeExMotor(hardwareMap),
@@ -53,6 +57,7 @@ public class IntakeHardware {
 //                tiltServoSettings.makeServo(hardwareMap),
 //                intakeFlipperServoSettings.makeCRServo(hardwareMap),
                 bucketLiftZeroSwitch,
+                slideZeroSwitch,
                 new ServoSSR(hardwareMap.get(Servo.class,"servo0")),
                 new ServoSSR(hardwareMap.get(Servo.class, "servo2")),
                 new ServoSSR(hardwareMap.get(Servo.class, "servo4")),
