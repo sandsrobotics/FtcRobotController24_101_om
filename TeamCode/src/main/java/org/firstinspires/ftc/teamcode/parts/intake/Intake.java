@@ -3,13 +3,12 @@ package org.firstinspires.ftc.teamcode.parts.intake;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
-import org.firstinspires.ftc.teamcode.parts.intake2.Intake2Tasks;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
 import om.self.supplier.consumer.EdgeConsumer;
+import om.self.task.core.Group;
 
 public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardware, IntakeControl> {
     public int slideTargetPosition;
@@ -17,7 +16,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     double motorPower = 0;
     private int currentSlidePos;
     private int currentBucketPos;
-    private IntakeTasks tasks;
+    public IntakeTasks tasks;
     // Watch for bucket lift zero
     private final EdgeConsumer homingVSlideZero = new EdgeConsumer();
     //***** Constructors *****
@@ -141,19 +140,26 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public void setIntakePosition(int position) {
-        if (position == 2) { // safe
-            tasks.safeTask.restart();
-        } else if ( position == 1) { // go up
-            tasks.prepareToIntakeTask.restart();
-        }else if ( position == 3) { // go up
-            tasks.autoIntakeTask.restart();
-        }else if ( position == 4) { // go up
-            tasks.transferTask.restart();
-        }else if ( position == 5) { // go up
-            tasks.prepareToDepositTask.restart();
-        }else if ( position == 6) { // go up
-            tasks.depositTask.restart();
-        }
+        /* See alternate controls concept in IntakeTeleop */
+//        if (position == 2) { // safe
+//            stopAllIntakeTasks();
+//            tasks.safeTask.restart();
+//        } else if ( position == 1) { // go up
+//            stopAllIntakeTasks();
+//            tasks.prepareToIntakeTask.restart();
+//        }else if ( position == 3) { // go up
+//            stopAllIntakeTasks();
+//            tasks.autoIntakeTask.restart();
+//        }else if ( position == 4) { // go up
+//            stopAllIntakeTasks();
+//            tasks.transferTask.restart();
+//        }else if ( position == 5) { // go up
+//            stopAllIntakeTasks();
+//            tasks.prepareToDepositTask.restart();
+//        }else if ( position == 6) { // go up
+//            stopAllIntakeTasks();
+//            tasks.depositTask.restart();
+//        }
     }
 
     public int getSlidePosition() {
@@ -175,7 +181,23 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 //        }
 //    }
 
+    public void eStop() {
+        // stop all tasks in the intake group
+        stopAllIntakeTasks();
+        // stop the slides
+        stopSlide();
+        stopLift();
+        // stop all the servos
+        getHardware().spinner.stop();
+        getHardware().flipper.stop();
+        getHardware().chute.stop();
+        getHardware().pinch.stop();
+    }
 
+    public void stopAllIntakeTasks() {
+        tasks.movementTask.runCommand(Group.Command.PAUSE);
+        tasks.movementTask.getActiveRunnables().clear();    // this is the magic sauce... must be used after the PAUSE or it will stop working
+    }
 
     @Override
     public void onInit() {
@@ -214,10 +236,6 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         currentSlidePos = getHardware().horizSliderMotor.getCurrentPosition();
         currentBucketPos = getHardware().bucketLiftMotor.getCurrentPosition();
 
-        if (parent.buttonMgr.getState(2, ButtonMgr.Buttons.back, ButtonMgr.State.wasPressed)) {
-            // launch an eStop function?
-            // this could look less imposing by importing ButtonMgr.Buttons and ButtonMgr.State;
-        }
         homingVSlideZero.accept(getHardware().bucketLiftZeroSwitch.getState());
     }
 
