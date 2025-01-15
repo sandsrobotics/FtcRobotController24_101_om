@@ -31,7 +31,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     private final EdgeConsumer homingHSlideZero = new EdgeConsumer();
     //***** Constructors *****
     public Intake(Robot parent) {
-        super(parent, "Slider", () -> new IntakeControl(0, 0, 0, 0, 0,0 ,0, 0));
+        super(parent, "Slider", () -> new IntakeControl(0, 0, 0, 0, 0,0 ,0));
         setConfig(
                 IntakeSettings.makeDefault(),
                 IntakeHardware.makeDefault(parent.opMode.hardwareMap)
@@ -39,7 +39,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public Intake(Robot parent, IntakeSettings settings, IntakeHardware hardware) {
-        super(parent, "slider", () -> new IntakeControl(0, 0, 0, 0, 0, 0, 0, 0));
+        super(parent, "slider", () -> new IntakeControl(0, 0, 0, 0, 0, 0, 0));
         setConfig(settings, hardware);
     }
 
@@ -200,14 +200,14 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public double getIntakeAngleMax() {
         return getSettings().intakeAngleMax;
     }
-    private void setIntakeAngle(int position) {
-        if (position==1) {
-            getHardware().flipper.setPosition(getIntakeAngleMin());
-        }
-        else if (position==-1) {
-            getHardware().flipper.setPosition(getIntakeAngleMax());
-        }
-    }
+   // private void setIntakeAngle(int position) {
+  //      if (position==1) {
+  //          getHardware().flipper.setPosition(getIntakeAngleMin());
+     //   }
+   //     else if (position==-1) {
+       //     getHardware().flipper.setPosition(getIntakeAngleMax());
+     //   }
+   // }
 
     public void eStop() {
         // stop all tasks in the intake group
@@ -238,17 +238,40 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             getHardware().bucketLiftMotor.setTargetPosition(2800);
         }
         else if (position==-1) {
-//            getHardware().v_SlideMotor.setTargetPosition(20);
-//            if (getSettings().v_Slide_pos < getV_Slide_Max()) {
+            getHardware().bucketLiftMotor.setTargetPosition(20);
+//            if (getSettings().v_Slide_pos < get_Slide_Max()) {
 //                getSettings().v_Slide_pos = getSettings().v_Slide_pos - 30; // can't modify a setting
 //            }
         } else if ( position == 1) {
-//            getHardware().v_SlideMotor.setTargetPosition(1440);
+            getHardware().bucketLiftMotor.setTargetPosition(1440);
 //            if (getSettings().v_Slide_pos > getV_Slide_Min()) {
 //                getSettings().v_Slide_pos = 1440; // can't modify a setting
 //            }
         }
     }
+
+    public double sampleDistance() {
+        return ((DistanceSensor) getHardware().colorSensor).getDistance(DistanceUnit.CM);
+    }
+    public int identifySampleColor() {
+        float[] hsvValues = new float[3];
+        NormalizedRGBA colorPlural = getHardware().colorSensor.getNormalizedColors();
+        Color.colorToHSV(colorPlural.toColor(), hsvValues);
+        int hue = (int) hsvValues[0];
+        if (hue > 20 && hue < 60) return 1; // Red = 1
+        if (hue > 65 && hue < 160) return 2; // Yellow = 2
+        if (hue > 160) return 3; // Blue = 3
+        return 0; // Nothing detected
+   }
+   public boolean isSampleGood(int sample) {
+        if (sample == 1 && isRedGood) return true;
+        if (sample == 2 && isYellowGood) return true;
+        if (sample == 3 && isBlueGood) return true;
+        return false;
+   }
+   public boolean isSampleGood() {
+        return isSampleGood(identifySampleColor());
+   }
 
     @Override
     public void onInit() {
@@ -287,12 +310,12 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public void onRun(IntakeControl control) {
 //        sweepWithPower(control.sweeperPower);
 //        setSweepPosition(control.sweepLiftPosition);
-        changeSlidePosition(control.sweepSlidePosition);
+ //       changeSlidePosition(control.sweepSlidePosition);
         setBucketLiftPosition(control.bucketLiftPosition);
-        setIntakePosition(control.intakePosition);
-        //setSpecimanClaw(control.pinchPosition); // jas
-        //setV_Slide(control.v_SlidePosition); // jas
-        //setIntakeAngle(control.intakeAngleSupplier); // jas
+      //  setIntakePosition(control.intakePosition);
+        setSpecimanClaw(control.pinchPosition); // jas
+        setV_Slide(control.v_SlidePosition); // jas
+       // setIntakeAngle(control.intakeAngleSupplier); // jas
 
         currentSlidePos = getHardware().horizSliderMotor.getCurrentPosition();
         currentBucketPos = getHardware().bucketLiftMotor.getCurrentPosition();
