@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 
 import om.self.ezftc.core.Robot;
-import om.self.ezftc.utils.Vector3;
 import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
 
@@ -51,10 +50,10 @@ public class Intake2Tasks {
     }
     public void constructAutoBucketLift() {
         autoBucketLiftTask.autoStart = false;
-        autoBucketLiftTask.addStep(() -> {
-            intake.incrementIntakeUpDown(2007); //CHANGE NUMBER. NUMBER IF STATEMENT IS SET IN INCREMENTINTAKEUPDOWN
-        });
-        autoBucketLiftTask.addDelay(500);
+//        autoBucketLiftTask.addStep(() -> {
+//            intake.incrementIntakeUpDown(2007); //CHANGE NUMBER. NUMBER IF STATEMENT IS SET IN INCREMENTINTAKEUPDOWN
+//        });
+        //autoBucketLiftTask.addDelay(500);
         autoBucketLiftTask.addStep(() -> {
             intake.incrementIntakeUpDown(2007);
             intake.getHardware().dropperServo.getController().pwmDisable();

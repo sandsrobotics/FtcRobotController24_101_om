@@ -96,7 +96,7 @@ public class AutoTest2024 extends LinearOpMode{
         //positionSolver.setNewTarget(pt.getCurrentPosition(), true);
 
         // Here is where we schedule the tasks for the autonomous run (testAuto function below run loop)
-        testAuto2(autoTasks);
+        testAuto(autoTasks);
 
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
@@ -112,6 +112,7 @@ public class AutoTest2024 extends LinearOpMode{
     }
 
     private void testAuto(TimedTask autoTasks) {
+        Vector3 rightbeforespecimenbar = new Vector3(11.75, -35.75, -90);
         Vector3 specimenbar = new Vector3(11.75, -32.75, -90);
         Vector3 afterfirstredbar = new Vector3(36, -40, -90);
         Vector3 rightbeforesample = new Vector3(36, -11.75, -90);
@@ -135,10 +136,12 @@ public class AutoTest2024 extends LinearOpMode{
         Vector3 parkingposition = new Vector3(54, -54, 0);
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
         autoTasks.addStep(()-> intake.setHorizontalSlidePosition(-1));
-        positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
-        autoTasks.addDelay(2000);
-        positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
+        positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.loseSettings));
+        positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
+        // autoTasks.addDelay(2000);
+        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang());
+        positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
         positionSolver.addMoveToTaskEx(rightbeforesample, autoTasks);
         positionSolver.addMoveToTaskEx(atfirstsample, autoTasks);
         positionSolver.addMoveToTaskEx(observationzone1, autoTasks);
@@ -178,8 +181,14 @@ public class AutoTest2024 extends LinearOpMode{
     }
 
     private void testBucketAuto(TimedTask autoTasks) {
-        Vector3 bucketstartposition = new Vector3(-14 - 3.0/8.0, -60.5, 90);
-        Vector3 specimenpickup = new Vector3(45, -60.5, 90);
-        
+        Vector3 startposition = new Vector3(-14 - 3.0/8.0, -62, -90);
+        Vector3 specimenhang = new Vector3(-10, -35, -90); //specimen must be lifted before hang
+        Vector3 firstsample = new Vector3(-48.8, -37.37, 90);
+        Vector3 Highbasketscore = new Vector3(-48.9, -40.9, 40);
+        Vector3 secondsample = new Vector3(-58.8, -37.39, 90);
+        Vector3 Highbasketscore2 = new Vector3(-48.9, -40.9, 40);
+        Vector3 thirdsample = new Vector3(-55.3, -24.58, 180);
+        Vector3 Highbasketscore3 = new Vector3(-48.9, -40.9, 40);
+
     }
 }

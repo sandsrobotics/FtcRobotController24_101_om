@@ -134,10 +134,10 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     public void setBucketLiftPosition(int position) {
         switch (position) {
-            case 1: // Move to maximum position
+            case 1: // Move to maximum position Y
                 tasks.startAutoBucketLift();
                 break;
-            case -1: // Move to minimum position
+            case -1: // Move to minimum position A
                 // check to make sure bucket is up clear of intake first
                 if(getHardware().bucketLiftMotor.getCurrentPosition()>500) tasks.startAutoBucketDropper();
                 break;
@@ -231,11 +231,11 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
         homingBucketZero.accept(!getHardware().bucketLiftZeroSwitch.getState());
         currentLiftPos = getHardware().robotLiftMotor.getCurrentPosition(); //0.32
+        currentSlidePos = getHardware().bucketLiftMotor.getCurrentPosition();
         parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
         parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
         parent.opMode.telemetry.addData("bucketLiftMotor postion", getHardware().bucketLiftMotor.getCurrentPosition());
-        currentSlidePos = getHardware().bucketLiftMotor.getCurrentPosition();
-        homingBucketZero.accept(getHardware().bucketLiftZeroSwitch.getState());
+
     }
 
     @Override
