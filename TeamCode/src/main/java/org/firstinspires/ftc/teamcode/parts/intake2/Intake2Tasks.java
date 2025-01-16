@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.parts.intake2;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
-
 import om.self.ezftc.core.Robot;
 import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
@@ -43,11 +41,12 @@ public class Intake2Tasks {
         }, () -> intake.getHardware().bucketLiftZeroSwitch.getState(), 10000);
         autoHomeTask.addStep(() -> {
             intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            intake.getHardware().bucketLiftMotor.setTargetPosition(0);
-            intake.slideTargetPosition = 0;
+            intake.getHardware().bucketLiftMotor.setTargetPosition(20);
+            intake.slideTargetPosition = 20;
             setMotorsToRunConfig();
         });
     }
+
     public void constructAutoBucketLift() {
         autoBucketLiftTask.autoStart = false;
 //        autoBucketLiftTask.addStep(() -> {
@@ -55,7 +54,8 @@ public class Intake2Tasks {
 //        });
         //autoBucketLiftTask.addDelay(500);
         autoBucketLiftTask.addStep(() -> {
-            intake.incrementIntakeUpDown(2007);
+            //intake.incrementIntakeUpDown(2007);
+            intake.getHardware().tiltServoLeft.setPosition(0);
             intake.getHardware().dropperServo.getController().pwmDisable();
         });
         autoBucketLiftTask.addStep( ()-> {
@@ -83,6 +83,7 @@ public class Intake2Tasks {
             intake.getHardware().dropperServo.getController().pwmDisable();
         });
         autoBucketDropperTask.addStep(() -> {
+            intake.getHardware().bucketLiftMotor.setPower(1);
             intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().minLiftPosition);
         });
     }
@@ -95,6 +96,7 @@ public class Intake2Tasks {
         });
         autoSpecimenPickupTask.addDelay(1000);
         autoSpecimenPickupTask.addStep(() -> {
+            intake.getHardware().bucketLiftMotor.setPower(1);
             intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().specimenSafeHeight);
         });
     }
@@ -103,6 +105,7 @@ public class Intake2Tasks {
 
         autoSpecimenHangTask.addStep( ()-> {
             intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().specimenServoOpenHeight);
+            intake.getHardware().bucketLiftMotor.setPower(1);
             intake.slideTargetPosition = intake.getSettings().specimenServoOpenHeight;
         }, () -> intake.isLiftInTolerance());
 
@@ -113,6 +116,7 @@ public class Intake2Tasks {
         autoSpecimenHangTask.addDelay(1000);
 
         autoSpecimenHangTask.addStep(() -> {
+            intake.getHardware().bucketLiftMotor.setPower(1);
             intake.getHardware().bucketLiftMotor.setTargetPosition(0);
         });
     }
@@ -142,7 +146,7 @@ public class Intake2Tasks {
         intake.getHardware().bucketLiftMotor.setPower(power);
     }
 
-    private void setMotorsToRunConfig() {
+    public void setMotorsToRunConfig() {
         intake.getHardware().bucketLiftMotor.setPower(IntakeHardware.slideHoldPower);
         intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }

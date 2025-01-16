@@ -11,8 +11,6 @@ public class IntakeTeleopSettings2 {
     public final Supplier<Integer> sweepSlideSupplier;
     public final Supplier<Integer> bucketLiftSupplier;
     public final Supplier<Integer> robotLiftSupplier;
-    public final Supplier<Integer> robotLift0Supplier;
-    public final Supplier<Integer> robotLifthangSupplier;
     public final Supplier<Integer> rotationServoSupplier;
     public final Supplier<Float> strafeSpeedSupplier;
     public final Supplier<Boolean> autoHomeSupplier;
@@ -21,8 +19,7 @@ public class IntakeTeleopSettings2 {
 
     public IntakeTeleopSettings2(Supplier<Integer> sweepSpeedSupplier, Supplier<Integer> sweepLiftSupplier,
                                  Supplier<Integer> sweepSlideSupplier, Supplier<Integer> bucketLiftSupplier,
-                                 Supplier<Integer> robotLiftSupplier, Supplier<Integer> robotLift0Supplier,
-                                 Supplier<Integer> robotLifthangSupplier, Supplier<Integer> rotationServoSupplier,
+                                 Supplier<Integer> robotLiftSupplier,Supplier<Integer> rotationServoSupplier,
                                  Supplier<Float> strafeSpeedSupplier, Supplier<Boolean> autoHomeSupplier,
                                  Supplier<Integer> specimenServoSupplier, Supplier<Integer> robotLiftToZeroSupplier) {
         this.sweepSpeedSupplier = sweepSpeedSupplier;
@@ -30,8 +27,6 @@ public class IntakeTeleopSettings2 {
         this.sweepSlideSupplier = sweepSlideSupplier;
         this.bucketLiftSupplier = bucketLiftSupplier;
         this.robotLiftSupplier = robotLiftSupplier;
-        this.robotLift0Supplier = robotLift0Supplier;
-        this.robotLifthangSupplier = robotLifthangSupplier;
         this.rotationServoSupplier = rotationServoSupplier;
         this.strafeSpeedSupplier = strafeSpeedSupplier;
         this.autoHomeSupplier = autoHomeSupplier;
@@ -48,9 +43,7 @@ public class IntakeTeleopSettings2 {
                 () -> gamepad.y ? -1 : gamepad.a ? 1 : 0, // sweepLiftSupplier
                 () -> gamepad.x ? -1 : gamepad.b ? 1 : 0, // horizontal SlideSupplier -1 = in
                 () -> gamepad2.y ? 1 : gamepad2.a ? -1 : 0, // bucketLiftSupplier
-                () -> gamepad2.left_bumper ? 1 : 0, // robotLiftSupplier
-                () -> 0, // robotLift0Supplier
-                () -> gamepad2.dpad_up ? 1 : 0, // robotLifthangSupplier
+                () -> gamepad2.left_bumper ? -1 :gamepad2.right_bumper ? 1 : 0, // robotLiftSupplier
                 () -> gamepad.dpad_left ? -1 : gamepad.dpad_right ? 1 : 0, // rotationServoSupplier
                 () -> gamepad2.left_stick_x, // strafeSpeedSupplier
                 new EdgeSupplier(() -> gamepad.back).getRisingEdgeSupplier(), // autoHomeSupplier

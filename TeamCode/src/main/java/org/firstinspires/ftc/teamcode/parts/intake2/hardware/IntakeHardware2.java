@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.parts.intake2.hardware;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -66,6 +68,7 @@ public class IntakeHardware2 {
         bucketLiftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
         DigitalChannel robotLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital0");
         robotLiftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
+        //Rev2mDistanceSensor specDistance = hardwareMap.get(Rev2mDistanceSensor.class, "sensor_distance");
 
         return new IntakeHardware2(
                 bucketLiftMotorSettings.makeExMotor(hardwareMap),
