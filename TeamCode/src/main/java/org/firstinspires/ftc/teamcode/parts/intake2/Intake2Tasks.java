@@ -7,7 +7,7 @@ import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
 
 public class Intake2Tasks {
-    private final Group movementTask;
+    protected final Group movementTask;
     private final TimedTask autoHomeTask;
     private Intake2 intake;
     private Robot robot;

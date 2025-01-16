@@ -9,6 +9,8 @@ import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
 import om.self.supplier.consumer.EdgeConsumer;
+import om.self.task.core.Group;
+
 import static java.lang.Math.abs;
 
 public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHardware2, IntakeControl2> {
@@ -220,6 +222,10 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         });
     }
 
+    public void stopAllIntakeTasks() {
+        tasks.movementTask.runCommand(Group.Command.PAUSE);
+        tasks.movementTask.getActiveRunnables().clear();    // this is the magic sauce... must be used after the PAUSE or it will stop working
+    }
     @Override
     public void onBeanLoad() {
     }
