@@ -8,10 +8,13 @@ import om.self.task.other.TimedTask;
 
 public class IntakeTasks {
     public final Group movementTask;
+    public final TimedTask autonomousSample;
     public final TimedTask autoHomeTask;
     public final TimedTask prepareToIntakeTask;
     public final TimedTask safeTask;
     public final TimedTask transferTask;
+    public final TimedTask prepareToGetSpecimen;
+    public final TimedTask getSpecimen;
     public final TimedTask hangSpecimenTask;
     public final TimedTask prepareToHangSpecimenTask;
     public final TimedTask prepareToDepositTask;
@@ -20,6 +23,8 @@ public class IntakeTasks {
     public final TimedTask prepareToTransferTask;
     public final TimedTask checkSampleTask;
     public final TimedTask ejectBadSampleTask;
+    public final TimedTask prepareToHangRobotTask;
+    public final TimedTask hangRobotTask;
     private final Intake intake;
     private final Robot robot;
 
@@ -27,10 +32,13 @@ public class IntakeTasks {
         this.intake = intake;
         this.robot = robot;
         movementTask = new Group("auto movement", intake.getTaskManager());
+        autonomousSample = new TimedTask(TaskNames.autonomousSample, movementTask);
         autoHomeTask = new TimedTask(TaskNames.autoHome, movementTask);
         prepareToIntakeTask = new TimedTask(TaskNames.prepareToIntake, movementTask);
         safeTask = new TimedTask(TaskNames.safe, movementTask);
         transferTask = new TimedTask(TaskNames.transfer, movementTask);
+        prepareToGetSpecimen = new TimedTask(TaskNames.prepareToGetSpecimen, movementTask);
+        getSpecimen = new TimedTask(TaskNames.getSpecimen, movementTask);
         hangSpecimenTask = new TimedTask(TaskNames.hangSpecimen, movementTask);
         prepareToHangSpecimenTask = new TimedTask(TaskNames.prepareToHangSpecimen, movementTask);
         prepareToDepositTask = new TimedTask(TaskNames.prepareToDeposit, movementTask);
@@ -39,12 +47,28 @@ public class IntakeTasks {
         prepareToTransferTask = new TimedTask(TaskNames.prepareToTransfer, movementTask);
         checkSampleTask = new TimedTask(TaskNames.checkSample, movementTask);
         ejectBadSampleTask = new TimedTask(TaskNames.ejectBadSample, movementTask);
+        prepareToHangRobotTask = new TimedTask(TaskNames.prepareToHangRobotTask, movementTask);
+        hangRobotTask = new TimedTask(TaskNames.hangRobotTask, movementTask);
     }
 
     public void startAutoHome() { autoHomeTask.restart(); }
 
 //    public void constructPrepareToIntakeTask() {
     public void constructAllIntakeTasks() {
+        autonomousSample.autoStart = false;
+        autonomousSample.addStep(() -> {
+                    intake.getHardware().flipper.setPosition(intake.getSettings().spintakeAlmostFloor);
+                    intake.getHardware().spinner.setPosition(intake.getSettings().spinnerIn);
+        });
+        autonomousSample.addStep(() -> intake.getHardware().flipper.isDone());
+        autonomousSample.addStep(() -> intake.setSlidePosition(intake.getSettings().autoSampleSlideDistance, 1));
+        autonomousSample.addStep(intake::isSlideInTolerance);
+        autonomousSample.addDelay(500);
+        autonomousSample.addStep(() -> intake.setSlidePosition(intake.getSettings().minSlidePosition, 1));
+        autonomousSample.addStep(intake::isSlideInTolerance);
+        autonomousSample.addStep(prepareToTransferTask::restart);
+        autonomousSample.addStep(transferTask::isDone);
+
         prepareToIntakeTask.autoStart = false;
         prepareToIntakeTask.addStep(() -> {
             //safeTask.runCommand(Group.Command.PAUSE);
@@ -57,6 +81,42 @@ public class IntakeTasks {
         });
         prepareToIntakeTask.addStep( () -> intake.getHardware().flipper.isDone() );
 //    }
+
+        prepareToGetSpecimen.autoStart = false;
+        prepareToGetSpecimen.addStep(() -> {
+            //safeTask.runCommand(Group.Command.PAUSE);
+            intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftGetSpecimen);
+            intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen);
+
+        });
+        prepareToGetSpecimen.addStep(intake::isLiftInTolerance);
+        prepareToGetSpecimen.addStep(() -> intake.getHardware().pinch.isDone());
+
+//    }
+        getSpecimen.autoStart = false;
+        getSpecimen.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed));
+        getSpecimen.addStep(() -> intake.getHardware().pinch.isDone());
+        getSpecimen.addStep(() -> intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftRaiseSpeciman));
+        getSpecimen.addStep(intake::isLiftInTolerance);
+
+        prepareToHangSpecimenTask.autoStart = false;
+        prepareToHangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchLoose));
+        prepareToHangSpecimenTask.addStep(() -> intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftHangReady));
+        prepareToHangSpecimenTask.addStep(intake::isLiftInTolerance);
+
+        hangSpecimenTask.autoStart = false;
+        hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchSuperLoose));
+        hangSpecimenTask.addStep(() -> intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftHangRelease));
+        hangSpecimenTask.addStep(intake::isLiftInTolerance);
+        hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen));
+        hangSpecimenTask.addStep(safeTask::restart);
+
+        prepareToHangRobotTask.autoStart = false;
+        prepareToHangRobotTask.addStep(() -> intake.getHardware().robotHangMotor.setTargetPosition(intake.getSettings().positionHangReady));
+
+        hangRobotTask.autoStart = false;
+        hangRobotTask.addStep(() -> intake.getHardware().robotHangMotor.setTargetPosition(intake.getSettings().positionHangFinal));
+
 
 //    public void constructSafeTask() {
         safeTask.autoStart = false;
@@ -210,12 +270,17 @@ public class IntakeTasks {
         }
     }
 
+
+
     /***********************************************************************************/
     public static final class TaskNames {
+        public final static String autonomousSample = "autonomous sample";
         public final static String autoHome = "auto home";
         public final static String prepareToIntake = "prepare to intake";
         public final static String safe = "safe";
         public final static String transfer = "transfer";
+        public final static String prepareToGetSpecimen = "prepare to get specimen";
+        public final static String getSpecimen = "get specimen";
         public final static String hangSpecimen = "hang specimen";
         public final static String prepareToHangSpecimen = "prepare to hang specimen";
         public final static String prepareToDeposit = "prepare to deposit";
@@ -224,6 +289,8 @@ public class IntakeTasks {
         public final static String checkSample = "check sample";
         public final static String ejectBadSample = "eject the sample";
         public final static String prepareToTransfer = "prepare the transfer";
+        public final static String prepareToHangRobotTask = "prepare to hang robot";
+        public final static String hangRobotTask = "hang robot";
     }
 
     public static final class Events {

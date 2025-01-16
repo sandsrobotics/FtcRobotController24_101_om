@@ -18,6 +18,7 @@ public class IntakeHardware {
     public static final double bucketHoldPower = 1;
     public final DcMotorEx bucketLiftMotor;
     public final DcMotorEx horizSliderMotor;
+    public final DcMotorEx robotHangMotor;
 //    public final Servo tiltServo;
 //    public final CRServo intakeFlipperServo;
     public final ServoSSR spinner;
@@ -29,10 +30,11 @@ public class IntakeHardware {
     public final DigitalChannel bucketLiftZeroSwitch;
     public final DigitalChannel slideZeroSwitch;
 
-    public IntakeHardware(DcMotorEx bucketLiftMotor, DcMotorEx slideMotor, DigitalChannel bucketLiftZeroSwitch, DigitalChannel slideZeroSwitch,
+    public IntakeHardware(DcMotorEx bucketLiftMotor, DcMotorEx slideMotor, DcMotorEx robotHangMotor, DigitalChannel bucketLiftZeroSwitch, DigitalChannel slideZeroSwitch,
                           ServoSSR spinner, ServoSSR flipper, ServoSSR chute, ServoSSR pinch, NormalizedColorSensor colorSensor) {
         this.bucketLiftMotor = bucketLiftMotor;
         this.horizSliderMotor = slideMotor;
+        this.robotHangMotor = robotHangMotor;
         this.bucketLiftZeroSwitch = bucketLiftZeroSwitch;
         this.slideZeroSwitch = slideZeroSwitch;
         this.spinner = spinner;
@@ -45,6 +47,7 @@ public class IntakeHardware {
     public static IntakeHardware makeDefault(HardwareMap hardwareMap)  {
         MotorSettings bucketLiftMotorSettings =new MotorSettings(MotorSettings.Number.ONE_B, DcMotorSimple.Direction.REVERSE, DcMotorEx.ZeroPowerBehavior.BRAKE, DcMotorEx.RunMode.RUN_TO_POSITION, bucketHoldPower);
         MotorSettings slideMotorSettings = new MotorSettings(MotorSettings.Number.ZERO_B, DcMotorSimple.Direction.FORWARD, DcMotorEx.ZeroPowerBehavior.BRAKE, DcMotorEx.RunMode.RUN_TO_POSITION, slideHoldPower);
+        MotorSettings robotHangMotorSettings = new MotorSettings(MotorSettings.Number.TWO_B, DcMotorSimple.Direction.FORWARD, DcMotorEx.ZeroPowerBehavior.BRAKE, DcMotorEx.RunMode.RUN_TO_POSITION, 1);
 //        ServoSettings tiltServoSettings = new ServoSettings(ServoSettings.Number.FOUR, Servo.Direction.FORWARD);ServoSettings tiltServoRightSettings = new ServoSettings(ServoSettings.Number.FIVE, Servo.Direction.FORWARD);
 //        MotorSettings intakeFlipperServoSettings = new MotorSettings(ServoSettings.Number.ZERO, DcMotorSimple.Direction.FORWARD);MotorSettings intakeWheelServoRightSettings = new MotorSettings(ServoSettings.Number.TWO, DcMotorSimple.Direction.REVERSE);
         DigitalChannel bucketLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital2");
@@ -55,6 +58,7 @@ public class IntakeHardware {
         return new IntakeHardware(
                 bucketLiftMotorSettings.makeExMotor(hardwareMap),
                 slideMotorSettings.makeExMotor(hardwareMap),
+                robotHangMotorSettings.makeExMotor(hardwareMap),
                 bucketLiftZeroSwitch,
                 slideZeroSwitch,
                 new ServoSSR(hardwareMap.get(Servo.class,"servo0")),
