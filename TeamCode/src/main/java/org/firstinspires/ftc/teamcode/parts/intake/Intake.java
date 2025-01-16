@@ -258,10 +258,11 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         NormalizedRGBA colorPlural = getHardware().colorSensor.getNormalizedColors();
         Color.colorToHSV(colorPlural.toColor(), hsvValues);
         int hue = (int) hsvValues[0];
-        if (hue > 20 && hue < 60) return 1; // Red = 1
-        if (hue > 65 && hue < 160) return 2; // Yellow = 2
-        if (hue > 160) return 3; // Blue = 3
-        return 0; // Nothing detected
+        lastSample = 0;
+        if (hue > 20 && hue < 60) lastSample = 1; // Red = 1
+        if (hue > 65 && hue < 160) lastSample = 2; // Yellow = 2
+        if (hue > 160) lastSample = 3; // Blue = 3
+        return lastSample; // Nothing detected
    }
    public boolean isSampleGood(int sample) {
         if (sample == 1 && isRedGood) return true;
@@ -277,13 +278,14 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public void onInit() {
         setMotorsToRunConfig();
         tasks = new IntakeTasks(this, parent);
-        tasks.constructAutoHome();
-        tasks.constructSafeTask();
-        tasks.constructPrepareToIntakeTask();
-        tasks.constructTransfer();
-        tasks.constructPrepareToDepositTask();
-        tasks.constructDepositTask();
-        tasks.constructAutoIntakeTask();
+        tasks.constructAllIntakeTasks();
+//        tasks.constructAutoHome();
+//        tasks.constructSafeTask();
+//        tasks.constructPrepareToIntakeTask();
+//        tasks.constructTransfer();
+//        tasks.constructPrepareToDepositTask();
+//        tasks.constructDepositTask();
+//        tasks.constructAutoIntakeTask();
 //        tasks.constructEjectBadSampleTask();
 //        tasks.constructPrepareToTransferTask();
 

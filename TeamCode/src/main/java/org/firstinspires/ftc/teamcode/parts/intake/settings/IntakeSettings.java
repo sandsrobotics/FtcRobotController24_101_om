@@ -50,7 +50,7 @@ public class IntakeSettings {
     public final int pinchSweepTime              = 1500;   // spec is 1250
 
     public final int positionSlideMin            = 10;
-    public final int positionSlideMax            = 1500;
+    public final int positionSlideMax            = 1200; // Physical limit = 1500; 1100 might be necessary if too long
     public final int positionSlideStartIntake    = 450;   //todo: finalize number
     public final int positionSlidePitMin         = 250;    //todo: finalize number
     public final int toleranceSlide              = 20;

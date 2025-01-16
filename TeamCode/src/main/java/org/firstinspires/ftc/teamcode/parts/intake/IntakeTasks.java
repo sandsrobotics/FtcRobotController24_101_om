@@ -43,7 +43,8 @@ public class IntakeTasks {
 
     public void startAutoHome() { autoHomeTask.restart(); }
 
-    public void constructPrepareToIntakeTask() {
+//    public void constructPrepareToIntakeTask() {
+    public void constructAllIntakeTasks() {
         prepareToIntakeTask.autoStart = false;
         prepareToIntakeTask.addStep(() -> {
             //safeTask.runCommand(Group.Command.PAUSE);
@@ -55,9 +56,9 @@ public class IntakeTasks {
             intake.getHardware().flipper.setPosition(intake.getSettings().spintakeAlmostFloor);
         });
         prepareToIntakeTask.addStep( () -> intake.getHardware().flipper.isDone() );
-    }
+//    }
 
-    public void constructSafeTask() {
+//    public void constructSafeTask() {
         safeTask.autoStart = false;
         safeTask.addStep( () -> {
             //prepareToIntakeTask.runCommand(Group.Command.PAUSE);
@@ -77,9 +78,9 @@ public class IntakeTasks {
             intake.getHardware().flipper.disable();
             intake.getHardware().chute.disable();
         });
-    }
+//    }
 
-    public void constructTransfer() {
+//    public void constructTransfer() {
         transferTask.autoStart = false;
         transferTask.addStep(safeTask::restart);
         transferTask.addStep(safeTask::isDone);
@@ -94,9 +95,9 @@ public class IntakeTasks {
             intake.getHardware().chute.disable();
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
         });
-    }
+//    }
 
-    public void constructPrepareToDepositTask() {
+//    public void constructPrepareToDepositTask() {
         prepareToDepositTask.autoStart = false;
         prepareToDepositTask.addStep( () -> {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
@@ -107,9 +108,9 @@ public class IntakeTasks {
             intake.setLiftPosition(intake.getSettings().positionLiftReady, 1);
         });
         prepareToDepositTask.addStep(intake::isLiftInTolerance);
-    }
+//    }
 
-    public void constructDepositTask() {
+//    public void constructDepositTask() {
         depositTask.autoStart = false;
         depositTask.addStep( () -> {
             intake.getHardware().chute.setPosition(intake.getSettings().chuteReady);
@@ -122,18 +123,49 @@ public class IntakeTasks {
         depositTask.addStep( ()-> intake.getHardware().chute.isDone());
         depositTask.addDelay(500);
         depositTask.addStep(safeTask::restart);
-    }
+//    }
 
-    public void constructAutoIntakeTask() {
+//    public void constructAutoIntakeTask() {
         autoIntakeTask.autoStart = false;
         autoIntakeTask.addStep( ()->{
             intake.getHardware().flipper.setPosition((intake.getSettings().spintakeAlmostFloor));
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerIn);
+
             //TODO: FINISH THIS TASK
         });
-    }
+        autoIntakeTask.addStep(()-> (intake.sampleDistance() < 1.5));
+        autoIntakeTask.addStep(()->(intake.identifySampleColor() > 0));
+        autoIntakeTask.addStep(()->{
+           if (intake.isSampleGood(intake.lastSample)) {
+                prepareToTransferTask.restart();
+           } else {
+               ejectBadSampleTask.restart();
+           }
+        });
 
-    public void constructAutoHome() {
+        ejectBadSampleTask.autoStart = false;
+        ejectBadSampleTask.addStep( ()-> {
+            intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOut);
+
+        });
+        ejectBadSampleTask.addDelay(1500);
+        ejectBadSampleTask.addStep(autoIntakeTask::restart);
+
+        prepareToTransferTask.autoStart = false;
+        prepareToTransferTask.addStep( ()-> {
+           intake.getHardware().flipper.setPosition(intake.getSettings().spintakeSafe);
+           intake.getHardware().spinner.setPosition(intake.getSettings().spinnerSlowOut);
+        });
+        prepareToTransferTask.addDelay(500);
+        prepareToTransferTask.addStep( ()->{
+            intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
+            transferTask.restart();
+        });
+
+
+//    }
+
+//    public void constructAutoHome() {
         autoHomeTask.autoStart = false;
         autoHomeTask.addStep(()->this.setSlideToHomeConfig(1));
         autoHomeTask.addTimedStep(() -> {
