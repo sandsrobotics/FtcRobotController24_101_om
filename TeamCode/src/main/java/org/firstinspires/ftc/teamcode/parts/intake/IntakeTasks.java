@@ -68,6 +68,7 @@ public class IntakeTasks {
         autonomousSample.addStep(intake::isSlideInTolerance);
         autonomousSample.addStep(prepareToTransferTask::restart);
         autonomousSample.addStep(transferTask::isDone);
+        /* todo: This needs more wiggling!!!! */
 
         prepareToIntakeTask.autoStart = false;
         prepareToIntakeTask.addStep(() -> {
@@ -85,7 +86,8 @@ public class IntakeTasks {
         prepareToGetSpecimen.autoStart = false;
         prepareToGetSpecimen.addStep(() -> {
             //safeTask.runCommand(Group.Command.PAUSE);
-            intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftGetSpecimen);
+            //intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftGetSpecimen);
+            intake.setLiftPosition(intake.getSettings().positionLiftGetSpecimen, 1);
             intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen);
 
         });
@@ -96,17 +98,20 @@ public class IntakeTasks {
         getSpecimen.autoStart = false;
         getSpecimen.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed));
         getSpecimen.addStep(() -> intake.getHardware().pinch.isDone());
-        getSpecimen.addStep(() -> intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftRaiseSpeciman));
+        //getSpecimen.addStep(() -> intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftRaiseSpeciman));
+        getSpecimen.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftRaiseSpeciman, 1));
         getSpecimen.addStep(intake::isLiftInTolerance);
 
         prepareToHangSpecimenTask.autoStart = false;
         prepareToHangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchLoose));
-        prepareToHangSpecimenTask.addStep(() -> intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftHangReady));
+        //prepareToHangSpecimenTask.addStep(() -> intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftHangReady));
+        prepareToHangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangReady, 1));
         prepareToHangSpecimenTask.addStep(intake::isLiftInTolerance);
 
         hangSpecimenTask.autoStart = false;
         hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchSuperLoose));
-        hangSpecimenTask.addStep(() -> intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftHangRelease));
+        //hangSpecimenTask.addStep(() -> intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftHangRelease));
+        hangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangRelease, 1));
         hangSpecimenTask.addStep(intake::isLiftInTolerance);
         hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen));
         hangSpecimenTask.addStep(safeTask::restart);
@@ -126,7 +131,7 @@ public class IntakeTasks {
             intake.getHardware().flipper.setPosition(intake.getSettings().spintakeParked);
             intake.getHardware().chute.setPosition(intake.getSettings().chuteParked);
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
-            intake.setSlidePosition(intake.getSettings().positionSlideMin, 1);
+            intake.setSlidePosition(intake.getSettings().positionSlideOvershoot, 1);
             intake.setLiftPosition(intake.getSettings().positionLiftMin, 1);
         });
         safeTask.addStep( () ->
@@ -190,9 +195,11 @@ public class IntakeTasks {
         autoIntakeTask.addStep( ()->{
             intake.getHardware().flipper.setPosition((intake.getSettings().spintakeAlmostFloor));
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerIn);
-
-            //TODO: FINISH THIS TASK
         });
+        //lk added this; subtract if trouble
+        autoIntakeTask.addStep(()-> intake.getHardware().flipper.isDone());
+        autoIntakeTask.addStep(()-> intake.getHardware().flipper.disable());
+        //end lk
         autoIntakeTask.addStep(()-> (intake.sampleDistance() < 1.5));
         autoIntakeTask.addStep(()->(intake.identifySampleColor() > 0));
         autoIntakeTask.addStep(()->{
@@ -216,7 +223,7 @@ public class IntakeTasks {
            intake.getHardware().flipper.setPosition(intake.getSettings().spintakeSafe);
            intake.getHardware().spinner.setPosition(intake.getSettings().spinnerSlowOut);
         });
-        prepareToTransferTask.addDelay(500);
+        prepareToTransferTask.addDelay(350);
         prepareToTransferTask.addStep( ()->{
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
             transferTask.restart();
@@ -250,7 +257,7 @@ public class IntakeTasks {
     }
 
     private void setSlideToHomeConfig(int i) {
-        double power = -0.125;
+        double power = -.33; //-0.125;
         if (i==1) {
             intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
             intake.getHardware().bucketLiftMotor.setPower(power);

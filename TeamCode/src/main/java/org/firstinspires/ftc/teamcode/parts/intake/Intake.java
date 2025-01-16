@@ -82,7 +82,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     // Some new helper code
 
     public void setSlidePosition(int position, double power) {
-        if (position < getSettings().positionSlideMin || position > getSettings().positionSlideMax) {  // something very wrong so bail
+        if (position < getSettings().positionSlideOvershoot || position > getSettings().positionSlideMax) {  // something very wrong so bail
             stopSlide();
             return;
         }
@@ -313,10 +313,10 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 //        sweepWithPower(control.sweeperPower);
 //        setSweepPosition(control.sweepLiftPosition);
  //       changeSlidePosition(control.sweepSlidePosition);
-        setBucketLiftPosition(control.bucketLiftPosition);
+//lk        setBucketLiftPosition(control.bucketLiftPosition);
       //  setIntakePosition(control.intakePosition);
-        setSpecimanClaw(control.pinchPosition); // jas
-        setV_Slide(control.v_SlidePosition); // jas
+//lk        setSpecimanClaw(control.pinchPosition); // jas
+//lk        setV_Slide(control.v_SlidePosition); // jas
        // setIntakeAngle(control.intakeAngleSupplier); // jas
 
         currentSlidePos = getHardware().horizSliderMotor.getCurrentPosition();
