@@ -50,24 +50,27 @@ public class IntakeSettings {
     public final int pinchSweepTime              = 1500;   // spec is 1250
 
     public final int positionSlideMin            = 10;
-    public final int positionSlideMax            = 1500;
+    public final int positionSlideMax            = 1200; // Physical limit = 1500; 1100 might be necessary if too long
     public final int positionSlideStartIntake    = 450;   //todo: finalize number
     public final int positionSlidePitMin         = 250;    //todo: finalize number
     public final int toleranceSlide              = 20;
+    public final int positionSlideOvershoot      = -10;
+    public final int autoSampleSlideDistance     = 750; //todo : finalize number
 
     public final int positionLiftMin             = 10;
     public final int positionLiftMax             = 3000;  //4200; //4350;
     public final int positionLiftReady           = 1500;
     public final int positionLiftGetSpecimen     = 10;     //todo: finalize number
-    public final int positionLiftHangReady       = 1700;  //2500;   //todo: get number
-    public final int positionLiftHangRelease     = 1400;  //2000;   //todo: get number
+    public final int positionLiftRaiseSpeciman   = 150; //= 50;
+    public final int positionLiftHangReady       = 1440;  //2500;   //todo: get number
+    public final int positionLiftHangRelease     = 1000;  //2000;   //todo: get number
     public final int positionLiftTransfer        = 10;
     public final int toleranceLift               = 20;
 
     public final int positionHangMin             = 20;
-    public final int positionHangMax             = 9600; //4350;
-    public final int positionHangReady           = 3000; //todo: get number
-    public final int positionHangFinal           = 1000; //todo: get number
+    public final int positionHangMax             = 13500; //4350;
+    public final int positionHangReady           = 9000; //todo: get number
+    public final int positionHangFinal           = 745; //todo: get number
     public final int toleranceHang               = 20;
 
 //    public static boolean slideOverride          = false;

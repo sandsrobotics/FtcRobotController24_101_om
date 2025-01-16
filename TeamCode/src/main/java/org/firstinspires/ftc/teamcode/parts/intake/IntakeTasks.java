@@ -8,10 +8,13 @@ import om.self.task.other.TimedTask;
 
 public class IntakeTasks {
     public final Group movementTask;
+    public final TimedTask autonomousSample;
     public final TimedTask autoHomeTask;
     public final TimedTask prepareToIntakeTask;
     public final TimedTask safeTask;
     public final TimedTask transferTask;
+    public final TimedTask prepareToGetSpecimen;
+    public final TimedTask getSpecimen;
     public final TimedTask hangSpecimenTask;
     public final TimedTask prepareToHangSpecimenTask;
     public final TimedTask prepareToDepositTask;
@@ -20,6 +23,8 @@ public class IntakeTasks {
     public final TimedTask prepareToTransferTask;
     public final TimedTask checkSampleTask;
     public final TimedTask ejectBadSampleTask;
+    public final TimedTask prepareToHangRobotTask;
+    public final TimedTask hangRobotTask;
     private final Intake intake;
     private final Robot robot;
 
@@ -27,10 +32,13 @@ public class IntakeTasks {
         this.intake = intake;
         this.robot = robot;
         movementTask = new Group("auto movement", intake.getTaskManager());
+        autonomousSample = new TimedTask(TaskNames.autonomousSample, movementTask);
         autoHomeTask = new TimedTask(TaskNames.autoHome, movementTask);
         prepareToIntakeTask = new TimedTask(TaskNames.prepareToIntake, movementTask);
         safeTask = new TimedTask(TaskNames.safe, movementTask);
         transferTask = new TimedTask(TaskNames.transfer, movementTask);
+        prepareToGetSpecimen = new TimedTask(TaskNames.prepareToGetSpecimen, movementTask);
+        getSpecimen = new TimedTask(TaskNames.getSpecimen, movementTask);
         hangSpecimenTask = new TimedTask(TaskNames.hangSpecimen, movementTask);
         prepareToHangSpecimenTask = new TimedTask(TaskNames.prepareToHangSpecimen, movementTask);
         prepareToDepositTask = new TimedTask(TaskNames.prepareToDeposit, movementTask);
@@ -39,11 +47,29 @@ public class IntakeTasks {
         prepareToTransferTask = new TimedTask(TaskNames.prepareToTransfer, movementTask);
         checkSampleTask = new TimedTask(TaskNames.checkSample, movementTask);
         ejectBadSampleTask = new TimedTask(TaskNames.ejectBadSample, movementTask);
+        prepareToHangRobotTask = new TimedTask(TaskNames.prepareToHangRobotTask, movementTask);
+        hangRobotTask = new TimedTask(TaskNames.hangRobotTask, movementTask);
     }
 
     public void startAutoHome() { autoHomeTask.restart(); }
 
-    public void constructPrepareToIntakeTask() {
+//    public void constructPrepareToIntakeTask() {
+    public void constructAllIntakeTasks() {
+        autonomousSample.autoStart = false;
+        autonomousSample.addStep(() -> {
+                    intake.getHardware().flipper.setPosition(intake.getSettings().spintakeAlmostFloor);
+                    intake.getHardware().spinner.setPosition(intake.getSettings().spinnerIn);
+        });
+        autonomousSample.addStep(() -> intake.getHardware().flipper.isDone());
+        autonomousSample.addStep(() -> intake.setSlidePosition(intake.getSettings().autoSampleSlideDistance, 1));
+        autonomousSample.addStep(intake::isSlideInTolerance);
+        autonomousSample.addDelay(500);
+        autonomousSample.addStep(() -> intake.setSlidePosition(intake.getSettings().minSlidePosition, 1));
+        autonomousSample.addStep(intake::isSlideInTolerance);
+        autonomousSample.addStep(prepareToTransferTask::restart);
+        autonomousSample.addStep(transferTask::isDone);
+        /* todo: This needs more wiggling!!!! */
+
         prepareToIntakeTask.autoStart = false;
         prepareToIntakeTask.addStep(() -> {
             //safeTask.runCommand(Group.Command.PAUSE);
@@ -55,9 +81,49 @@ public class IntakeTasks {
             intake.getHardware().flipper.setPosition(intake.getSettings().spintakeAlmostFloor);
         });
         prepareToIntakeTask.addStep( () -> intake.getHardware().flipper.isDone() );
-    }
+//    }
 
-    public void constructSafeTask() {
+        prepareToGetSpecimen.autoStart = false;
+        prepareToGetSpecimen.addStep(() -> {
+            //safeTask.runCommand(Group.Command.PAUSE);
+            //intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftGetSpecimen);
+            intake.setLiftPosition(intake.getSettings().positionLiftGetSpecimen, 1);
+            intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen);
+
+        });
+        prepareToGetSpecimen.addStep(intake::isLiftInTolerance);
+        prepareToGetSpecimen.addStep(() -> intake.getHardware().pinch.isDone());
+
+//    }
+        getSpecimen.autoStart = false;
+        getSpecimen.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed));
+        getSpecimen.addStep(() -> intake.getHardware().pinch.isDone());
+        //getSpecimen.addStep(() -> intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftRaiseSpeciman));
+        getSpecimen.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftRaiseSpeciman, 1));
+        getSpecimen.addStep(intake::isLiftInTolerance);
+
+        prepareToHangSpecimenTask.autoStart = false;
+        prepareToHangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchLoose));
+        //prepareToHangSpecimenTask.addStep(() -> intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftHangReady));
+        prepareToHangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangReady, 1));
+        prepareToHangSpecimenTask.addStep(intake::isLiftInTolerance);
+
+        hangSpecimenTask.autoStart = false;
+        hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchSuperLoose));
+        //hangSpecimenTask.addStep(() -> intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftHangRelease));
+        hangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangRelease, 1));
+        hangSpecimenTask.addStep(intake::isLiftInTolerance);
+        hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen));
+        hangSpecimenTask.addStep(safeTask::restart);
+
+        prepareToHangRobotTask.autoStart = false;
+        prepareToHangRobotTask.addStep(() -> intake.getHardware().robotHangMotor.setTargetPosition(intake.getSettings().positionHangReady));
+
+        hangRobotTask.autoStart = false;
+        hangRobotTask.addStep(() -> intake.getHardware().robotHangMotor.setTargetPosition(intake.getSettings().positionHangFinal));
+
+
+//    public void constructSafeTask() {
         safeTask.autoStart = false;
         safeTask.addStep( () -> {
             //prepareToIntakeTask.runCommand(Group.Command.PAUSE);
@@ -65,7 +131,7 @@ public class IntakeTasks {
             intake.getHardware().flipper.setPosition(intake.getSettings().spintakeParked);
             intake.getHardware().chute.setPosition(intake.getSettings().chuteParked);
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
-            intake.setSlidePosition(intake.getSettings().positionSlideMin, 1);
+            intake.setSlidePosition(intake.getSettings().positionSlideOvershoot, 1);
             intake.setLiftPosition(intake.getSettings().positionLiftMin, 1);
         });
         safeTask.addStep( () ->
@@ -77,9 +143,9 @@ public class IntakeTasks {
             intake.getHardware().flipper.disable();
             intake.getHardware().chute.disable();
         });
-    }
+//    }
 
-    public void constructTransfer() {
+//    public void constructTransfer() {
         transferTask.autoStart = false;
         transferTask.addStep(safeTask::restart);
         transferTask.addStep(safeTask::isDone);
@@ -94,9 +160,9 @@ public class IntakeTasks {
             intake.getHardware().chute.disable();
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
         });
-    }
+//    }
 
-    public void constructPrepareToDepositTask() {
+//    public void constructPrepareToDepositTask() {
         prepareToDepositTask.autoStart = false;
         prepareToDepositTask.addStep( () -> {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
@@ -107,9 +173,9 @@ public class IntakeTasks {
             intake.setLiftPosition(intake.getSettings().positionLiftReady, 1);
         });
         prepareToDepositTask.addStep(intake::isLiftInTolerance);
-    }
+//    }
 
-    public void constructDepositTask() {
+//    public void constructDepositTask() {
         depositTask.autoStart = false;
         depositTask.addStep( () -> {
             intake.getHardware().chute.setPosition(intake.getSettings().chuteReady);
@@ -122,18 +188,51 @@ public class IntakeTasks {
         depositTask.addStep( ()-> intake.getHardware().chute.isDone());
         depositTask.addDelay(500);
         depositTask.addStep(safeTask::restart);
-    }
+//    }
 
-    public void constructAutoIntakeTask() {
+//    public void constructAutoIntakeTask() {
         autoIntakeTask.autoStart = false;
         autoIntakeTask.addStep( ()->{
             intake.getHardware().flipper.setPosition((intake.getSettings().spintakeAlmostFloor));
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerIn);
-            //TODO: FINISH THIS TASK
         });
-    }
+        //lk added this; subtract if trouble
+        autoIntakeTask.addStep(()-> intake.getHardware().flipper.isDone());
+        autoIntakeTask.addStep(()-> intake.getHardware().flipper.disable());
+        //end lk
+        autoIntakeTask.addStep(()-> (intake.sampleDistance() < 1.5));
+        autoIntakeTask.addStep(()->(intake.identifySampleColor() > 0));
+        autoIntakeTask.addStep(()->{
+           if (intake.isSampleGood(intake.lastSample)) {
+                prepareToTransferTask.restart();
+           } else {
+               ejectBadSampleTask.restart();
+           }
+        });
 
-    public void constructAutoHome() {
+        ejectBadSampleTask.autoStart = false;
+        ejectBadSampleTask.addStep( ()-> {
+            intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOut);
+
+        });
+        ejectBadSampleTask.addDelay(1500);
+        ejectBadSampleTask.addStep(autoIntakeTask::restart);
+
+        prepareToTransferTask.autoStart = false;
+        prepareToTransferTask.addStep( ()-> {
+           intake.getHardware().flipper.setPosition(intake.getSettings().spintakeSafe);
+           intake.getHardware().spinner.setPosition(intake.getSettings().spinnerSlowOut);
+        });
+        prepareToTransferTask.addDelay(350);
+        prepareToTransferTask.addStep( ()->{
+            intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
+            transferTask.restart();
+        });
+
+
+//    }
+
+//    public void constructAutoHome() {
         autoHomeTask.autoStart = false;
         autoHomeTask.addStep(()->this.setSlideToHomeConfig(1));
         autoHomeTask.addTimedStep(() -> {
@@ -158,7 +257,7 @@ public class IntakeTasks {
     }
 
     private void setSlideToHomeConfig(int i) {
-        double power = -0.125;
+        double power = -.33; //-0.125;
         if (i==1) {
             intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
             intake.getHardware().bucketLiftMotor.setPower(power);
@@ -178,12 +277,17 @@ public class IntakeTasks {
         }
     }
 
+
+
     /***********************************************************************************/
     public static final class TaskNames {
+        public final static String autonomousSample = "autonomous sample";
         public final static String autoHome = "auto home";
         public final static String prepareToIntake = "prepare to intake";
         public final static String safe = "safe";
         public final static String transfer = "transfer";
+        public final static String prepareToGetSpecimen = "prepare to get specimen";
+        public final static String getSpecimen = "get specimen";
         public final static String hangSpecimen = "hang specimen";
         public final static String prepareToHangSpecimen = "prepare to hang specimen";
         public final static String prepareToDeposit = "prepare to deposit";
@@ -192,6 +296,8 @@ public class IntakeTasks {
         public final static String checkSample = "check sample";
         public final static String ejectBadSample = "eject the sample";
         public final static String prepareToTransfer = "prepare the transfer";
+        public final static String prepareToHangRobotTask = "prepare to hang robot";
+        public final static String hangRobotTask = "hang robot";
     }
 
     public static final class Events {
