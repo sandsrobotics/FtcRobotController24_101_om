@@ -8,12 +8,18 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.parts.drive.Drive;
+import org.firstinspires.ftc.teamcode.parts.drive.DriveControl;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
+import org.firstinspires.ftc.teamcode.parts.intake2.Intake2;
+
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
 import om.self.supplier.consumer.EdgeConsumer;
 import om.self.task.core.Group;
+
+import static java.lang.Math.abs;
 
 public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardware, IntakeControl> {
     public int slideTargetPosition;
@@ -26,6 +32,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public boolean isYellowGood = true;
     public boolean isBlueGood = false;
     public int lastSample = -1;
+    protected Drive drive;
+    private double spinnerSliderPower = 0.0;
     // this is part of the resets lift to 0 each time it hits the limit switch
     private final EdgeConsumer homingVSlideZero = new EdgeConsumer();
     private final EdgeConsumer homingHSlideZero = new EdgeConsumer();
@@ -274,6 +282,11 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         return isSampleGood(identifySampleColor());
    }
 
+    public void strafeRobot(DriveControl control) {
+        if (abs(spinnerSliderPower) > .01) {
+            control.power = control.power.addX(spinnerSliderPower / 3);
+        }
+    }
     @Override
     public void onInit() {
         setMotorsToRunConfig();
@@ -319,6 +332,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 //lk        setV_Slide(control.v_SlidePosition); // jas
        // setIntakeAngle(control.intakeAngleSupplier); // jas
 
+        spinnerSliderPower = 0.0; // control.strafePower;
         currentSlidePos = getHardware().horizSliderMotor.getCurrentPosition();
         currentBucketPos = getHardware().bucketLiftMotor.getCurrentPosition();
 
@@ -328,14 +342,20 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 
     @Override
     public void onStart() {
-        //drive = getBeanManager().getBestMatch(Drive.class, false);
+        drive = getBeanManager().getBestMatch(Drive.class, false);
+        drive.addController(Intake.ControllerNames.distanceController, this::strafeRobot);
         tasks.startAutoHome();
     }
 
     @Override
     public void onStop() {
-        //drive.removeController(ContollerNames.distanceContoller);
+        drive.removeController(Intake.ControllerNames.distanceController);
     }
+
+    public static final class ControllerNames {
+        public static final String distanceController = "distance controller";
+    }
+
 
 //    public double getDistance() {
 //        return ((DistanceSensor) getHardware().colorSensor).getDistance(DistanceUnit.CM);

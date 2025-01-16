@@ -264,17 +264,19 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     @Override
     public void onStart() {
-        drive.addController(ContollerNames.distanceContoller, this::strafeRobot);
-        drive.addController(ContollerNames.distanceContoller, this::doSpecRange);
+        drive.addController(ControllerNames.distanceController, this::strafeRobot);
+        drive.addController(ControllerNames.specController, this::doSpecRange);
         tasks.startAutoHome();
     }
 
     @Override
     public void onStop() {
-        drive.removeController(ContollerNames.distanceContoller);
+        drive.removeController(ControllerNames.distanceController);
+        drive.removeController(ControllerNames.specController);
     }
 
-    public static final class ContollerNames {
-        public static final String distanceContoller = "distance controller";
+    public static final class ControllerNames {
+        public static final String distanceController = "distance controller";
+        public static final String specController = "specimen controller";
     }
 }
