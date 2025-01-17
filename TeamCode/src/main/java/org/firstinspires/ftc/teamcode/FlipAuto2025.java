@@ -150,13 +150,15 @@ public class FlipAuto2025 extends LinearOpMode{
         Vector3 humansidestart = new Vector3(14 + 3.0/8.0, -62, -90);
         Vector3 rightbeforespecimenbar = new Vector3(11.75, -37.75, -90);
         Vector3 specimenbar = new Vector3(11.75, -32.75, -90);
-        Vector3 afterfirstredbar = new Vector3(36, -42, -90);
-        Vector3 rightbeforesample = new Vector3(36, -11.75, -90);
-        Vector3 atfirstsample = new Vector3(44.5, -11.75, 180);
-        Vector3 observationzone1 = new Vector3(44.5, -52.5, 180);
-        Vector3 beforesecondsample = new Vector3(44.5, -11.75, 180);
-        Vector3 atsecondsample = new Vector3(54.5, -11.75, 180);
-        Vector3 observationzone2 = new Vector3(54.5, -52.5, 180);
+        Vector3 afterfirstredbar = new Vector3(32, -42, 180);
+        Vector3 rightbeforesample = new Vector3(36, -11.75, 180);
+        Vector3 atfirstsample = new Vector3(44.5, -11.75, 90);
+        Vector3 observationzone1 = new Vector3(44.5, -52.5, 90);
+        Vector3 beforesecondsample = new Vector3(44.5, -11.75, 90);
+        Vector3 atsecondsample = new Vector3(54.5, -11.75, 90);
+        Vector3 observationzone2 = new Vector3(54.5, -52.5, 90);
+        Vector3 observationzoneprepickup = new Vector3(46, -58.5, 90);
+        Vector3 observationzonepickup = new Vector3(46, -61.5, 90);
         Vector3 beforethirdsample = new Vector3(44.5, -11.75, 180);
         Vector3 atthirdsample = new Vector3(61, -11.75, 180);
         Vector3 observationzone3 = new Vector3(61, -52.5, 180);
@@ -176,14 +178,19 @@ public class FlipAuto2025 extends LinearOpMode{
         autoTasks.addStep(()-> odo.setPosition(humansidestart));
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
         // close pincer on initial specimen
+        autoTasks.addStep(()-> intake.tasks.getSpecimen.restart());
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         // raise for specimen hang
+        autoTasks.addStep(()-> intake.tasks.prepareToHangSpecimenTask.restart());
         autoTasks.addDelay(500);
         positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
         autoTasks.addDelay(200);
         // clip specimen on bar
+        autoTasks.addStep(()-> intake.tasks.hangSpecimenTask.restart());
+        autoTasks.addDelay(200);
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
+        autoTasks.addDelay(200);
         positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
         positionSolver.addMoveToTaskEx(rightbeforesample, autoTasks);
         positionSolver.addMoveToTaskEx(atfirstsample, autoTasks);
@@ -191,23 +198,32 @@ public class FlipAuto2025 extends LinearOpMode{
         positionSolver.addMoveToTaskEx(beforesecondsample, autoTasks);
         positionSolver.addMoveToTaskEx(atsecondsample, autoTasks);
         positionSolver.addMoveToTaskEx(observationzone2, autoTasks);
-        positionSolver.addMoveToTaskEx(beforethirdsample, autoTasks);
-        positionSolver.addMoveToTaskEx(atthirdsample, autoTasks);
-        positionSolver.addMoveToTaskEx(observationzone3, autoTasks);
-        positionSolver.addMoveToTaskEx(beforespecimen2, autoTasks);
-        positionSolver.addMoveToTaskEx(rotationbeforespecimen2, autoTasks);
-        positionSolver.addMoveToTaskEx(atspecimen2, autoTasks);
-        // grab specimen
+        positionSolver.addMoveToTaskEx(observationzoneprepickup, autoTasks);
+        positionSolver.addMoveToTaskEx(observationzonepickup, autoTasks);
+        autoTasks.addStep(()-> intake.tasks.getSpecimen.restart());
+        autoTasks.addDelay(250);
+        autoTasks.addStep(()-> intake.tasks.prepareToHangSpecimenTask.restart());
+        autoTasks.addDelay(500);
         positionSolver.addMoveToTaskEx(midwayspecimen2hang, autoTasks);
-        // raise for specimen hang
         positionSolver.addMoveToTaskEx(specimen2hang, autoTasks);
-        // clip specimen on bar
-        positionSolver.addMoveToTaskEx(backmidwayspecimen2spot, autoTasks);
-        positionSolver.addMoveToTaskEx(atspecimen3, autoTasks);
-        positionSolver.addMoveToTaskEx(midwayspecimen3hang, autoTasks);
-        positionSolver.addMoveToTaskEx(specimen3hang, autoTasks);
-        positionSolver.addMoveToTaskEx(parkingposition, autoTasks);
-        autoTasks.addStep(()-> intake.stopAllIntakeTasks());
+
+//        positionSolver.addMoveToTaskEx(beforethirdsample, autoTasks);
+//        positionSolver.addMoveToTaskEx(atthirdsample, autoTasks);
+//        positionSolver.addMoveToTaskEx(observationzone3, autoTasks);
+//        positionSolver.addMoveToTaskEx(beforespecimen2, autoTasks);
+//        positionSolver.addMoveToTaskEx(rotationbeforespecimen2, autoTasks);
+//        positionSolver.addMoveToTaskEx(atspecimen2, autoTasks);
+//        // grab specimen
+//        positionSolver.addMoveToTaskEx(midwayspecimen2hang, autoTasks);
+//        // raise for specimen hang
+//        positionSolver.addMoveToTaskEx(specimen2hang, autoTasks);
+//        // clip specimen on bar
+//        positionSolver.addMoveToTaskEx(backmidwayspecimen2spot, autoTasks);
+//        positionSolver.addMoveToTaskEx(atspecimen3, autoTasks);
+//        positionSolver.addMoveToTaskEx(midwayspecimen3hang, autoTasks);
+//        positionSolver.addMoveToTaskEx(specimen3hang, autoTasks);
+//        positionSolver.addMoveToTaskEx(parkingposition, autoTasks);
+//        autoTasks.addStep(()-> intake.stopAllIntakeTasks());
     }
 
     private void testBucketAuto(TimedTask autoTasks) {
