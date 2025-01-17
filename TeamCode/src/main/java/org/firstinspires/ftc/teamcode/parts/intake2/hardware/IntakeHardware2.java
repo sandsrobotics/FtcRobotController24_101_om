@@ -21,20 +21,20 @@ public class IntakeHardware2 {
     public final DcMotorEx robotLiftMotor;
     public final Servo sliderServoLeft;
     public final Servo sliderServoRight;
-    public final Servo tiltServoLeft;
+    public final ServoSSR tiltServoLeft;
     public final Servo tiltServoRight;
     public final Servo rotationServo;
     public final CRServo intakeWheelServoLeft;
     public final CRServo intakeWheelServoRight;
     public final DigitalChannel robotLiftZeroSwitch;
     public final DigitalChannel bucketLiftZeroSwitch;
-    public final Servo dropperServo;
+    public final ServoSSR dropperServo;
     public final ServoSSR specimenServo;
 
     public IntakeHardware2(DcMotorEx bucketLiftMotor, DcMotorEx robotLiftMotor, Servo sliderServoLeft,
-                           Servo sliderServoRight, Servo tiltServoLeft, Servo tiltServoRight, Servo rotationServo,
+                           Servo sliderServoRight, ServoSSR tiltServoLeft, Servo tiltServoRight, Servo rotationServo,
                            CRServo intakeWheelServoLeft, CRServo intakeWheelServoRight, DigitalChannel liftZeroSwitch,
-                           DigitalChannel bucketLiftZeroSwitch, Servo dropperServo, ServoSSR specimenServo) {
+                           DigitalChannel bucketLiftZeroSwitch, ServoSSR dropperServo, ServoSSR specimenServo) {
         this.bucketLiftMotor = bucketLiftMotor;
         this.robotLiftMotor = robotLiftMotor;
         this.sliderServoLeft = sliderServoLeft;
@@ -75,14 +75,15 @@ public class IntakeHardware2 {
                 robotLift1MotorSettings.makeExMotor(hardwareMap),
                 sliderServoLeftSettings.makeServo(hardwareMap),
                 sliderServoRightSettings.makeServo(hardwareMap),
-                tiltServoRightSettings.makeServo(hardwareMap),
-                tiltServoLeftSettings.makeServo(hardwareMap),
+                tiltServoRightSettings.makeServoSSR(hardwareMap),
+                new ServoSSR(hardwareMap.get(Servo.class, "servo4B")),
+                //tiltServoLeftSettings.makeServoSSR(hardwareMap),
                 rotationServoSettings.makeServo(hardwareMap),
                 intakeWheelServoLeftSettings.makeCRServo(hardwareMap),
                 intakeWheelServoRightSettings.makeCRServo(hardwareMap),
                 bucketLiftZeroSwitch,
                 robotLiftZeroSwitch,
-                dropperServoSettings.makeServo(hardwareMap),
+                dropperServoSettings.makeServoSSR(hardwareMap),
                 specimenServoSettings.makeServoSSR(hardwareMap)
         );
     }

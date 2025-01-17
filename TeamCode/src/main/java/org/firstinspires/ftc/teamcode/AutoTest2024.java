@@ -150,6 +150,7 @@ public class AutoTest2024 extends LinearOpMode{
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.loseSettings));
         autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang());
         autoTasks.addDelay(1000);
+
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         //autoTasks.addStep(()-> intake.stopAllIntakeTasks());
         positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
@@ -162,20 +163,20 @@ public class AutoTest2024 extends LinearOpMode{
         positionSolver.addMoveToTaskEx(beforethirdsample, autoTasks);
         positionSolver.addMoveToTaskEx(atthirdsample, autoTasks);
         positionSolver.addMoveToTaskEx(observationzone3, autoTasks);
-//        positionSolver.addMoveToTaskEx(beforespecimen2, autoTasks);
-//        positionSolver.addMoveToTaskEx(rotationbeforespecimen2, autoTasks);
-//        positionSolver.addMoveToTaskEx(atspecimen2, autoTasks);
-//        autoTasks.addDelay(2000);
-//        positionSolver.addMoveToTaskEx(midwayspecimen2hang, autoTasks);
-//        positionSolver.addMoveToTaskEx(specimen2hang, autoTasks);
-//        autoTasks.addDelay(2000);
-//        positionSolver.addMoveToTaskEx(backmidwayspecimen2spot, autoTasks);
-//        positionSolver.addMoveToTaskEx(atspecimen3, autoTasks);
-//        autoTasks.addDelay(2000);
-//        positionSolver.addMoveToTaskEx(midwayspecimen3hang, autoTasks);
-//        positionSolver.addMoveToTaskEx(specimen3hang, autoTasks);
-//        autoTasks.addDelay(2000);
-//        positionSolver.addMoveToTaskEx(parkingposition, autoTasks);
+        positionSolver.addMoveToTaskEx(beforespecimen2, autoTasks);
+        positionSolver.addMoveToTaskEx(rotationbeforespecimen2, autoTasks);
+        positionSolver.addMoveToTaskEx(atspecimen2, autoTasks);
+        autoTasks.addDelay(2000);
+        positionSolver.addMoveToTaskEx(midwayspecimen2hang, autoTasks);
+        positionSolver.addMoveToTaskEx(specimen2hang, autoTasks);
+        autoTasks.addDelay(2000);
+        positionSolver.addMoveToTaskEx(backmidwayspecimen2spot, autoTasks);
+        positionSolver.addMoveToTaskEx(atspecimen3, autoTasks);
+        autoTasks.addDelay(2000);
+        positionSolver.addMoveToTaskEx(midwayspecimen3hang, autoTasks);
+        positionSolver.addMoveToTaskEx(specimen3hang, autoTasks);
+        autoTasks.addDelay(2000);
+        positionSolver.addMoveToTaskEx(parkingposition, autoTasks);
     }
 
     private void testAuto2(TimedTask autoTasks) {

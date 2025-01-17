@@ -15,6 +15,8 @@ public class Intake2Tasks {
     private final TimedTask autoBucketDropperTask;
     private final TimedTask autoSpecimenPickupTask;
     private final TimedTask autoSpecimenHangTask;
+    private final TimedTask autoIntakeDropTask;
+
 
 
     public Intake2Tasks(Intake2 intake, Robot robot) {
@@ -26,6 +28,7 @@ public class Intake2Tasks {
         autoBucketDropperTask = new TimedTask(TaskNames.autoBucketDropper, movementTask);
         autoSpecimenPickupTask = new TimedTask(TaskNames.autoSpecimenPickup, movementTask);
         autoSpecimenHangTask = new TimedTask(TaskNames.autoSpecimenHang, movementTask);
+        autoIntakeDropTask = new TimedTask(TaskNames.autoIntakeDrop);
     }
 
     public void constructAutoHome() {
@@ -49,19 +52,17 @@ public class Intake2Tasks {
 
     public void constructAutoBucketLift() {
         autoBucketLiftTask.autoStart = false;
-//        autoBucketLiftTask.addStep(() -> {
-//            intake.incrementIntakeUpDown(2007); //CHANGE NUMBER. NUMBER IF STATEMENT IS SET IN INCREMENTINTAKEUPDOWN
-//        });
-        //autoBucketLiftTask.addDelay(500);
+
         autoBucketLiftTask.addStep(() -> {
-            //intake.incrementIntakeUpDown(2007);
-            intake.getHardware().tiltServoLeft.setPosition(0);
+            intake.getHardware().tiltServoLeft.setPosition(0.3);
             intake.getHardware().dropperServo.getController().pwmDisable();
-        });
+        }, () -> intake.getHardware().tiltServoLeft.isDone());
+
         autoBucketLiftTask.addStep( ()-> {
             intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().maxLiftPosition);
-        });
-        autoBucketLiftTask.addDelay(1000);
+            intake.slideTargetPosition = intake.getSettings().maxLiftPosition;
+        }, () -> intake.isLiftInTolerance());
+
         autoBucketLiftTask.addStep( ()->{
             intake.getHardware().dropperServo.getController().pwmEnable();
             intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin);
@@ -77,8 +78,7 @@ public class Intake2Tasks {
         autoBucketDropperTask.addDelay(500);
         autoBucketDropperTask.addStep( ()-> {
             intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin);
-        }, () -> intake.getHardware().dropperServo.getPosition() == intake.getSettings().dropperServoMin);
-        autoBucketDropperTask.addDelay(800);
+        }, () -> intake.getHardware().dropperServo.isDone());
         autoBucketDropperTask.addStep(() -> {
             intake.getHardware().dropperServo.getController().pwmDisable();
         });
@@ -91,7 +91,7 @@ public class Intake2Tasks {
     public void constructAutoSpecimenPickup() {
         autoSpecimenPickupTask.autoStart = false;
         autoSpecimenPickupTask.addStep(() -> {
-            intake.incrementIntakeUpDown(2007);
+            intake.incrementIntakeUpDown(0);
             intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition);
         });
         autoSpecimenPickupTask.addDelay(1000);
@@ -121,6 +121,21 @@ public class Intake2Tasks {
         });
     }
 
+    public void constructIntakeDrop() {
+        autoIntakeDropTask.autoStart = false;
+        autoIntakeDropTask.addStep(() -> {
+            intake.getHardware().tiltServoLeft.setPosition(0.64);
+        });
+        autoIntakeDropTask.addDelay(1000);
+        autoIntakeDropTask.addStep(() -> {
+            intake.getHardware().intakeWheelServoRight.setPower(1);
+        });
+        autoIntakeDropTask.addDelay(1000);
+        autoIntakeDropTask.addStep(() -> {
+            intake.getHardware().tiltServoLeft.setPosition(0);
+        });
+    }
+
     public void startAutoHome() {
         autoHomeTask.restart();
     }
@@ -138,6 +153,9 @@ public class Intake2Tasks {
     }
     public void startAutoSpecimenHang() {
         autoSpecimenHangTask.restart();
+    }
+    public void startAutoIntakeDropTask() {
+        autoIntakeDropTask.restart();
     }
 
     private void setSlideToHomeConfig() {
@@ -158,6 +176,7 @@ public class Intake2Tasks {
         public final static String autoBucketDropper = "auto bucket drop";
         public final static String autoSpecimenPickup = "auto specimen pickup";
         public final static String autoSpecimenHang = "auto specimen hang";
+        public final static String autoIntakeDrop = "drop block into bucket";
     }
 
     public static final class Events {
