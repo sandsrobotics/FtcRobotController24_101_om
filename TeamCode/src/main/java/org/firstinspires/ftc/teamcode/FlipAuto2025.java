@@ -5,11 +5,13 @@ import static om.self.ezftc.utils.Constants.tileSide;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.teamcode.lib.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
@@ -27,11 +29,12 @@ import java.util.function.Function;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Constants;
 import om.self.ezftc.utils.Vector3;
+import om.self.supplier.suppliers.EdgeSupplier;
 import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
 
 @Config
-@TeleOp(name="1 FlipAuto2025", group="Test")
+@Autonomous (name="Flip Auto 2025", group="Test")
 public class FlipAuto2025 extends LinearOpMode{
     public Function<Vector3, Vector3> transformFunc;
     public Vector3 customStartPos;
@@ -41,6 +44,14 @@ public class FlipAuto2025 extends LinearOpMode{
     Vector3 startPosition;
     Pinpoint odo;
     Intake intake;
+    //  DASHBOARD VARIABLES (static public)
+    static public int shortDelay = 1000;
+    static public int midDelay = 2000;
+    static public int longDelay = 3000;
+    public static int maxDelay = 3000;
+    /**************************/
+    public int startDelay;
+    private int parkPosition;
 
     public void initAuto(){
         transformFunc = (v) -> v;
@@ -74,7 +85,10 @@ public class FlipAuto2025 extends LinearOpMode{
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
                 100, new Vector3(2,2,2), fieldStartPos);
         pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));
-        odo = new Pinpoint(pt);
+        odo = new Pinpoint(pt, true, "pinpoint",
+                -56.0, 52.0, 13.26291192f,
+                GoBildaPinpointDriver.EncoderDirection.REVERSED,
+                GoBildaPinpointDriver.EncoderDirection.FORWARD);
         pt.positionSourceId = Pinpoint.class;
         positionSolver = new PositionSolver(drive); // removed so it won't rotate 90deg clockwise
         DecimalFormat df = new DecimalFormat("#0.0");
@@ -82,8 +96,28 @@ public class FlipAuto2025 extends LinearOpMode{
         robot.init();
 
         while (!isStarted()) {
-            telemetry.addData("position (pt)", pt.getCurrentPosition());
+            if(new EdgeSupplier(()-> robot.opMode.gamepad1.right_bumper).isRisingEdge()) {
+                startDelay += 1000;
+            }
+            else if(new EdgeSupplier(()->robot.opMode.gamepad1.left_bumper).isRisingEdge()) {
+                startDelay -= 1000;
+                if(startDelay < 0) startDelay = 0;
+            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.a).isRisingEdge()) {
+                parkPosition = 1;
+            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.b).isRisingEdge()) {
+                parkPosition = 2;
+            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.x).isRisingEdge()) {
+                parkPosition = 3;
+            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.y).isRisingEdge()) {
+                parkPosition = 0;
+            }
+
+            if(startDelay > maxDelay) startDelay = maxDelay;
+
+            telemetry.addData("PARK POSITION:", parkPosition == 0 ? "Normal mid wall" : parkPosition == 1 ? "Park MID" : parkPosition == 2 ? "Park CORNER" : "Park BOARD");
+            telemetry.addData("START DELAY:", startDelay / 1000);
             telemetry.update();
+            sleep(50);
         }
 
         odo.setPosition(fieldStartPos);
@@ -97,7 +131,7 @@ public class FlipAuto2025 extends LinearOpMode{
         //positionSolver.setNewTarget(pt.getCurrentPosition(), true);
 
         // Here is where we schedule the tasks for the autonomous run (testAuto function below run loop)
-        testAuto2(autoTasks);
+        testAuto(autoTasks);
 
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
@@ -113,8 +147,10 @@ public class FlipAuto2025 extends LinearOpMode{
     }
 
     private void testAuto(TimedTask autoTasks) {
+        Vector3 humansidestart = new Vector3(14 + 3.0/8.0, -62, -90);
+        Vector3 rightbeforespecimenbar = new Vector3(11.75, -37.75, -90);
         Vector3 specimenbar = new Vector3(11.75, -32.75, -90);
-        Vector3 afterfirstredbar = new Vector3(36, -40, -90);
+        Vector3 afterfirstredbar = new Vector3(36, -42, -90);
         Vector3 rightbeforesample = new Vector3(36, -11.75, -90);
         Vector3 atfirstsample = new Vector3(44.5, -11.75, 180);
         Vector3 observationzone1 = new Vector3(44.5, -52.5, 180);
@@ -134,12 +170,21 @@ public class FlipAuto2025 extends LinearOpMode{
         Vector3 midwayspecimen3hang = new Vector3(23.5, -47, 0);
         Vector3 specimen3hang = new Vector3(5.75, -32.75, -90);
         Vector3 parkingposition = new Vector3(54, -54, 0);
+        //Vector3 parkingposidtion = new Vector3(54, -54, 0);
+
+        autoTasks.addStep(()-> intake.stopAllIntakeTasks());
+        autoTasks.addStep(()-> odo.setPosition(humansidestart));
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
-        //autoTasks.addStep(()-> intake.setHorizontalSlidePosition(-1));
+        // close pincer on initial specimen
+        positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
+        // raise for specimen hang
+        autoTasks.addDelay(500);
         positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
-        autoTasks.addDelay(2000);
-        positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
+        autoTasks.addDelay(200);
+        // clip specimen on bar
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.loseSettings));
+        positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
+        positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
         positionSolver.addMoveToTaskEx(rightbeforesample, autoTasks);
         positionSolver.addMoveToTaskEx(atfirstsample, autoTasks);
         positionSolver.addMoveToTaskEx(observationzone1, autoTasks);
@@ -152,30 +197,17 @@ public class FlipAuto2025 extends LinearOpMode{
         positionSolver.addMoveToTaskEx(beforespecimen2, autoTasks);
         positionSolver.addMoveToTaskEx(rotationbeforespecimen2, autoTasks);
         positionSolver.addMoveToTaskEx(atspecimen2, autoTasks);
-        autoTasks.addDelay(2000);
+        // grab specimen
         positionSolver.addMoveToTaskEx(midwayspecimen2hang, autoTasks);
+        // raise for specimen hang
         positionSolver.addMoveToTaskEx(specimen2hang, autoTasks);
-        autoTasks.addDelay(2000);
+        // clip specimen on bar
         positionSolver.addMoveToTaskEx(backmidwayspecimen2spot, autoTasks);
         positionSolver.addMoveToTaskEx(atspecimen3, autoTasks);
-        autoTasks.addDelay(2000);
         positionSolver.addMoveToTaskEx(midwayspecimen3hang, autoTasks);
         positionSolver.addMoveToTaskEx(specimen3hang, autoTasks);
-        autoTasks.addDelay(2000);
         positionSolver.addMoveToTaskEx(parkingposition, autoTasks);
-    }
-
-    private void testAuto2(TimedTask autoTasks) {
-        Vector3 specimenbar = new Vector3(11.75, -32.75, -90);
-        Vector3 afterfirstredbar = new Vector3(36, -40, -90);
-        Vector3 specimenpickup = new Vector3(45, -60.5, 90);
-
-        //autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1));
-        positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
-        positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
-        positionSolver.addMoveToTaskEx(specimenpickup, autoTasks);
-        //autoTasks.addStep(() ->intake.tasks.startAutoSpecimenPickup());
+        autoTasks.addStep(()-> intake.stopAllIntakeTasks());
     }
 
     private void testBucketAuto(TimedTask autoTasks) {

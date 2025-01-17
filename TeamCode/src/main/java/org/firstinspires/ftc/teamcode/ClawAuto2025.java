@@ -2,19 +2,17 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.intake2.Intake2;
-import org.firstinspires.ftc.teamcode.parts.intake2.IntakeTeleop2;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
-import org.firstinspires.ftc.teamcode.parts.positionsolver.XRelativeSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolverSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.hardware.PositionTrackerHardware;
@@ -25,13 +23,14 @@ import java.util.function.Function;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Constants;
 import om.self.ezftc.utils.Vector3;
+import om.self.supplier.suppliers.EdgeSupplier;
 import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
 import static om.self.ezftc.utils.Constants.tileSide;
 
 @Config
-@Autonomous(name="1 AutoTest2024", group="Test")
-public class AutoTest2024 extends LinearOpMode{
+@Autonomous(name="Claw Auto 2025", group="Test")
+public class ClawAuto2025 extends LinearOpMode{
     public Function<Vector3, Vector3> transformFunc;
     public Vector3 customStartPos;
     public boolean shutdownps;
@@ -40,6 +39,14 @@ public class AutoTest2024 extends LinearOpMode{
     Vector3 startPosition;
     Pinpoint odo;
     Intake2 intake;
+    //  DASHBOARD VARIABLES (static public)
+    static public int shortDelay = 1000;
+    static public int midDelay = 2000;
+    static public int longDelay = 3000;
+    public static int maxDelay = 3000;
+    /**************************/
+    public int startDelay;
+    private int parkPosition;
 
     public void initAuto(){
         transformFunc = (v) -> v;
@@ -60,6 +67,7 @@ public class AutoTest2024 extends LinearOpMode{
         long start;
         initAuto();
         FtcDashboard dashboard = FtcDashboard.getInstance();
+        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
         TelemetryPacket packet = new TelemetryPacket();
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
         Robot robot = new Robot(this);
@@ -81,10 +89,31 @@ public class AutoTest2024 extends LinearOpMode{
         robot.init();
 
         while (!isStarted()) {
-            telemetry.addData("position (pt)", pt.getCurrentPosition());
-            telemetry.update();
-        }
+            if(new EdgeSupplier(()-> robot.opMode.gamepad1.right_bumper).isRisingEdge()) {
+                startDelay += 1000;
+            }
+            else if(new EdgeSupplier(()->robot.opMode.gamepad1.left_bumper).isRisingEdge()) {
+                startDelay -= 1000;
+                if(startDelay < 0) startDelay = 0;
+            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.a).isRisingEdge()) {
+                parkPosition = 1;
+            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.b).isRisingEdge()) {
+                parkPosition = 2;
+            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.x).isRisingEdge()) {
+                parkPosition = 3;
+            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.y).isRisingEdge()) {
+                parkPosition = 0;
+            }
 
+            if(startDelay > maxDelay) startDelay = maxDelay;
+
+            dashboardTelemetry.addData("position", "blah");
+            telemetry.addData("PARK POSITION:", parkPosition == 0 ? "Park based off tags" : parkPosition == 1 ? "Park MID" : parkPosition == 2 ? "Park CORNER" : "Park BOARD");
+            telemetry.addData("START DELAY:", startDelay / 1000);
+            dashboardTelemetry.update();
+            telemetry.update();
+            sleep(50);
+        }
         odo.setPosition(fieldStartPos);
         robot.start();
 
@@ -96,7 +125,8 @@ public class AutoTest2024 extends LinearOpMode{
         //positionSolver.setNewTarget(pt.getCurrentPosition(), true);
 
         // Here is where we schedule the tasks for the autonomous run (testAuto function below run loop)
-        testSpecAuto(autoTasks);
+        //testSpecAuto(autoTasks);
+        testBucketAuto(autoTasks);
 
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
@@ -142,14 +172,14 @@ public class AutoTest2024 extends LinearOpMode{
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
         autoTasks.addStep(()-> intake.tasks.setMotorsToRunConfig());
         autoTasks.addStep(()-> intake.setHorizontalSlidePosition(-1)); // h-slide in
-
-        positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
+        // close specimen pincer
         autoTasks.addStep(() -> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
+        positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         autoTasks.addStep(() -> intake.setSpecimenPositions(2)); // prepare for specimen hang
         autoTasks.addDelay(500);
         positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
         autoTasks.addDelay(200);
-        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specien on bar
+        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
@@ -170,7 +200,7 @@ public class AutoTest2024 extends LinearOpMode{
         autoTasks.addStep(() -> intake.setSpecimenPositions(2)); //
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.slowSettings));
         positionSolver.addMoveToTaskEx(specimen2hang, autoTasks);
-        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specien on bar
+        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
         positionSolver.addMoveToTaskEx(backmidwayspecimen2spot, autoTasks);
         positionSolver.addMoveToTaskEx(atspecimen3, autoTasks);
 //        autoTasks.addDelay(2000);
@@ -194,7 +224,7 @@ public class AutoTest2024 extends LinearOpMode{
     }
 
     private void testBucketAuto(TimedTask autoTasks) {
-        Vector3 startposition = new Vector3(-14 - 3.0/8.0, -62, -90);
+        Vector3 bucketsidestart = new Vector3(-14 - 3.0/8.0, -62, -90);
         Vector3 specimenhang = new Vector3(-10, -35, -90); //specimen must be lifted before hang
         Vector3 firstsample = new Vector3(-48.8, -37.37, 90);
         Vector3 Highbasketscore = new Vector3(-48.9, -40.9, 40);
@@ -202,6 +232,20 @@ public class AutoTest2024 extends LinearOpMode{
         Vector3 Highbasketscore2 = new Vector3(-48.9, -40.9, 40);
         Vector3 thirdsample = new Vector3(-55.3, -24.58, 180);
         Vector3 Highbasketscore3 = new Vector3(-48.9, -40.9, 40);
+        Vector3 park = new Vector3(-48.9, -40.9, 40);
 
+        autoTasks.addStep(()-> intake.stopAllIntakeTasks());
+        autoTasks.addStep(()-> odo.setPosition(bucketsidestart));
+        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
+        autoTasks.addStep(()-> intake.tasks.setMotorsToRunConfig());
+        autoTasks.addStep(()-> intake.setHorizontalSlidePosition(-1)); // h-slide in
+        positionSolver.addMoveToTaskEx(specimenhang, autoTasks);
+        positionSolver.addMoveToTaskEx(firstsample, autoTasks);
+        positionSolver.addMoveToTaskEx(Highbasketscore, autoTasks);
+        positionSolver.addMoveToTaskEx(secondsample, autoTasks);
+        positionSolver.addMoveToTaskEx(Highbasketscore2, autoTasks);
+        positionSolver.addMoveToTaskEx(thirdsample, autoTasks);
+        positionSolver.addMoveToTaskEx(park, autoTasks);
+        //positionSolver.addMoveToTaskEx(park, autoTasks);
     }
 }

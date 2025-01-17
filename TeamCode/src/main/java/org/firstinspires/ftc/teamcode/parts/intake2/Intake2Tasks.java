@@ -35,7 +35,7 @@ public class Intake2Tasks {
         autoHomeTask.addStep(() -> {
             intake.incrementIntakeUpDown(0);
             intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoOpenPosition);
-            intake.getHardware().dropperServo.getController().pwmDisable();
+            intake.getHardware().dropperServo.stop();
         });
         autoHomeTask.addTimedStep(() -> {
             robot.opMode.telemetry.addData("homing", intake.getHardware().bucketLiftZeroSwitch.getState());
@@ -53,7 +53,7 @@ public class Intake2Tasks {
 
         autoBucketLiftTask.addStep(() -> {
             intake.getHardware().tiltServo.setPosition(0.3);
-            intake.getHardware().dropperServo.getController().pwmDisable();
+            intake.getHardware().dropperServo.stop();
         }, () -> intake.getHardware().tiltServo.isDone());
 
         autoBucketLiftTask.addStep( ()-> {
@@ -62,7 +62,7 @@ public class Intake2Tasks {
         }, () -> intake.isLiftInTolerance());
 
         autoBucketLiftTask.addStep( ()->{
-            intake.getHardware().dropperServo.getController().pwmEnable();
+            intake.getHardware().dropperServo.enable();
             intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin);
         });
     }
@@ -70,7 +70,7 @@ public class Intake2Tasks {
     public void constructAutoBucketDropper() {
         autoBucketDropperTask.autoStart = false;
         autoBucketDropperTask.addStep(() -> {
-            intake.getHardware().dropperServo.getController().pwmEnable();
+            intake.getHardware().dropperServo.enable();
             intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMax);
         },()->intake.getHardware().dropperServo.isDone());
 
@@ -79,7 +79,7 @@ public class Intake2Tasks {
         }, () -> intake.getHardware().dropperServo.isDone());
 
         autoBucketDropperTask.addStep(() -> {
-            intake.getHardware().dropperServo.getController().pwmDisable();
+            intake.getHardware().dropperServo.stop();
         });
         autoBucketDropperTask.addStep(() -> {
             intake.getHardware().bucketLiftMotor.setPower(1);
