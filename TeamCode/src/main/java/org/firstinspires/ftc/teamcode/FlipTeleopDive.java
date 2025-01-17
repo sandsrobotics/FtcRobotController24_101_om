@@ -55,16 +55,17 @@ public class FlipTeleopDive extends LinearOpMode {
         pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));
       XRelativeSolver solver = new XRelativeSolver(drive);
 
-       EncoderTracker et = new EncoderTracker(pt);
-       pt.positionSourceId = EncoderTracker.class;
+//       EncoderTracker et = new EncoderTracker(pt);
+//       pt.positionSourceId = EncoderTracker.class;
 
 //        Add Pinpoint here
 //Z        odo = new Pinpoint(pt, true, -56.0, 52.0, 13.26291192f,
 //Z        GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
-        //Pinpoint odo = new Pinpoint(robot, true);
-//Z        pt.positionSourceId = Pinpoint.class;
-//        positionSolver = new PositionSolver(drive); // removed so it won't rotate 90deg clockwise
 
+
+        odo = new Pinpoint(pt);  //, true);
+        pt.positionSourceId = Pinpoint.class;
+        //positionSolver = new PositionSolver(drive); // removed so it won't rotate 90deg clockwise
 
         Intake intake = new Intake(robot);
         new IntakeTeleop(intake);
