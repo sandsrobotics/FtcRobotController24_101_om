@@ -126,6 +126,7 @@ public class IntakeTasks {
         lowDumpIntake.autoStart = false;
         lowDumpIntake.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteDeposit));
         lowDumpIntake.addStep( ()-> intake.getHardware().chute.isDone());
+        lowDumpIntake.addDelay(500);
         lowDumpIntake.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteParked));
 
         prepareToHangRobotTask.autoStart = false;

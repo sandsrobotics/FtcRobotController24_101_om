@@ -99,22 +99,37 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
                 parent.stopAllIntakeTasks();
                 parent.tasks.lowDumpIntake.restart();
             }
-        } else {
-            if (buttonMgr.getState(2, Buttons.x, State.wasSingleTapped)) {
+            if (buttonMgr.getState(1, Buttons.x, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.prepareToGetSpecimen.restart();
             }
-            if (buttonMgr.getState(2, Buttons.y, State.wasSingleTapped)) {
+            if (buttonMgr.getState(1, Buttons.y, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.getSpecimen.restart();
             }
-            if (buttonMgr.getState(2, Buttons.x, State.wasDoubleTapped)) {
+            if (buttonMgr.getState(1, Buttons.b, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.prepareToHangSpecimenTask.restart();
             }
-            if (buttonMgr.getState(2, Buttons.y, State.wasDoubleTapped)) {
+            if (buttonMgr.getState(1, Buttons.a, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.hangSpecimenTask.restart();
+        } else {
+//            if (buttonMgr.getState(2, Buttons.x, State.wasSingleTapped)) {
+//                parent.stopAllIntakeTasks();
+//                parent.tasks.prepareToGetSpecimen.restart();
+//            }
+//            if (buttonMgr.getState(2, Buttons.y, State.wasSingleTapped)) {
+//                parent.stopAllIntakeTasks();
+//                parent.tasks.getSpecimen.restart();
+//            }
+//            if (buttonMgr.getState(2, Buttons.x, State.wasDoubleTapped)) {
+//                parent.stopAllIntakeTasks();
+//                parent.tasks.prepareToHangSpecimenTask.restart();
+//            }
+//            if (buttonMgr.getState(2, Buttons.y, State.wasDoubleTapped)) {
+//                parent.stopAllIntakeTasks();
+//                parent.tasks.hangSpecimenTask.restart();
             }
             if (buttonMgr.getState(2, Buttons.dpad_up, State.wasSingleTapped)) {
                 parent.stopAllIntakeTasks();
