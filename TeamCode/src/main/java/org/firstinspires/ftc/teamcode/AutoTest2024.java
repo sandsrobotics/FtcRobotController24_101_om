@@ -96,7 +96,7 @@ public class AutoTest2024 extends LinearOpMode{
         //positionSolver.setNewTarget(pt.getCurrentPosition(), true);
 
         // Here is where we schedule the tasks for the autonomous run (testAuto function below run loop)
-        testAuto(autoTasks);
+        testSpecAuto(autoTasks);
 
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
@@ -111,7 +111,7 @@ public class AutoTest2024 extends LinearOpMode{
         robot.stop();
     }
 
-    private void testAuto(TimedTask autoTasks) {
+    private void testSpecAuto(TimedTask autoTasks) {
         Vector3 humansidestart = new Vector3(14 + 3.0/8.0, -62, -90);
         Vector3 rightbeforespecimenbar = new Vector3(11.75, -37.75, -90);
         Vector3 specimenbar = new Vector3(11.75, -32.75, -90);
@@ -135,6 +135,8 @@ public class AutoTest2024 extends LinearOpMode{
         Vector3 midwayspecimen3hang = new Vector3(23.5, -47, 0);
         Vector3 specimen3hang = new Vector3(5.75, -32.75, -90);
         Vector3 parkingposition = new Vector3(54, -54, 0);
+        //Vector3 parkingposidtion = new Vector3(54, -54, 0);
+
 
         autoTasks.addStep(()-> intake.stopAllIntakeTasks());
         autoTasks.addStep(()-> odo.setPosition(humansidestart));
@@ -147,12 +149,11 @@ public class AutoTest2024 extends LinearOpMode{
         autoTasks.addDelay(500);
         positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
         autoTasks.addDelay(200);
-        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.loseSettings));
         autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang());
         autoTasks.addDelay(1000);
-
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         //autoTasks.addStep(()-> intake.stopAllIntakeTasks());
+        //autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
         positionSolver.addMoveToTaskEx(rightbeforesample, autoTasks);
         positionSolver.addMoveToTaskEx(atfirstsample, autoTasks);
@@ -166,19 +167,21 @@ public class AutoTest2024 extends LinearOpMode{
         positionSolver.addMoveToTaskEx(beforespecimen2, autoTasks);
         positionSolver.addMoveToTaskEx(rotationbeforespecimen2, autoTasks);
         positionSolver.addMoveToTaskEx(atspecimen2, autoTasks);
-        autoTasks.addDelay(2000);
+        autoTasks.addDelay(500);
+        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenPickup());
+        autoTasks.addDelay(250);
         positionSolver.addMoveToTaskEx(midwayspecimen2hang, autoTasks);
+        autoTasks.addStep(() -> intake.setSpecimenServoPosition(2));
         positionSolver.addMoveToTaskEx(specimen2hang, autoTasks);
-        autoTasks.addDelay(2000);
-        positionSolver.addMoveToTaskEx(backmidwayspecimen2spot, autoTasks);
-        positionSolver.addMoveToTaskEx(atspecimen3, autoTasks);
-        autoTasks.addDelay(2000);
-        positionSolver.addMoveToTaskEx(midwayspecimen3hang, autoTasks);
-        positionSolver.addMoveToTaskEx(specimen3hang, autoTasks);
-        autoTasks.addDelay(2000);
-        positionSolver.addMoveToTaskEx(parkingposition, autoTasks);
+//        autoTasks.addDelay(2000);
+//        positionSolver.addMoveToTaskEx(backmidwayspecimen2spot, autoTasks);
+//        positionSolver.addMoveToTaskEx(atspecimen3, autoTasks);
+//        autoTasks.addDelay(2000);
+//        positionSolver.addMoveToTaskEx(midwayspecimen3hang, autoTasks);
+//        positionSolver.addMoveToTaskEx(specimen3hang, autoTasks);
+//        autoTasks.addDelay(2000);
+//        positionSolver.addMoveToTaskEx(parkingposition, autoTasks);
     }
-
     private void testAuto2(TimedTask autoTasks) {
         Vector3 specimenbar = new Vector3(11.75, -32.75, -90);
         Vector3 afterfirstredbar = new Vector3(36, -40, -90);
