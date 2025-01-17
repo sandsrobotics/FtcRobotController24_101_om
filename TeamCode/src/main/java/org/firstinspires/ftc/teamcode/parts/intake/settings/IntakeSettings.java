@@ -63,7 +63,7 @@ public class IntakeSettings {
     public final int positionLiftGetSpecimen     = 10;     //todo: finalize number
     public final int positionLiftRaiseSpeciman   = 150; //= 50;
     public final int positionLiftHangReady       = 1440;  //2500;   //todo: get number
-    public final int positionLiftHangRelease     = 1000;  //2000;   //todo: get number
+    public final int positionLiftHangRelease     = 980; //1000;  //2000;   //todo: get number
     public final int positionLiftTransfer        = 10;
     public final int toleranceLift               = 20;
 

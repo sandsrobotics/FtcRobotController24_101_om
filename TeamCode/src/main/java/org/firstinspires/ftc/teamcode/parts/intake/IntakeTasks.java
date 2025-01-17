@@ -13,6 +13,8 @@ public class IntakeTasks {
     public final TimedTask prepareToIntakeTask;
     public final TimedTask safeTask;
     public final TimedTask transferTask;
+    public final TimedTask prepareToLowDumpIntake;
+    public final TimedTask lowDumpIntake;
     public final TimedTask prepareToGetSpecimen;
     public final TimedTask getSpecimen;
     public final TimedTask hangSpecimenTask;
@@ -37,6 +39,8 @@ public class IntakeTasks {
         prepareToIntakeTask = new TimedTask(TaskNames.prepareToIntake, movementTask);
         safeTask = new TimedTask(TaskNames.safe, movementTask);
         transferTask = new TimedTask(TaskNames.transfer, movementTask);
+        prepareToLowDumpIntake = new TimedTask(TaskNames.prepareToLowDumpIntake, movementTask);
+        lowDumpIntake = new TimedTask(TaskNames.lowDumpIntake, movementTask);
         prepareToGetSpecimen = new TimedTask(TaskNames.prepareToGetSpecimen, movementTask);
         getSpecimen = new TimedTask(TaskNames.getSpecimen, movementTask);
         hangSpecimenTask = new TimedTask(TaskNames.hangSpecimen, movementTask);
@@ -116,6 +120,15 @@ public class IntakeTasks {
         hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen));
         hangSpecimenTask.addStep(safeTask::restart);
 
+    //    prepareToLowDumpIntake.autoStart = false;
+      //  prepareToLowDumpIntake.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteParked));
+
+        lowDumpIntake.autoStart = false;
+        lowDumpIntake.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteDeposit));
+        lowDumpIntake.addStep( ()-> intake.getHardware().chute.isDone());
+        lowDumpIntake.addDelay(500);
+        lowDumpIntake.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteParked));
+
         prepareToHangRobotTask.autoStart = false;
         prepareToHangRobotTask.addStep(() -> intake.getHardware().robotHangMotor.setTargetPosition(intake.getSettings().positionHangReady));
 
@@ -161,6 +174,7 @@ public class IntakeTasks {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
         });
 //    }
+
 
 //    public void constructPrepareToDepositTask() {
         prepareToDepositTask.autoStart = false;
@@ -286,6 +300,8 @@ public class IntakeTasks {
         public final static String prepareToIntake = "prepare to intake";
         public final static String safe = "safe";
         public final static String transfer = "transfer";
+        public final static String prepareToLowDumpIntake = " prepare to low dump for specimen";
+        public final static String lowDumpIntake = "low dump intake for specimen";
         public final static String prepareToGetSpecimen = "prepare to get specimen";
         public final static String getSpecimen = "get specimen";
         public final static String hangSpecimen = "hang specimen";

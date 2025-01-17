@@ -65,6 +65,7 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
     }
 
     public void driverControls() {
+         parent.setUserSlidePower (-parent.parent.opMode.gamepad2.left_stick_y);
         if (buttonMgr.getState(2, Buttons.back, State.wasPressed)) {
             parent.eStop();
         }
@@ -94,22 +95,41 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
                 parent.stopAllIntakeTasks();
                 parent.tasks.depositTask.restart();
             }
-        } else {
-            if (buttonMgr.getState(2, Buttons.x, State.wasSingleTapped)) {
+            if (buttonMgr.getState(2, Buttons.right_stick_button, State.wasTapped)) {
+                parent.stopAllIntakeTasks();
+                parent.tasks.lowDumpIntake.restart();
+            }
+            if (buttonMgr.getState(1, Buttons.x, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.prepareToGetSpecimen.restart();
             }
-            if (buttonMgr.getState(2, Buttons.y, State.wasSingleTapped)) {
+            if (buttonMgr.getState(1, Buttons.y, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.getSpecimen.restart();
             }
-            if (buttonMgr.getState(2, Buttons.x, State.wasDoubleTapped)) {
+            if (buttonMgr.getState(1, Buttons.b, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.prepareToHangSpecimenTask.restart();
             }
-            if (buttonMgr.getState(2, Buttons.y, State.wasDoubleTapped)) {
+            if (buttonMgr.getState(1, Buttons.a, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.hangSpecimenTask.restart();
+        } else {
+//            if (buttonMgr.getState(2, Buttons.x, State.wasSingleTapped)) {
+//                parent.stopAllIntakeTasks();
+//                parent.tasks.prepareToGetSpecimen.restart();
+//            }
+//            if (buttonMgr.getState(2, Buttons.y, State.wasSingleTapped)) {
+//                parent.stopAllIntakeTasks();
+//                parent.tasks.getSpecimen.restart();
+//            }
+//            if (buttonMgr.getState(2, Buttons.x, State.wasDoubleTapped)) {
+//                parent.stopAllIntakeTasks();
+//                parent.tasks.prepareToHangSpecimenTask.restart();
+//            }
+//            if (buttonMgr.getState(2, Buttons.y, State.wasDoubleTapped)) {
+//                parent.stopAllIntakeTasks();
+//                parent.tasks.hangSpecimenTask.restart();
             }
             if (buttonMgr.getState(2, Buttons.dpad_up, State.wasSingleTapped)) {
                 parent.stopAllIntakeTasks();

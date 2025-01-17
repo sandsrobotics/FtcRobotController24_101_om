@@ -32,6 +32,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public boolean isYellowGood = true;
     public boolean isBlueGood = false;
     public int lastSample = -1;
+    public boolean slideIsUnderControl = false;
     protected Drive drive;
     private double spinnerSliderPower = 0.0;
     // this is part of the resets lift to 0 each time it hits the limit switch
@@ -110,6 +111,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         getHardware().bucketLiftMotor.setTargetPosition(liftTargetPosition);
         getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         setLiftPower(power);
+        slideIsUnderControl = false;
     }
 
     public void stopSlide() { getHardware().horizSliderMotor.setPower(0); }
@@ -247,15 +249,36 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         }
         else if (position==-1) {
             getHardware().bucketLiftMotor.setTargetPosition(20);
-//            if (getSettings().v_Slide_pos < get_Slide_Max()) {
-//                getSettings().v_Slide_pos = getSettings().v_Slide_pos - 30; // can't modify a setting
+
 //            }
         } else if ( position == 1) {
             getHardware().bucketLiftMotor.setTargetPosition(1440);
-//            if (getSettings().v_Slide_pos > getV_Slide_Min()) {
-//                getSettings().v_Slide_pos = 1440; // can't modify a setting
+
 //            }
         }
+    }
+    public void setUserSlidePower(double power) {
+        if (power > 0 && getHardware().horizSliderMotor.getCurrentPosition() >= getSettings().positionSlideMax) {
+            setSlidePosition(getSettings().positionSlideMax, 0.25);
+           // slideIsUnderControl = false;
+            return;
+        }
+        if (power < 0 && getHardware().horizSliderMotor.getCurrentPosition() <= getSettings().positionSlideMin) {
+            setSlidePosition(getSettings().positionSlideMin, 0.25);
+           // slideIsUnderControl = false;
+            return;
+        }
+        if (power == 0 && slideIsUnderControl) {
+            setSlidePosition(getHardware().horizSliderMotor.getCurrentPosition(), 0.25);
+            return;
+        }
+        if (power == 0) {
+            return;
+        }
+        slideIsUnderControl = true;
+        getHardware().horizSliderMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setSlidePower(power);
+
     }
 
     public double sampleDistance() {
@@ -320,6 +343,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     @Override
     public void onBeanLoad() {
     }
+
 
     @Override
     public void onRun(IntakeControl control) {
