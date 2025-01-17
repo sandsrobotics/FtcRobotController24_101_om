@@ -91,16 +91,19 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public void incrementIntakeUpDown(int direction) {
-        if(Math.abs(direction) != 0) {
-            double adjustment = 0.01 * Math.signum(direction);
-            currentIntakeHeightPos = Math.max(
-                    getSettings().intakeArmMin,
-                    Math.min(
-                            getSettings().intakeArmMax,
-                            currentIntakeHeightPos + adjustment
-                    )
-            );
-            getHardware().tiltServo.setPosition(currentIntakeHeightPos);
+
+        if (getHardware().rotationServo.isDone()) {
+            if (Math.abs(direction) != 0) {
+                double adjustment = 0.01 * Math.signum(direction);
+                currentIntakeHeightPos = Math.max(
+                        getSettings().intakeArmMin,
+                        Math.min(
+                                getSettings().intakeArmMax,
+                                currentIntakeHeightPos + adjustment
+                        )
+                );
+                getHardware().tiltServo.setPosition(currentIntakeHeightPos);
+            }
         }
     }
 
@@ -214,6 +217,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         tasks.constructAutoSpecimenPickup();
         tasks.constructAutoSpecimenHang();
         tasks.constructIntakeDrop();
+        tasks.constructRotateServoSafe();
 
         //homing bucket lift setup
         homingBucketZero.setOnRise(() -> {

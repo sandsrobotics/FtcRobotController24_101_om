@@ -29,8 +29,8 @@ import om.self.task.other.TimedTask;
 import static om.self.ezftc.utils.Constants.tileSide;
 
 @Config
-@Autonomous(name="Claw Auto 2025", group="Test")
-public class ClawAuto2025 extends LinearOpMode{
+@Autonomous(name="Claw Auto 2026", group="Test")
+public class ClawAuto2026 extends LinearOpMode{
     public Function<Vector3, Vector3> transformFunc;
     public Vector3 customStartPos;
     public boolean shutdownps;
@@ -147,17 +147,20 @@ public class ClawAuto2025 extends LinearOpMode{
         Vector3 specimenbar = new Vector3(11.75, -32.75, -90);
         Vector3 afterfirstredbar = new Vector3(36, -42, -90);
         Vector3 rightbeforesample = new Vector3(36, -11.75, -90);
-        Vector3 atfirstsample = new Vector3(44.5, -11.75, 180);
-        Vector3 observationzone1 = new Vector3(44.5, -52.5, 180);
-        Vector3 beforesecondsample = new Vector3(44.5, -11.75, 180);
-        Vector3 atsecondsample = new Vector3(54.5, -11.75, 180);
-        Vector3 observationzone2 = new Vector3(54.5, -52.5, 180);
+        Vector3 atfirstsample = new Vector3(44.5, -11.75, 90);
+        Vector3 observationzone1 = new Vector3(44.5, -52.5, 90);
+        Vector3 beforesecondsample = new Vector3(44.5, -11.75, 90);
+        Vector3 atsecondsample = new Vector3(54.5, -11.75, 90);
+        Vector3 observationzone2 = new Vector3(54.5, -52.5, 90);
+        Vector3 beforespecimen2 = new Vector3(46, -52.5, 90);
+        Vector3 atspecimen2 = new Vector3(46, -62, 90);
+
+
+
         Vector3 beforethirdsample = new Vector3(44.5, -11.75, 180);
         Vector3 atthirdsample = new Vector3(61, -11.75, 180);
         Vector3 observationzone3 = new Vector3(61, -52.5, 180);
-        Vector3 beforespecimen2 = new Vector3(46, -53, 180);
         Vector3 rotationbeforespecimen2 = new Vector3(46, -52.5, 90);
-        Vector3 atspecimen2 = new Vector3(46, -62, 90);
         Vector3 midwayspecimen2hang = new Vector3(23.5, -47, 0);
         Vector3 specimen2hang = new Vector3(8.75, -32.75, -90);
         Vector3 backmidwayspecimen2spot = new Vector3(23.5, -47, 0);
@@ -181,6 +184,7 @@ public class ClawAuto2025 extends LinearOpMode{
         autoTasks.addDelay(200);
         autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.loseSettings));
+        autoTasks.addDelay(250);
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
         positionSolver.addMoveToTaskEx(rightbeforesample, autoTasks);
@@ -189,21 +193,25 @@ public class ClawAuto2025 extends LinearOpMode{
         positionSolver.addMoveToTaskEx(beforesecondsample, autoTasks);
         positionSolver.addMoveToTaskEx(atsecondsample, autoTasks);
         positionSolver.addMoveToTaskEx(observationzone2, autoTasks);
-        positionSolver.addMoveToTaskEx(beforethirdsample, autoTasks);
-        positionSolver.addMoveToTaskEx(atthirdsample, autoTasks);
-        positionSolver.addMoveToTaskEx(observationzone3, autoTasks);
         positionSolver.addMoveToTaskEx(beforespecimen2, autoTasks);
-        positionSolver.addMoveToTaskEx(rotationbeforespecimen2, autoTasks);
         positionSolver.addMoveToTaskEx(atspecimen2, autoTasks);
         autoTasks.addStep(() -> intake.tasks.startAutoSpecimenPickup()); // grab specimen
         autoTasks.addDelay(1000);
-        positionSolver.addMoveToTaskEx(midwayspecimen2hang, autoTasks);
-        autoTasks.addStep(() -> intake.setSpecimenPositions(2)); //
-        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.slowSettings));
-        positionSolver.addMoveToTaskEx(specimen2hang, autoTasks);
-        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
-        positionSolver.addMoveToTaskEx(backmidwayspecimen2spot, autoTasks);
-        positionSolver.addMoveToTaskEx(atspecimen3, autoTasks);
+        //   positionSolver.addMoveToTaskEx(beforethirdsample, autoTasks);
+        //  positionSolver.addMoveToTaskEx(atthirdsample, autoTasks);
+        //  positionSolver.addMoveToTaskEx(observationzone3, autoTasks);
+        //   positionSolver.addMoveToTaskEx(beforespecimen2, autoTasks);
+        // positionSolver.addMoveToTaskEx(rotationbeforespecimen2, autoTasks);
+        //  positionSolver.addMoveToTaskEx(atspecimen2, autoTasks);
+        //  autoTasks.addStep(() -> intake.tasks.startAutoSpecimenPickup()); // grab specimen
+        //  autoTasks.addDelay(1000);
+        //   positionSolver.addMoveToTaskEx(midwayspecimen2hang, autoTasks);
+        //   autoTasks.addStep(() -> intake.setSpecimenPositions(2)); //
+        //   autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.slowSettings));
+        //  positionSolver.addMoveToTaskEx(specimen2hang, autoTasks);
+        //  autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
+        //  positionSolver.addMoveToTaskEx(backmidwayspecimen2spot, autoTasks);
+        //  positionSolver.addMoveToTaskEx(atspecimen3, autoTasks);
 //        autoTasks.addDelay(2000);
 //        positionSolver.addMoveToTaskEx(midwayspecimen3hang, autoTasks);
 //        positionSolver.addMoveToTaskEx(specimen3hang, autoTasks);

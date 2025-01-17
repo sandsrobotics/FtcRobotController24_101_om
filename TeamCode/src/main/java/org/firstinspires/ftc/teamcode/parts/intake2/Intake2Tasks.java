@@ -16,6 +16,7 @@ public class Intake2Tasks {
     private final TimedTask autoSpecimenPickupTask;
     private final TimedTask autoSpecimenHangTask;
     private final TimedTask autoIntakeDropTask;
+    private final TimedTask autoRotateServoSafe;
 
     public Intake2Tasks(Intake2 intake, Robot robot) {
         this.intake = intake;
@@ -26,7 +27,8 @@ public class Intake2Tasks {
         autoBucketDropperTask = new TimedTask(TaskNames.autoBucketDropper, movementTask);
         autoSpecimenPickupTask = new TimedTask(TaskNames.autoSpecimenPickup, movementTask);
         autoSpecimenHangTask = new TimedTask(TaskNames.autoSpecimenHang, movementTask);
-        autoIntakeDropTask = new TimedTask(TaskNames.autoIntakeDrop);
+        autoIntakeDropTask = new TimedTask(TaskNames.autoIntakeDrop, movementTask);
+        autoRotateServoSafe = new TimedTask(TaskNames.autoRotateServoSafe, movementTask);
     }
 
     public void constructAutoHome() {
@@ -133,6 +135,12 @@ public class Intake2Tasks {
             intake.getHardware().tiltServo.setPosition(0);
         });
     }
+    public void constructRotateServoSafe() {
+        autoRotateServoSafe.autoStart = false;
+        autoRotateServoSafe.addStep(() -> {
+            intake.getHardware().rotationServo.setPosition(0.5);
+        }, ()-> intake.getHardware().specimenServo.isDone());
+    }
 
     public void startAutoHome() {
         autoHomeTask.restart();
@@ -146,13 +154,10 @@ public class Intake2Tasks {
     public void startAutoSpecimenPickup() {
         autoSpecimenPickupTask.restart();
     }
-    public void startAutoSpecimenHang() {
-        autoSpecimenHangTask.restart();
-    }
+    public void startAutoSpecimenHang() {autoSpecimenHangTask.restart(); }
     public void startAutoIntakeDropTask() {
         autoIntakeDropTask.restart();
     }
-
     private void setSlideToHomeConfig() {
         double power = -0.125;
         intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -172,6 +177,7 @@ public class Intake2Tasks {
         public final static String autoSpecimenPickup = "auto specimen pickup";
         public final static String autoSpecimenHang = "auto specimen hang";
         public final static String autoIntakeDrop = "drop block into bucket";
+        public final static String autoRotateServoSafe = "rotate servo to safe speed";
     }
 
     public static final class Events {
