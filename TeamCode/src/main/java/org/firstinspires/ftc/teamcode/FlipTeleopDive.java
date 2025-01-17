@@ -6,6 +6,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.teamcode.lib.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveTeleop;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.XRelativeSolver;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.hardware.PositionTrackerHardware;
+import org.firstinspires.ftc.teamcode.parts.positiontracker.pinpoint.Pinpoint;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.settings.PositionTrackerSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.encodertracking.EncoderTracker;
 import java.text.DecimalFormat;
@@ -28,7 +30,9 @@ public class FlipTeleopDive extends LinearOpMode {
     Robot robot;
     PositionSolver positionSolver;
     PositionTracker pt;
-    Vector3 fieldStartPos = new Vector3(0,0,180);
+    Pinpoint odo;
+  //Vector3 fieldStartPos = new Vector3(0,0,180);
+    Vector3 fieldStartPos = new Vector3(-14.375,-62,90);
 
     public void initTeleop(){
         new DriveTeleop(this.drive);
@@ -45,16 +49,22 @@ public class FlipTeleopDive extends LinearOpMode {
         drive = new Drive(robot);
         initTeleop();
 
-        PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false, 100, new Vector3(2,2,2), fieldStartPos);
-        pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));
-        XRelativeSolver solver = new XRelativeSolver(drive);
+        PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
+               100, new Vector3(2,2,2), fieldStartPos);
 
-        EncoderTracker et = new EncoderTracker(pt);
-        pt.positionSourceId = EncoderTracker.class;
+        pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));
+      XRelativeSolver solver = new XRelativeSolver(drive);
+
+       EncoderTracker et = new EncoderTracker(pt);
+       pt.positionSourceId = EncoderTracker.class;
 
 //        Add Pinpoint here
-//        Pinpoint odo = new Pinpoint(robot);
-//        pt.positionSourceId = Pinpoint.class;
+//Z        odo = new Pinpoint(pt, true, -56.0, 52.0, 13.26291192f,
+//Z        GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        //Pinpoint odo = new Pinpoint(robot, true);
+//Z        pt.positionSourceId = Pinpoint.class;
+//        positionSolver = new PositionSolver(drive); // removed so it won't rotate 90deg clockwise
+
 
         Intake intake = new Intake(robot);
         new IntakeTeleop(intake);

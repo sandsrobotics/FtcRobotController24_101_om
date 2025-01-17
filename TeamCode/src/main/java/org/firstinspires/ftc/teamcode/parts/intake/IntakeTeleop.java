@@ -65,6 +65,7 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
     }
 
     public void driverControls() {
+         parent.setUserSlidePower (-parent.parent.opMode.gamepad2.left_stick_y);
         if (buttonMgr.getState(2, Buttons.back, State.wasPressed)) {
             parent.eStop();
         }
@@ -93,6 +94,10 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
             if (buttonMgr.getState(2, Buttons.dpad_right, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.depositTask.restart();
+            }
+            if (buttonMgr.getState(2, Buttons.right_stick_button, State.wasTapped)) {
+                parent.stopAllIntakeTasks();
+                parent.tasks.lowDumpIntake.restart();
             }
         } else {
             if (buttonMgr.getState(2, Buttons.x, State.wasSingleTapped)) {
