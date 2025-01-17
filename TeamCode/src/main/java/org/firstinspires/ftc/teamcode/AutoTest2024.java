@@ -137,23 +137,21 @@ public class AutoTest2024 extends LinearOpMode{
         Vector3 parkingposition = new Vector3(54, -54, 0);
         //Vector3 parkingposidtion = new Vector3(54, -54, 0);
 
-
         autoTasks.addStep(()-> intake.stopAllIntakeTasks());
         autoTasks.addStep(()-> odo.setPosition(humansidestart));
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
         autoTasks.addStep(()-> intake.tasks.setMotorsToRunConfig());
         autoTasks.addStep(()-> intake.setHorizontalSlidePosition(-1)); // h-slide in
+
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         autoTasks.addStep(() -> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
-        autoTasks.addStep(() -> intake.setSpecimenServoPosition(2));
+        autoTasks.addStep(() -> intake.setSpecimenPositions(2)); // prepare for specimen hang
         autoTasks.addDelay(500);
         positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
         autoTasks.addDelay(200);
-        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang());
-        autoTasks.addDelay(1000);
+        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specien on bar
+        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
-        //autoTasks.addStep(()-> intake.stopAllIntakeTasks());
-        //autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
         positionSolver.addMoveToTaskEx(rightbeforesample, autoTasks);
         positionSolver.addMoveToTaskEx(atfirstsample, autoTasks);
@@ -167,20 +165,20 @@ public class AutoTest2024 extends LinearOpMode{
         positionSolver.addMoveToTaskEx(beforespecimen2, autoTasks);
         positionSolver.addMoveToTaskEx(rotationbeforespecimen2, autoTasks);
         positionSolver.addMoveToTaskEx(atspecimen2, autoTasks);
-        autoTasks.addDelay(500);
-        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenPickup());
-        autoTasks.addDelay(250);
+        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenPickup()); // grab specimen
         positionSolver.addMoveToTaskEx(midwayspecimen2hang, autoTasks);
-        autoTasks.addStep(() -> intake.setSpecimenServoPosition(2));
+        autoTasks.addStep(() -> intake.setSpecimenPositions(2)); //
+        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.slowSettings));
         positionSolver.addMoveToTaskEx(specimen2hang, autoTasks);
-//        autoTasks.addDelay(2000);
-//        positionSolver.addMoveToTaskEx(backmidwayspecimen2spot, autoTasks);
-//        positionSolver.addMoveToTaskEx(atspecimen3, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specien on bar
+        positionSolver.addMoveToTaskEx(backmidwayspecimen2spot, autoTasks);
+        positionSolver.addMoveToTaskEx(atspecimen3, autoTasks);
 //        autoTasks.addDelay(2000);
 //        positionSolver.addMoveToTaskEx(midwayspecimen3hang, autoTasks);
 //        positionSolver.addMoveToTaskEx(specimen3hang, autoTasks);
 //        autoTasks.addDelay(2000);
 //        positionSolver.addMoveToTaskEx(parkingposition, autoTasks);
+        autoTasks.addStep(()-> intake.stopAllIntakeTasks());
     }
     private void testAuto2(TimedTask autoTasks) {
         Vector3 specimenbar = new Vector3(11.75, -32.75, -90);

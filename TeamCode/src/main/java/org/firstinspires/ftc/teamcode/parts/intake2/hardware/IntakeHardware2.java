@@ -21,7 +21,7 @@ public class IntakeHardware2 {
     public final DcMotorEx robotLiftMotor;
     public final Servo sliderServoLeft;
     public final Servo sliderServoRight;
-    public final ServoSSR tiltServoLeft;
+    public final ServoSSR tiltServo;
     public final Servo rotationServo;
     public final CRServo intakeWheelServoLeft;
     public final CRServo intakeWheelServoRight;
@@ -29,18 +29,18 @@ public class IntakeHardware2 {
     public final DigitalChannel bucketLiftZeroSwitch;
     public final ServoSSR dropperServo;
     public final ServoSSR specimenServo;
-    public final Rev2mDistanceSensor specDistance;
+    //public final Rev2mDistanceSensor specDistance;
 
     public IntakeHardware2(DcMotorEx bucketLiftMotor, DcMotorEx robotLiftMotor, Servo sliderServoLeft,
-                           Servo sliderServoRight, ServoSSR tiltServoLeft, Servo rotationServo,
+                           Servo sliderServoRight, ServoSSR tiltServo, Servo rotationServo,
                            CRServo intakeWheelServoLeft, CRServo intakeWheelServoRight, DigitalChannel liftZeroSwitch,
-                           DigitalChannel bucketLiftZeroSwitch, ServoSSR dropperServo, ServoSSR specimenServo,
-                           Rev2mDistanceSensor specDistance) {
+                           DigitalChannel bucketLiftZeroSwitch, ServoSSR dropperServo, ServoSSR specimenServo){
+                           //Rev2mDistanceSensor specDistance) {
         this.bucketLiftMotor = bucketLiftMotor;
         this.robotLiftMotor = robotLiftMotor;
         this.sliderServoLeft = sliderServoLeft;
         this.sliderServoRight = sliderServoRight;
-        this.tiltServoLeft = tiltServoLeft;
+        this.tiltServo = tiltServo;
         this.rotationServo = rotationServo;
         this.intakeWheelServoLeft = intakeWheelServoLeft;
         this.intakeWheelServoRight = intakeWheelServoRight;
@@ -48,7 +48,7 @@ public class IntakeHardware2 {
         this.bucketLiftZeroSwitch = bucketLiftZeroSwitch;
         this.dropperServo = dropperServo;
         this.specimenServo = specimenServo;
-        this.specDistance = specDistance;
+        //this.specDistance = specDistance;
     }
 
     public static IntakeHardware2 makeDefault(HardwareMap hardwareMap) {
@@ -56,7 +56,7 @@ public class IntakeHardware2 {
         MotorSettings robotLift1MotorSettings = new MotorSettings(MotorSettings.Number.ZERO_B, DcMotorSimple.Direction.FORWARD, DcMotorEx.ZeroPowerBehavior.BRAKE, DcMotorEx.RunMode.RUN_TO_POSITION, slideHoldPower);
         ServoSettings sliderServoLeftSettings = new ServoSettings(ServoSettings.Number.THREE, Servo.Direction.FORWARD);
         ServoSettings sliderServoRightSettings = new ServoSettings(ServoSettings.Number.FOUR, Servo.Direction.REVERSE);
-        ServoSettings tiltServoLeftSettings = new ServoSettings(ServoSettings.Number.FIVE_B, Servo.Direction.FORWARD);
+        ServoSettings tiltServoSettings = new ServoSettings(ServoSettings.Number.FIVE_B, Servo.Direction.FORWARD);
         ServoSettings rotationServoSettings = new ServoSettings(ServoSettings.Number.TWO_B, Servo.Direction.FORWARD);
         ServoSettings dropperServoSettings = new ServoSettings(ServoSettings.Number.ZERO, Servo.Direction.FORWARD);
         ServoSettings specimenServoSettings = new ServoSettings(ServoSettings.Number.TWO, Servo.Direction.FORWARD);
@@ -67,22 +67,22 @@ public class IntakeHardware2 {
         bucketLiftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
         DigitalChannel robotLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital0");
         robotLiftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
-        Rev2mDistanceSensor specDistance = hardwareMap.get(Rev2mDistanceSensor.class, "sensor_distance");
+        //Rev2mDistanceSensor specDistance = hardwareMap.get(Rev2mDistanceSensor.class, "sensor_distance");
 
         return new IntakeHardware2(
                 bucketLiftMotorSettings.makeExMotor(hardwareMap),
                 robotLift1MotorSettings.makeExMotor(hardwareMap),
                 sliderServoLeftSettings.makeServo(hardwareMap),
                 sliderServoRightSettings.makeServo(hardwareMap),
-                tiltServoLeftSettings.makeServoSSR(hardwareMap),
+                tiltServoSettings.makeServoSSR(hardwareMap),
                 rotationServoSettings.makeServo(hardwareMap),
                 intakeWheelServoLeftSettings.makeCRServo(hardwareMap),
                 intakeWheelServoRightSettings.makeCRServo(hardwareMap),
                 bucketLiftZeroSwitch,
                 robotLiftZeroSwitch,
                 dropperServoSettings.makeServoSSR(hardwareMap),
-                specimenServoSettings.makeServoSSR(hardwareMap),
-                specDistance
+                specimenServoSettings.makeServoSSR(hardwareMap)
+                //specDistance
         );
     }
 }

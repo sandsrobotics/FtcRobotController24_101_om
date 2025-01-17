@@ -52,9 +52,9 @@ public class Intake2Tasks {
         autoBucketLiftTask.autoStart = false;
 
         autoBucketLiftTask.addStep(() -> {
-            intake.getHardware().tiltServoLeft.setPosition(0.3);
+            intake.getHardware().tiltServo.setPosition(0.3);
             intake.getHardware().dropperServo.getController().pwmDisable();
-        }, () -> intake.getHardware().tiltServoLeft.isDone());
+        }, () -> intake.getHardware().tiltServo.isDone());
 
         autoBucketLiftTask.addStep( ()-> {
             intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().maxLiftPosition);
@@ -90,7 +90,7 @@ public class Intake2Tasks {
     public void constructAutoSpecimenPickup() {
         autoSpecimenPickupTask.autoStart = false;
         autoSpecimenPickupTask.addStep(() -> {
-            intake.getHardware().tiltServoLeft.setPosition(intake.getSettings().intakeArmDefault); // default straight up position
+            intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmDefault); // default straight up position
             intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition);
         }, ()-> intake.getHardware().specimenServo.isDone());
         autoSpecimenPickupTask.addStep(() -> {
@@ -115,13 +115,14 @@ public class Intake2Tasks {
         autoSpecimenHangTask.addStep(() -> {
             intake.getHardware().bucketLiftMotor.setPower(1);
             intake.getHardware().bucketLiftMotor.setTargetPosition(0);
-        });
+            intake.slideTargetPosition = 0;
+        }, () -> intake.isLiftInTolerance());
     }
 
     public void constructIntakeDrop() {
         autoIntakeDropTask.autoStart = false;
         autoIntakeDropTask.addStep(() -> {
-            intake.getHardware().tiltServoLeft.setPosition(0.64);
+            intake.getHardware().tiltServo.setPosition(0.64);
         });
         autoIntakeDropTask.addDelay(1000);
         autoIntakeDropTask.addStep(() -> {
@@ -129,7 +130,7 @@ public class Intake2Tasks {
         });
         autoIntakeDropTask.addDelay(1000);
         autoIntakeDropTask.addStep(() -> {
-            intake.getHardware().tiltServoLeft.setPosition(0);
+            intake.getHardware().tiltServo.setPosition(0);
         });
     }
 

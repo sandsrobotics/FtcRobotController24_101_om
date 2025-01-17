@@ -100,7 +100,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
                             currentIntakeHeightPos + adjustment
                     )
             );
-            getHardware().tiltServoLeft.setPosition(currentIntakeHeightPos);
+            getHardware().tiltServo.setPosition(currentIntakeHeightPos);
         }
     }
 
@@ -133,7 +133,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         }
     }
 
-    public void setSpecimenServoPosition(int position) {
+    public void setSpecimenPositions(int position) {
         switch (position) {
             case 1: // Open position
                 tasks.startAutoSpecimenPickup();
@@ -201,7 +201,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     @Override
     public void onInit() {
         currentIntakeHeightPos = getSettings().intakeArmDefault;
-        getHardware().tiltServoLeft.setPosition(currentIntakeHeightPos); // default straight up position
+        getHardware().tiltServo.enable();
+        getHardware().tiltServo.setPosition(currentIntakeHeightPos); // default straight up position
         currentRotationPos = 0.0;
         setHorizontalSlidePosition(-1); // pull slide in on init
         drive = getBeanManager().getBestMatch(Drive.class, false);
@@ -237,7 +238,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
         setBucketLiftPosition(control.bucketLiftPosition);
         moveRobotLiftToZero(control.robotLiftToZero);
-        setSpecimenServoPosition(control.specimenServoPosition);
+        setSpecimenPositions(control.specimenServoPosition);
         //getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition);
         setRobotLiftPosition(control.robotliftPosition);
 
