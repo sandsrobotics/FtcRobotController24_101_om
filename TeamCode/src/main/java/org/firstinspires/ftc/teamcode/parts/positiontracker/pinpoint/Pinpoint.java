@@ -18,6 +18,7 @@ public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, 
     double oldTime = 0;
     Boolean reset = true;
 
+    String hwDeviceName = "odo";
     double settingsXoffset = -80.0;
     double settingsYoffset = 44.0;
     float settingsResolution = 19.89436789f; //19.89436789f for 4-bar;  13.26291192f for swingarm
@@ -43,6 +44,7 @@ public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, 
 
     public Pinpoint(PositionTracker parent,
                     Boolean reset,
+                    String hwDeviceName,
                     double settingsXoffset,
                     double settingsYoffset,
                     float settingsResolution,
@@ -50,6 +52,7 @@ public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, 
                     GoBildaPinpointDriver.EncoderDirection settingsYdirection) {
         super(parent, "Pinpoint");
         this.reset = reset;
+        this.hwDeviceName = hwDeviceName;
         this.settingsXoffset = settingsXoffset;
         this.settingsYoffset = settingsYoffset;
         this.settingsResolution = settingsResolution;
@@ -76,7 +79,7 @@ public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, 
         Pose2D pos = odo.getPosition();
 
         String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
-        //parent.parent.opMode.telemetry.addData("Position", data);
+        parent.parent.opMode.telemetry.addData("Position", data);
 
             /*
             gets the current Velocity (x & y in mm/sec and heading in degrees/sec) and prints it.
@@ -113,7 +116,8 @@ public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, 
     public void onInit() {
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        odo = parent.parent.opMode.hardwareMap.get(GoBildaPinpointDriver.class, "odo");
+        odo = parent.parent.opMode.hardwareMap.get(GoBildaPinpointDriver.class, hwDeviceName);
+        //odo = parent.parent.opMode.hardwareMap.get(GoBildaPinpointDriver.class, "odo");
 
         /*
         Set the odometry pod positions relative to the point that the odometry computer tracks around.
