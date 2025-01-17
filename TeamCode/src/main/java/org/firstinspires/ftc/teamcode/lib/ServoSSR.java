@@ -274,6 +274,14 @@ public class ServoSSR implements Servo {
 
     @Override
     public void setPosition(double position) {
+        /* This is untested */
+        // does ServoControllerEx cache this, or does it have to query the hardware resulting in a time penalty?
+        if (enabled && !((ServoImplEx)servo).isPwmEnabled()) {   // detect pwmDisabled without using internal methods and assume the worst
+            enabled=false;
+            eStopped=true;
+        }
+        /*-- end untested --*/
+
         if (enabled && isSetPosition(position)) return;    // has already been set (but not necessarily done moving), no need to update timer or position
         //if (!enabled) enable();
         timer = calcSweepTimerValue(position);
