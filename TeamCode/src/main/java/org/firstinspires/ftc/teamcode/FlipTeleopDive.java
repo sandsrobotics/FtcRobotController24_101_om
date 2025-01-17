@@ -59,11 +59,11 @@ public class FlipTeleopDive extends LinearOpMode {
 //       pt.positionSourceId = EncoderTracker.class;
 
 //        Add Pinpoint here
-//Z        odo = new Pinpoint(pt, true, -56.0, 52.0, 13.26291192f,
-//Z        GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo = new Pinpoint(pt, true, "pinpoint",
+                -56.0, 52.0, 13.26291192f,
+                GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
-
-        odo = new Pinpoint(pt);  //, true);
+        //odo = new Pinpoint(pt);  //, true);
         pt.positionSourceId = Pinpoint.class;
         //positionSolver = new PositionSolver(drive); // removed so it won't rotate 90deg clockwise
 
@@ -71,12 +71,15 @@ public class FlipTeleopDive extends LinearOpMode {
         new IntakeTeleop(intake);
 
         robot.init();
+        odo.setPosition(fieldStartPos);
 
         while (!isStarted()) {
             telemetry.addData("Not Started", "Not Started");
             dashboard.sendTelemetryPacket(packet);
             telemetry.update();
         }
+
+        odo.setPosition(fieldStartPos);
         robot.start();
 
         while (opModeIsActive()) {
