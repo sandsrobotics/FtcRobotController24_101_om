@@ -17,8 +17,6 @@ public class Intake2Tasks {
     private final TimedTask autoSpecimenHangTask;
     private final TimedTask autoIntakeDropTask;
 
-
-
     public Intake2Tasks(Intake2 intake, Robot robot) {
         this.intake = intake;
         this.robot = robot;
@@ -74,11 +72,12 @@ public class Intake2Tasks {
         autoBucketDropperTask.addStep(() -> {
             intake.getHardware().dropperServo.getController().pwmEnable();
             intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMax);
-        });
-        autoBucketDropperTask.addDelay(500);
+        },()->intake.getHardware().dropperServo.isDone());
+
         autoBucketDropperTask.addStep( ()-> {
             intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin);
         }, () -> intake.getHardware().dropperServo.isDone());
+
         autoBucketDropperTask.addStep(() -> {
             intake.getHardware().dropperServo.getController().pwmDisable();
         });
@@ -91,14 +90,14 @@ public class Intake2Tasks {
     public void constructAutoSpecimenPickup() {
         autoSpecimenPickupTask.autoStart = false;
         autoSpecimenPickupTask.addStep(() -> {
-            intake.incrementIntakeUpDown(0);
+            intake.getHardware().tiltServoLeft.setPosition(intake.getSettings().intakeArmDefault); // default straight up position
             intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition);
-        });
-        autoSpecimenPickupTask.addDelay(1000);
+        }, ()-> intake.getHardware().specimenServo.isDone());
         autoSpecimenPickupTask.addStep(() -> {
             intake.getHardware().bucketLiftMotor.setPower(1);
             intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().specimenSafeHeight);
-        });
+            intake.slideTargetPosition = intake.getSettings().specimenSafeHeight;
+        }, () -> intake.isLiftInTolerance());
     }
     public void constructAutoSpecimenHang() {
         autoSpecimenHangTask.autoStart = false;
@@ -111,9 +110,7 @@ public class Intake2Tasks {
 
         autoSpecimenHangTask.addStep(() -> {
             intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoOpenPosition);
-        });
-
-        autoSpecimenHangTask.addDelay(1000);
+        }, ()->intake.getHardware().specimenServo.isDone());
 
         autoSpecimenHangTask.addStep(() -> {
             intake.getHardware().bucketLiftMotor.setPower(1);
@@ -139,15 +136,12 @@ public class Intake2Tasks {
     public void startAutoHome() {
         autoHomeTask.restart();
     }
-
     public void startAutoBucketLift() {
         autoBucketLiftTask.restart();
     }
-
     public void startAutoBucketDropper() {
         autoBucketDropperTask.restart();
     }
-
     public void startAutoSpecimenPickup() {
         autoSpecimenPickupTask.restart();
     }

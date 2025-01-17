@@ -91,10 +91,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public void incrementIntakeUpDown(int direction) {
-        //TODO: fix this so it doesn't take these huge numbers and divide them down
-
         if(Math.abs(direction) != 0) {
-
             double adjustment = 0.01 * Math.signum(direction);
             currentIntakeHeightPos = Math.max(
                     getSettings().intakeArmMin,
@@ -103,9 +100,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
                             currentIntakeHeightPos + adjustment
                     )
             );
-
             getHardware().tiltServoLeft.setPosition(currentIntakeHeightPos);
-
         }
     }
 
@@ -206,9 +201,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     @Override
     public void onInit() {
         currentIntakeHeightPos = getSettings().intakeArmDefault;
+        getHardware().tiltServoLeft.setPosition(currentIntakeHeightPos); // default straight up position
         currentRotationPos = 0.0;
         setHorizontalSlidePosition(-1); // pull slide in on init
-        getHardware().tiltServoLeft.setPosition(0.52); // default straight up position
         drive = getBeanManager().getBestMatch(Drive.class, false);
         pt = getBeanManager().getBestMatch(PositionTracker.class, false);
         tasks = new Intake2Tasks(this, parent);
