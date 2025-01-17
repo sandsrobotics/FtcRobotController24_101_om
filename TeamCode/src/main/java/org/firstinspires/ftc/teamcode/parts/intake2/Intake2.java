@@ -92,20 +92,21 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     public void incrementIntakeUpDown(int direction) {
         //TODO: fix this so it doesn't take these huge numbers and divide them down
-        double adjustment = 0.01 * Math.signum(direction);
-        currentIntakeHeightPos = Math.max(
-                getSettings().intakeArmMin,
-                Math.min(
-                        getSettings().intakeArmMax,
-                        currentIntakeHeightPos + adjustment
-                )
-        );
-        //TODO: why do we need this IF condition?
-        if (direction == 2007) {
-            currentIntakeHeightPos = 0;
-        }
 
-        getHardware().tiltServoLeft.setPosition(currentIntakeHeightPos);
+        if(Math.abs(direction) != 0) {
+
+            double adjustment = 0.01 * Math.signum(direction);
+            currentIntakeHeightPos = Math.max(
+                    getSettings().intakeArmMin,
+                    Math.min(
+                            getSettings().intakeArmMax,
+                            currentIntakeHeightPos + adjustment
+                    )
+            );
+
+            getHardware().tiltServoLeft.setPosition(currentIntakeHeightPos);
+
+        }
     }
 
     public void incrementHorizontalSlide(int direction) {
@@ -162,6 +163,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
                 // check to make sure bucket is up clear of intake first
                 if(getHardware().bucketLiftMotor.getCurrentPosition()>500) tasks.startAutoBucketDropper();
                 break;
+            case 2:
+                tasks.startAutoIntakeDropTask();
+                break;
         }
     }
 
@@ -204,7 +208,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         currentIntakeHeightPos = getSettings().intakeArmDefault;
         currentRotationPos = 0.0;
         setHorizontalSlidePosition(-1); // pull slide in on init
-        incrementIntakeUpDown(0); // default straight up position
+        getHardware().tiltServoLeft.setPosition(0.52); // default straight up position
         drive = getBeanManager().getBestMatch(Drive.class, false);
         pt = getBeanManager().getBestMatch(PositionTracker.class, false);
         tasks = new Intake2Tasks(this, parent);
@@ -213,6 +217,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         tasks.constructAutoBucketDropper();
         tasks.constructAutoSpecimenPickup();
         tasks.constructAutoSpecimenHang();
+        tasks.constructIntakeDrop();
 
         //homing bucket lift setup
         homingBucketZero.setOnRise(() -> {
