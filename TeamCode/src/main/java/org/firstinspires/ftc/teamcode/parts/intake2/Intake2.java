@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.parts.intake2;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveControl;
@@ -249,7 +250,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     @Override
     public void onRun(IntakeControl2 control) {
-        //spinIntakeWithPower(control.sweeperPower); // two servo intake spin fwd/reverse
+        if (parent.opMode instanceof TeleOp) {
+            spinIntakeWithPower(control.sweeperPower);
+        }
         incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
         incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
         setBucketLiftPosition(control.bucketLiftPosition);
