@@ -280,7 +280,19 @@ public class FlipBucketAuto2025 extends LinearOpMode{
     }
 
     private void testBucketAuto(TimedTask autoTasks) {
-        Vector3 bucketsidestart = new Vector3(-14 - 3.0/8.0, -62, -90);
+
+        // New settings
+        Vector3 posBucketSideStart = new Vector3(-14.375, -62, 90);
+        Vector3 posBucketScore = new Vector3(-53.5, -53.5, 45);
+        Vector3 posSample1 = new Vector3(-36, -39, 135);
+        Vector3 posSample2 = new Vector3(-46.5, -39, 135);
+        Vector3 posSample3 = new Vector3(-59, -42, 119);
+        Vector3 posPark = new Vector3(-23.5, -11, 180);
+        Vector3 posPrePark = new Vector3(-39, -11, 180);
+        // End New settings
+
+        /*  Don't run this; rewrite it  */
+
         Vector3 specimenhang = new Vector3(-10, -35, -90); //specimen must be lifted before hang
         Vector3 firstsample = new Vector3(-48.8, -37.37, 90);
         Vector3 Highbasketscore = new Vector3(-48.9, -40.9, 40);
@@ -291,7 +303,7 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         Vector3 park = new Vector3(-48.9, -40.9, 40);
 
         autoTasks.addStep(()-> intake.stopAllIntakeTasks());
-        autoTasks.addStep(()-> odo.setPosition(bucketsidestart));
+        autoTasks.addStep(()-> odo.setPosition(posBucketSideStart));
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
 //        autoTasks.addStep(()-> intake.tasks.setMotorsToRunConfig());
 //        autoTasks.addStep(()-> intake.setHorizontalSlidePosition(-1)); // h-slide in
