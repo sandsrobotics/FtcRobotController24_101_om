@@ -22,7 +22,7 @@ public class IntakeHardware2 {
     public final Servo sliderServoLeft;
     public final Servo sliderServoRight;
     public final ServoSSR tiltServo;
-    public final Servo rotationServo;
+    public final ServoSSR rotationServo;
     public final CRServo intakeWheelServoLeft;
     public final CRServo intakeWheelServoRight;
     public final DigitalChannel robotLiftZeroSwitch;
@@ -32,7 +32,7 @@ public class IntakeHardware2 {
     //public final Rev2mDistanceSensor specDistance;
 
     public IntakeHardware2(DcMotorEx bucketLiftMotor, DcMotorEx robotLiftMotor, Servo sliderServoLeft,
-                           Servo sliderServoRight, ServoSSR tiltServo, Servo rotationServo,
+                           Servo sliderServoRight, ServoSSR tiltServo, ServoSSR rotationServo,
                            CRServo intakeWheelServoLeft, CRServo intakeWheelServoRight, DigitalChannel liftZeroSwitch,
                            DigitalChannel bucketLiftZeroSwitch, ServoSSR dropperServo, ServoSSR specimenServo){
                            //Rev2mDistanceSensor specDistance) {
@@ -75,7 +75,7 @@ public class IntakeHardware2 {
                 sliderServoLeftSettings.makeServo(hardwareMap),
                 sliderServoRightSettings.makeServo(hardwareMap),
                 tiltServoSettings.makeServoSSR(hardwareMap),
-                rotationServoSettings.makeServo(hardwareMap),
+                rotationServoSettings.makeServoSSR(hardwareMap),
                 intakeWheelServoLeftSettings.makeCRServo(hardwareMap),
                 intakeWheelServoRightSettings.makeCRServo(hardwareMap),
                 bucketLiftZeroSwitch,
