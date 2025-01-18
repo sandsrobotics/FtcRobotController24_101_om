@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.parts.intake;
 
 import android.graphics.Color;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -12,7 +11,6 @@ import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveControl;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
-import org.firstinspires.ftc.teamcode.parts.intake2.Intake2;
 
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
@@ -66,8 +64,13 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         getHardware().horizSliderMotor.setPower(IntakeHardware.slideHoldPower);
         getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        //getHardware().rightLiftMotor.setPower(LifterHardware.liftHoldPower);
-        //getHardware().rightLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
+        getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        getHardware().bucketLiftMotor.setPower(IntakeHardware.bucketHoldPower);
+        getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
+        getHardware().robotHangMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        getHardware().robotHangMotor.setPower(0);
     }
 
     public void slideWithPower(double power, boolean force) {
@@ -98,7 +101,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         slideTargetPosition = position;
         stopSlide();   // ???
         getHardware().horizSliderMotor.setTargetPosition(slideTargetPosition);
-        getHardware().horizSliderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         setSlidePower(power);
     }
     public void setLiftPosition(int position, double power) {
@@ -109,9 +112,14 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         liftTargetPosition = position;
         stopLift();   // ???
         getHardware().bucketLiftMotor.setTargetPosition(liftTargetPosition);
-        getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         setLiftPower(power);
         slideIsUnderControl = false;
+    }
+    public void setHangPosition(int position, double power) {
+        getHardware().robotHangMotor.setTargetPosition(position);
+        getHardware().robotHangMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        getHardware().robotHangMotor.setPower(power);
     }
 
     public void stopSlide() { getHardware().horizSliderMotor.setPower(0); }
@@ -280,7 +288,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             return;
         }
         slideIsUnderControl = true;
-        getHardware().horizSliderMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         setSlidePower(power);
 
     }
@@ -319,19 +327,10 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         setMotorsToRunConfig();
         tasks = new IntakeTasks(this, parent);
         tasks.constructAllIntakeTasks();
-//        tasks.constructAutoHome();
-//        tasks.constructSafeTask();
-//        tasks.constructPrepareToIntakeTask();
-//        tasks.constructTransfer();
-//        tasks.constructPrepareToDepositTask();
-//        tasks.constructDepositTask();
-//        tasks.constructAutoIntakeTask();
-//        tasks.constructEjectBadSampleTask();
-//        tasks.constructPrepareToTransferTask();
 
         // this is part of the resets lift to 0 each time it hits the limit switch
         homingVSlideZero.setOnRise(() -> {
-            getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 //            getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //            getHardware().bucketLiftMotor.setTargetPosition(0);
 //            liftTargetPosition = 0;
@@ -339,7 +338,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         });
         //homing hslide slide setup
         homingHSlideZero.setOnRise(() -> {
-            getHardware().horizSliderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             setSlidePosition(20,0.125);
         });
     }

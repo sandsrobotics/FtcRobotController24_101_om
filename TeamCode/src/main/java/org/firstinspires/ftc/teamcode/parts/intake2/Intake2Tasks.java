@@ -16,6 +16,7 @@ public class Intake2Tasks {
     private final TimedTask autoSpecimenPickupTask;
     private final TimedTask autoSpecimenHangTask;
     private final TimedTask autoIntakeDropTask;
+    private final TimedTask autoSamplePickupTask;
     private final TimedTask autoRotateServoSafe;
 
     public Intake2Tasks(Intake2 intake, Robot robot) {
@@ -27,6 +28,7 @@ public class Intake2Tasks {
         autoBucketDropperTask = new TimedTask(TaskNames.autoBucketDropper, movementTask);
         autoSpecimenPickupTask = new TimedTask(TaskNames.autoSpecimenPickup, movementTask);
         autoSpecimenHangTask = new TimedTask(TaskNames.autoSpecimenHang, movementTask);
+        autoSamplePickupTask = new TimedTask(TaskNames.autoSamplePickupTask, movementTask);
         autoIntakeDropTask = new TimedTask(TaskNames.autoIntakeDrop, movementTask);
         autoRotateServoSafe = new TimedTask(TaskNames.autoRotateServoSafe, movementTask);
     }
@@ -125,15 +127,29 @@ public class Intake2Tasks {
         autoIntakeDropTask.autoStart = false;
         autoIntakeDropTask.addStep(() -> {
             intake.getHardware().tiltServo.setPosition(0.64);
+        }, ()-> intake.getHardware().tiltServo.isDone());
+
+        autoSamplePickupTask.addStep(()-> {
+            intake.getHardware().intakeWheelServoLeft.setPosition(1.0);
+            intake.getHardware().intakeWheelServoRight.setPosition(1.0);
         });
-        autoIntakeDropTask.addDelay(1000);
+        autoIntakeDropTask.addDelay(3000);
         autoIntakeDropTask.addStep(() -> {
-            intake.getHardware().intakeWheelServoRight.setPower(1);
+            intake.getHardware().tiltServo.setPosition(.52);
+            intake.getHardware().intakeWheelServoLeft.setPosition(0.5);
+            intake.getHardware().intakeWheelServoRight.setPosition(0.5);
         });
-        autoIntakeDropTask.addDelay(1000);
-        autoIntakeDropTask.addStep(() -> {
-            intake.getHardware().tiltServo.setPosition(0);
-        });
+    }
+
+    public void constructSamplePickup() {
+        autoSamplePickupTask.autoStart = false;
+        autoSamplePickupTask.addStep(()-> {
+            intake.getHardware().intakeWheelServoLeft.setPosition(0.0);
+            intake.getHardware().intakeWheelServoRight.setPosition(0.0);
+            intake.getHardware().tiltServo.setPosition(0.2);
+        }, ()-> intake.getHardware().tiltServo.isDone());
+        autoSamplePickupTask.addDelay(3000);
+        autoSamplePickupTask.addStep(autoIntakeDropTask::restart);
     }
     public void constructRotateServoSafe() {
         autoRotateServoSafe.autoStart = false;
@@ -158,6 +174,10 @@ public class Intake2Tasks {
     public void startAutoIntakeDropTask() {
         autoIntakeDropTask.restart();
     }
+    public void startAutoSamplePickup() {
+        autoSamplePickupTask.restart();
+    }
+
     private void setSlideToHomeConfig() {
         double power = -0.125;
         intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -178,6 +198,7 @@ public class Intake2Tasks {
         public final static String autoSpecimenHang = "auto specimen hang";
         public final static String autoIntakeDrop = "drop block into bucket";
         public final static String autoRotateServoSafe = "rotate servo to safe speed";
+        public final static String autoSamplePickupTask = "auto sample pickup";
     }
 
     public static final class Events {

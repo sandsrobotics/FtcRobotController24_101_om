@@ -34,7 +34,7 @@ public class IntakeTeleop2 extends LoopedPartImpl<Intake2, IntakeTeleopSettings2
     @Override
     public void onStart() {
         parent.setBaseController(() -> new IntakeControl2(
-                (int) settings.sweepSpeedSupplier.get(),
+                (double) settings.sweepSpeedSupplier.get(),
                 (int) settings.sweepLiftSupplier.get(),
                 (int) settings.sweepSlideSupplier.get(),
                 (int) settings.bucketLiftSupplier.get(),

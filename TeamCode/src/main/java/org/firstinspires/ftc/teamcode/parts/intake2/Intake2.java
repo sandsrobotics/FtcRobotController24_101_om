@@ -39,8 +39,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public void spinIntakeWithPower(double power) {
-        getHardware().intakeWheelServoLeft.setPower(power);
-        getHardware().intakeWheelServoRight.setPower(power);
+        getHardware().intakeWheelServoLeft.setPosition(power);
+        getHardware().intakeWheelServoRight.setPosition(power);
     }
 
     private void setBucketLiftPositionUnsafe(int position) {
@@ -218,6 +218,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         tasks.constructAutoSpecimenHang();
         tasks.constructIntakeDrop();
         tasks.constructRotateServoSafe();
+        tasks.constructSamplePickup();
 
         //homing bucket lift setup
         homingBucketZero.setOnRise(() -> {

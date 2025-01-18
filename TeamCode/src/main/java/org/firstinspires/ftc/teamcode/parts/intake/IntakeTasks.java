@@ -130,10 +130,12 @@ public class IntakeTasks {
         lowDumpIntake.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteParked));
 
         prepareToHangRobotTask.autoStart = false;
-        prepareToHangRobotTask.addStep(() -> intake.getHardware().robotHangMotor.setTargetPosition(intake.getSettings().positionHangReady));
+        //prepareToHangRobotTask.addStep(() -> intake.getHardware().robotHangMotor.setTargetPosition(intake.getSettings().positionHangReady));
+        prepareToHangRobotTask.addStep(() -> intake.setHangPosition(intake.getSettings().positionHangReady, 1));
 
         hangRobotTask.autoStart = false;
-        hangRobotTask.addStep(() -> intake.getHardware().robotHangMotor.setTargetPosition(intake.getSettings().positionHangFinal));
+        //hangRobotTask.addStep(() -> intake.getHardware().robotHangMotor.setTargetPosition(intake.getSettings().positionHangFinal));
+        hangRobotTask.addStep(() -> intake.setHangPosition(intake.getSettings().positionHangFinal, 1));
 
 
 //    public void constructSafeTask() {

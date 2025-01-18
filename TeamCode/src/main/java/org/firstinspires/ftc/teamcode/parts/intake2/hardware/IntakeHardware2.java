@@ -23,8 +23,8 @@ public class IntakeHardware2 {
     public final Servo sliderServoRight;
     public final ServoSSR tiltServo;
     public final ServoSSR rotationServo;
-    public final CRServo intakeWheelServoLeft;
-    public final CRServo intakeWheelServoRight;
+    public final Servo intakeWheelServoLeft;
+    public final Servo intakeWheelServoRight;
     public final DigitalChannel robotLiftZeroSwitch;
     public final DigitalChannel bucketLiftZeroSwitch;
     public final ServoSSR dropperServo;
@@ -33,7 +33,7 @@ public class IntakeHardware2 {
 
     public IntakeHardware2(DcMotorEx bucketLiftMotor, DcMotorEx robotLiftMotor, Servo sliderServoLeft,
                            Servo sliderServoRight, ServoSSR tiltServo, ServoSSR rotationServo,
-                           CRServo intakeWheelServoLeft, CRServo intakeWheelServoRight, DigitalChannel liftZeroSwitch,
+                           Servo intakeWheelServoLeft, Servo intakeWheelServoRight, DigitalChannel liftZeroSwitch,
                            DigitalChannel bucketLiftZeroSwitch, ServoSSR dropperServo, ServoSSR specimenServo){
                            //Rev2mDistanceSensor specDistance) {
         this.bucketLiftMotor = bucketLiftMotor;
@@ -61,8 +61,8 @@ public class IntakeHardware2 {
         ServoSettings dropperServoSettings = new ServoSettings(ServoSettings.Number.ZERO, Servo.Direction.FORWARD);
         ServoSettings specimenServoSettings = new ServoSettings(ServoSettings.Number.TWO, Servo.Direction.FORWARD);
 
-        MotorSettings intakeWheelServoLeftSettings = new MotorSettings(ServoSettings.Number.THREE_B, DcMotorSimple.Direction.FORWARD);
-        MotorSettings intakeWheelServoRightSettings = new MotorSettings(ServoSettings.Number.ONE_B, DcMotorSimple.Direction.REVERSE);
+        ServoSettings intakeWheelServoLeftSettings = new ServoSettings(ServoSettings.Number.THREE_B, Servo.Direction.FORWARD);
+        ServoSettings intakeWheelServoRightSettings = new ServoSettings(ServoSettings.Number.ONE_B, Servo.Direction.REVERSE);
         DigitalChannel bucketLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital1");
         bucketLiftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
         DigitalChannel robotLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital0");
@@ -76,8 +76,8 @@ public class IntakeHardware2 {
                 sliderServoRightSettings.makeServo(hardwareMap),
                 tiltServoSettings.makeServoSSR(hardwareMap),
                 rotationServoSettings.makeServoSSR(hardwareMap),
-                intakeWheelServoLeftSettings.makeCRServo(hardwareMap),
-                intakeWheelServoRightSettings.makeCRServo(hardwareMap),
+                intakeWheelServoLeftSettings.makeServo(hardwareMap),
+                intakeWheelServoRightSettings.makeServo(hardwareMap),
                 bucketLiftZeroSwitch,
                 robotLiftZeroSwitch,
                 dropperServoSettings.makeServoSSR(hardwareMap),

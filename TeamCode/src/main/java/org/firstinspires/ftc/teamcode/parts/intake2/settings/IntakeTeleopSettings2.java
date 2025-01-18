@@ -6,7 +6,7 @@ import om.self.ezftc.core.Robot;
 import om.self.supplier.suppliers.EdgeSupplier;
 
 public class IntakeTeleopSettings2 {
-    public final Supplier<Integer> sweepSpeedSupplier;
+    public final Supplier<Double> sweepSpeedSupplier;
     public final Supplier<Integer> sweepLiftSupplier;
     public final Supplier<Integer> sweepSlideSupplier;
     public final Supplier<Integer> bucketLiftSupplier;
@@ -17,7 +17,7 @@ public class IntakeTeleopSettings2 {
     public final Supplier<Integer> specimenServoSupplier;
     public final Supplier<Integer> robotLiftToZeroSupplier;
 
-    public IntakeTeleopSettings2(Supplier<Integer> sweepSpeedSupplier, Supplier<Integer> sweepLiftSupplier,
+    public IntakeTeleopSettings2(Supplier<Double> sweepSpeedSupplier, Supplier<Integer> sweepLiftSupplier,
                                  Supplier<Integer> sweepSlideSupplier, Supplier<Integer> bucketLiftSupplier,
                                  Supplier<Integer> robotLiftSupplier,Supplier<Integer> rotationServoSupplier,
                                  Supplier<Float> strafeSpeedSupplier, Supplier<Boolean> autoHomeSupplier,
@@ -39,7 +39,7 @@ public class IntakeTeleopSettings2 {
         Gamepad gamepad2 = robot.opMode.gamepad2;
 
         return new IntakeTeleopSettings2(
-                () -> gamepad.right_bumper ? -1 : gamepad.left_bumper ? 1 : 0,  // sweepSpeedSupplier
+                () -> gamepad.right_bumper ? 0 : gamepad.left_bumper ? 1 : 0.5,  // sweepSpeedSupplier
                 () -> gamepad.y ? -1 : gamepad.a ? 1 : 0, // sweepLiftSupplier
                 () -> gamepad.x ? -1 : gamepad.b ? 1 : 0, // horizontal SlideSupplier -1 = in
                 () -> gamepad2.y ? 1 : gamepad2.a ? -1 : 0, // bucketLiftSupplier
