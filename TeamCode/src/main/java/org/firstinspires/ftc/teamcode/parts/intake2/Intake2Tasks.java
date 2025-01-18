@@ -61,6 +61,7 @@ public class Intake2Tasks {
         }, () -> intake.getHardware().tiltServo.isDone());
 
         autoBucketLiftTask.addStep( ()-> {
+            intake.getHardware().bucketLiftMotor.setPower(1.0);
             intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().maxLiftPosition);
             intake.slideTargetPosition = intake.getSettings().maxLiftPosition;
         }, () -> intake.isLiftInTolerance());
@@ -151,7 +152,7 @@ public class Intake2Tasks {
             intake.getHardware().intakeWheelServoRight.setPosition(1.0);
             intake.getHardware().tiltServo.setPosition(0.2);
         });
-        autoSamplePickupTask.addDelay(400);
+        autoSamplePickupTask.addDelay(1000);
         autoSamplePickupTask.addStep(()-> {
             intake.getHardware().intakeWheelServoLeft.setPosition(0.5);
             intake.getHardware().intakeWheelServoRight.setPosition(0.5);
@@ -170,9 +171,7 @@ public class Intake2Tasks {
     public void startAutoHome() {
         autoHomeTask.restart();
     }
-    public void startAutoBucketLift() {
-        autoBucketLiftTask.restart();
-    }
+    public void startAutoBucketLift() {autoBucketLiftTask.restart();}
     public void startAutoBucketDropper() {
         autoBucketDropperTask.restart();
     }

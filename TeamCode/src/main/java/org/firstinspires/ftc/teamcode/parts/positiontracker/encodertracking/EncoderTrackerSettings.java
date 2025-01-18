@@ -11,8 +11,8 @@ public class EncoderTrackerSettings {
 
     public static EncoderTrackerSettings makeDefault(){
         return new EncoderTrackerSettings(
-                52.38,
-                45.68
+                52.38 * 96/104,
+                45.68 * 96/104
         );
     }
 }

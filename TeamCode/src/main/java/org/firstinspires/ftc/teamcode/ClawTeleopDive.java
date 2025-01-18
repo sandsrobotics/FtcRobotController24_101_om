@@ -51,7 +51,7 @@ public class ClawTeleopDive extends LinearOpMode {
         odo = new Pinpoint(pt,false);
         pt.positionSourceId = Pinpoint.class;
 
-        Intake2 intake = new Intake2(robot);
+        Intake2 intake = new Intake2(robot, "Teleop");
         new IntakeTeleop2(intake);
         robot.init();
 

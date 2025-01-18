@@ -75,7 +75,7 @@ public class ClawAuto2026 extends LinearOpMode{
         Robot robot = new Robot(this);
         Drive drive = new Drive(robot);
         new BulkRead(robot);
-        intake = new Intake2(robot);
+        intake = new Intake2(robot, "Teleop");
 
 //        Vector3 fieldStartPos = new Vector3(0,0,-90);
         Vector3 fieldStartPos = new Vector3(14 + 3.0/8.0, -62, -90);
