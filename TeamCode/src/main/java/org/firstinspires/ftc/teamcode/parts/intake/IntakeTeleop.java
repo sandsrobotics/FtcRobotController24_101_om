@@ -123,13 +123,26 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
                 parent.stopAllIntakeTasks();
                 parent.tasks.prepareToHangRobotTask.restart();
             }
-            if (buttonMgr.getState(2, Buttons.dpad_up, State.wasDoubleTapped)) {
-                parent.stopAllIntakeTasks();
-                parent.tasks.autonomousSample.restart();
-            }
             if (buttonMgr.getState(2, Buttons.dpad_right, State.wasSingleTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.hangRobotTask.restart();
+            }
+            // this is for testing the autonomous sample task
+            if (buttonMgr.getState(2, Buttons.dpad_down, State.wasDoubleTapped)) {
+                parent.stopAllIntakeTasks();
+                parent.tasks.autonomousSample.restart();
+            }
+            // this is for inspection to show the maximum extent of the robot
+            if (buttonMgr.getState(2, Buttons.dpad_left, State.wasDoubleTapped)) {
+                parent.stopAllIntakeTasks();
+                parent.getHardware().park.setPosition(parent.getSettings().parkUp);
+                parent.getHardware().chute.setPosition(parent.getSettings().chuteDeposit);
+                parent.setSlidePosition(parent.getSettings().positionSlideMax);
+            }
+            // emergency home
+            if (buttonMgr.getState(2, Buttons.x, State.wasDoubleTapped)) {
+                parent.stopAllIntakeTasks();
+                parent.tasks.startAutoHome();
             }
         }
 
