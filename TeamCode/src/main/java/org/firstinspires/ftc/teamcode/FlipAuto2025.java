@@ -152,6 +152,7 @@ public class FlipAuto2025 extends LinearOpMode{
 
     private void testAuto(TimedTask autoTasks) {
         Vector3 humansidestart = new Vector3(14 + 3.0/8.0, -62, -90);
+        Vector3 bucketsidestart = new Vector3(-14.373, -62, 90);
         Vector3 rightbeforespecimenbar = new Vector3(11.75, -37.75, -90);
         Vector3 rightbeforespecimenbar2 = new Vector3(8.75, -37.75, -90);
 
@@ -267,27 +268,28 @@ public class FlipAuto2025 extends LinearOpMode{
 
         // Positions to travel in Auto
         Vector3 p_1 = new Vector3(14.375, -62, -90);
-        Vector3 p_2 = new Vector3(11.75, -37.75, -90);
-        Vector3 p_3 = new Vector3(11.75, -32.75, -90);
-        Vector3 p_4 = new Vector3(36, -40, -90);
-        Vector3 p_5 = new Vector3(36, -11.75, -90);
-        Vector3 p_6= new Vector3(44.5, -11.75, 180);
-        Vector3 p_7 = new Vector3(44.5, -52.5, 180);
-        Vector3 p_8 = new Vector3(54.5, -11.75, 180);
-        Vector3 p_9 = new Vector3(54.5, -52.5, 180);
-        Vector3 p_10 = new Vector3(61, -11.75, 180);
-        Vector3 p_11 = new Vector3(61, -52.5, 180);
-        Vector3 p_12 = new Vector3(47, -58.5, 90);
-        Vector3 p_13 = new Vector3(47, -62, 90);
-        Vector3 p_14 = new Vector3(24, -47, 0);
-        Vector3 p_15 = new Vector3(8.75, -37.75, -90);
-        Vector3 p_16 = new Vector3(8.75, -32.75, -90);
-        Vector3 p_17 = new Vector3(5.75, -37.75, -90);
-        Vector3 p_18 = new Vector3(5.75, -32.75, -90);
-        Vector3 p_19 = new Vector3(2.75, -37.75, -90);
-        Vector3 p_20 = new Vector3(2.75, -32.75, -90);
-        Vector3 p_21 = new Vector3(-0.25, -37.75, -90);
-        Vector3 p_22 = new Vector3(-0.25, -32.75, -90);
+        Vector3 p_2 = new Vector3(-14.375, -62, 90);
+        Vector3 p_3 = new Vector3(11.75, -37.75, -90);
+        Vector3 p_4 = new Vector3(11.75, -32.75, -90);
+        Vector3 p_5 = new Vector3(36, -40, -90);
+        Vector3 p_6 = new Vector3(36, -11.75, -90);
+        Vector3 p_7= new Vector3(44.5, -11.75, 180);
+        Vector3 p_8 = new Vector3(44.5, -52.5, 180);
+        Vector3 p_9 = new Vector3(54.5, -11.75, 180);
+        Vector3 p_10 = new Vector3(54.5, -52.5, 180);
+        Vector3 p_11 = new Vector3(61, -11.75, 180);
+        Vector3 p_12 = new Vector3(61, -52.5, 180);
+        Vector3 p_13 = new Vector3(47, -58.5, 90);
+        Vector3 p_14 = new Vector3(47, -62, 90);
+        Vector3 p_15 = new Vector3(24, -47, 0);
+        Vector3 p_16 = new Vector3(8.75, -37.75, -90);
+        Vector3 p_17 = new Vector3(8.75, -32.75, -90);
+        Vector3 p_18 = new Vector3(5.75, -37.75, -90);
+        Vector3 p_19 = new Vector3(5.75, -32.75, -90);
+        Vector3 p_20 = new Vector3(2.75, -37.75, -90);
+        Vector3 p_21 = new Vector3(2.75, -32.75, -90);
+        Vector3 p_22 = new Vector3(-0.25, -37.75, -90);
+        Vector3 p_23 = new Vector3(-0.25, -32.75, -90);
         Vector3 p_00 = new Vector3(54, -54, -90);
 
         // Reset and Get Ready.

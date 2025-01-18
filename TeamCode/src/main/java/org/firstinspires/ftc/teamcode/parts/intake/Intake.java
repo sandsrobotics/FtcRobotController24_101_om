@@ -31,6 +31,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public boolean isBlueGood = false;
     public int lastSample = -1;
     public boolean slideIsUnderControl = false;
+    public boolean preventUserControl = false;
     protected Drive drive;
     private double spinnerSliderPower = 0.0;
     // this is part of the resets lift to 0 each time it hits the limit switch
@@ -232,6 +233,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
    // }
 
     public void eStop() {
+        preventUserControl = false;
         // stop all tasks in the intake group
         stopAllIntakeTasks();
         // stop the slides
@@ -245,8 +247,9 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public void stopAllIntakeTasks() {
+        preventUserControl = false;
         tasks.movementTask.runCommand(Group.Command.PAUSE);
-        tasks.movementTask.getActiveRunnables().clear();    // this is the magic sauce... must be used after the PAUSE or it will stop working
+        tasks.movementTask.getActiveRunnables().clear(); // this is the magic sauce... must be used after the PAUSE or it will stop working
     }
     public int getV_Slide_Min() {
         return getSettings().v_Slide_Min;
@@ -270,6 +273,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         }
     }
     public void setUserSlidePower(double power) {
+        if (preventUserControl) return;
         if (power > 0 && getHardware().horizSliderMotor.getCurrentPosition() >= getSettings().positionSlideMax) {
             setSlidePosition(getSettings().positionSlideMax, 0.25);
            // slideIsUnderControl = false;

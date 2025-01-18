@@ -140,9 +140,12 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
                 parent.setSlidePosition(parent.getSettings().positionSlideMax);
             }
             // emergency home
-            if (buttonMgr.getState(2, Buttons.x, State.wasDoubleTapped)) {
+            if (buttonMgr.getState(2, Buttons.x, State.wasSingleTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.startAutoHome();
+            }
+            if (buttonMgr.getState(2, Buttons.y, State.wasSingleTapped)) {
+                parent.isYellowGood = !parent.isYellowGood;
             }
         }
 
