@@ -39,7 +39,7 @@ public class IntakeTeleopSettings2 {
         Gamepad gamepad2 = robot.opMode.gamepad2;
 
         return new IntakeTeleopSettings2(
-                () -> gamepad.right_bumper ? 0 : gamepad.left_bumper ? 1 : 0.5,  // sweepSpeedSupplier
+                () -> gamepad.right_bumper ? -1 : gamepad.left_bumper ? 1 : 0.0,  // sweepSpeedSupplier
                 () -> gamepad.y ? -1 : gamepad.a ? 1 : 0, // sweepLiftSupplier
                 () -> gamepad.x ? -1 : gamepad.b ? 1 : 0, // horizontal SlideSupplier -1 = in
                 () -> gamepad2.y ? 1 : gamepad2.a ? -1 : 0, // bucketLiftSupplier

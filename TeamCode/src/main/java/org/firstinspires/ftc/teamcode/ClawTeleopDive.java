@@ -21,8 +21,8 @@ import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Vector3;
 import static om.self.ezftc.utils.Constants.tileSide;
 
-@TeleOp(name="1 TeleopDive", group="Linear Opmode")
-public class TeleopDive extends LinearOpMode {
+@TeleOp(name="1A Claw Teleop Dive", group="Linear Opmode")
+public class ClawTeleopDive extends LinearOpMode {
     Drive drive;
     Robot robot;
     PositionSolver positionSolver;

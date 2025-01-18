@@ -29,12 +29,12 @@ import om.self.task.other.TimedTask;
 import static om.self.ezftc.utils.Constants.tileSide;
 
 @Config
-@Autonomous(name="Claw Auto 2025", group="Test")
+@Autonomous(name="1A Claw Spec Auto", group="Test")
 public class ClawAuto2025 extends LinearOpMode{
     public Function<Vector3, Vector3> transformFunc;
     public Vector3 customStartPos;
     public boolean shutdownps;
-    public boolean bucketSide;
+    public boolean bucketSide = false;
     PositionSolver positionSolver;
     PositionTracker pt;
     Vector3 startPosition;
@@ -129,8 +129,10 @@ public class ClawAuto2025 extends LinearOpMode{
         // Here is where we schedule the tasks for the autonomous run (testAuto function below run loop)
         if (bucketSide)
             BucketAuto(autoTasks);
-        else
+        else {
             SpecAuto(autoTasks);
+//            testAuto2(autoTasks);
+        }
 
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
@@ -221,18 +223,21 @@ public class ClawAuto2025 extends LinearOpMode{
         Vector3 afterfirstredbar = new Vector3(36, -40, -90);
         Vector3 specimenpickup = new Vector3(45, -60.5, 90);
 
-        autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1));
-        positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
-        positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
-        positionSolver.addMoveToTaskEx(specimenpickup, autoTasks);
-        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenPickup());
+        autoTasks.addStep(() -> intake.tasks.startAutoSamplePickup());
+        autoTasks.addDelay(5000);
+        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
+//        autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1));
+//        positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
+//        positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
+//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
+//        positionSolver.addMoveToTaskEx(specimenpickup, autoTasks);
+//        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenPickup());
     }
 
     private void BucketAuto(TimedTask autoTasks) {
         Vector3 bucketsidestart = new Vector3(-14 - 3.0 / 8.0, -62, -90);
         Vector3 beforespecimenhang = new Vector3(-10, -37.75, -90);
-        Vector3 specimenhang = new Vector3(-10, -35, -90); //specimen must be lifted before hang
+        Vector3 specimenhang = new Vector3(-10, -32.75, -90); //specimen must be lifted before hang
         Vector3 firstsample = new Vector3(-48.8, -38.5, 90);
         Vector3 Highbasketscore = new Vector3(-53.2, -53.7, 43.3);
         Vector3 secondsample = new Vector3(-58.8, -37.39, 90);
@@ -248,13 +253,13 @@ public class ClawAuto2025 extends LinearOpMode{
         autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1)); // h-slide in
         // close specimen pincer
         autoTasks.addStep(() -> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
-        positionSolver.addMoveToTaskEx(beforespecimenhang, autoTasks);
         autoTasks.addStep(() -> intake.setSpecimenPositions(2)); // prepare for specimen hang
-        autoTasks.addDelay(500);
+        positionSolver.addMoveToTaskEx(beforespecimenhang, autoTasks);
         positionSolver.addMoveToTaskEx(specimenhang, autoTasks);
         autoTasks.addDelay(200);
         autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+        autoTasks.addDelay(200);
+        positionSolver.addMoveToTaskEx(beforespecimenhang, autoTasks);
         positionSolver.addMoveToTaskEx(firstsample, autoTasks);
         autoTasks.addDelay(250);
         autoTasks.addStep(() -> intake.tasks.startAutoSamplePickup());

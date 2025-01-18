@@ -31,7 +31,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     //***** Constructors *****
     public Intake2(Robot parent) {
-        super(parent, "Slider", () -> new IntakeControl2(0, 0, 0, 0, 0, 0, 0, 0, 0));
+        super(parent, "Slider", () -> new IntakeControl2(0.5, 0, 0, 0, 0, 0, 0, 0, 0));
         setConfig(
                 IntakeSettings2.makeDefault(),
                 IntakeHardware2.makeDefault(parent.opMode.hardwareMap)
@@ -39,8 +39,13 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public void spinIntakeWithPower(double power) {
-        getHardware().intakeWheelServoLeft.setPosition(power);
-        getHardware().intakeWheelServoRight.setPosition(power);
+        double finalPower = .5;
+
+        if (power == 1) finalPower = 1;
+        else if (power == -1 ) finalPower = 0.0;
+
+        getHardware().intakeWheelServoLeft.setPosition(finalPower);
+        getHardware().intakeWheelServoRight.setPosition(finalPower);
     }
 
     private void setBucketLiftPositionUnsafe(int position) {
@@ -162,7 +167,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
                 if(getHardware().bucketLiftMotor.getCurrentPosition()>500) tasks.startAutoBucketDropper();
                 break;
             case 2:
-                tasks.startAutoIntakeDropTask();
+                //tasks.startAutoIntakeDropTask();
                 break;
         }
     }
@@ -201,11 +206,17 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         getHardware().bucketLiftMotor.setPower(power);
     }
 
+    public void stopIntakeSpin() {
+        getHardware().intakeWheelServoLeft.setPosition(0.5);
+        getHardware().intakeWheelServoRight.setPosition(0.5);
+    }
+
     @Override
     public void onInit() {
         currentIntakeHeightPos = getSettings().intakeArmDefault;
         getHardware().tiltServo.enable();
         getHardware().tiltServo.setPosition(currentIntakeHeightPos); // default straight up position
+        stopIntakeSpin();
         currentRotationPos = 0.0;
         setHorizontalSlidePosition(-1); // pull slide in on init
         drive = getBeanManager().getBestMatch(Drive.class, false);
@@ -238,7 +249,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     @Override
     public void onRun(IntakeControl2 control) {
-        spinIntakeWithPower(control.sweeperPower); // two servo intake spin fwd/reverse
+        //spinIntakeWithPower(control.sweeperPower); // two servo intake spin fwd/reverse
         incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
         incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
         setBucketLiftPosition(control.bucketLiftPosition);
@@ -260,7 +271,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
         strafePower = control.strafePower;
         //Todo: test code needs control refactoring - rearrange controller A and B to suit drivers
-        //homingBucketZero.accept(getHardware().bucketLiftZeroSwitch.getState());
+        homingBucketZero.accept(getHardware().bucketLiftZeroSwitch.getState());
         currentLiftPos = getHardware().robotLiftMotor.getCurrentPosition(); //0.32
         currentSlidePos = getHardware().bucketLiftMotor.getCurrentPosition();
         parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
