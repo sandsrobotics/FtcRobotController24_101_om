@@ -29,10 +29,12 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public Intake2Tasks tasks;
     protected PositionTracker pt;
     boolean startSpecRange = false;
+    private final String modeName;
 
     //***** Constructors *****
-    public Intake2(Robot parent) {
+    public Intake2(Robot parent, String modeName) {
         super(parent, "Slider", () -> new IntakeControl2(0.5, 0, 0, 0, 0, 0, 0, 0, 0));
+        this.modeName = modeName;
         setConfig(
                 IntakeSettings2.makeDefault(),
                 IntakeHardware2.makeDefault(parent.opMode.hardwareMap)
@@ -250,6 +252,10 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     @Override
     public void onRun(IntakeControl2 control) {
+
+        if (modeName.equalsIgnoreCase("Teleop")) {
+            spinIntakeWithPower(control.sweeperPower);
+        }
         if (parent.opMode instanceof TeleOp) {
             spinIntakeWithPower(control.sweeperPower);
         }

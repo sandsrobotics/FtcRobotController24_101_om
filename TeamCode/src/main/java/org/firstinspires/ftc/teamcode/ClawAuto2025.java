@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.parts.intake2.Intake2;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolverSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
-import org.firstinspires.ftc.teamcode.parts.positiontracker.encodertracking.EncoderTracker;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.hardware.PositionTrackerHardware;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.pinpoint.Pinpoint;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.settings.PositionTrackerSettings;
@@ -75,7 +74,7 @@ public class ClawAuto2025 extends LinearOpMode{
         Robot robot = new Robot(this);
         Drive drive = new Drive(robot);
         new BulkRead(robot);
-        intake = new Intake2(robot);
+        intake = new Intake2(robot, "Autonomous");
 
 //        Vector3 fieldStartPos = new Vector3(0,0,-90);
         Vector3 fieldStartPos = new Vector3(14 + 3.0 / 8.0, -62, -90);
@@ -83,10 +82,8 @@ public class ClawAuto2025 extends LinearOpMode{
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
                 100, new Vector3(2, 2, 2), fieldStartPos);
         pt = new PositionTracker(robot, pts, PositionTrackerHardware.makeDefault(robot));
-//        odo = new Pinpoint(pt);
-//        pt.positionSourceId = Pinpoint.class;
-        new EncoderTracker(pt);
-        pt.positionSourceId = EncoderTracker.class;
+        odo = new Pinpoint(pt);
+        pt.positionSourceId = Pinpoint.class;
         positionSolver = new PositionSolver(drive); // removed so it won't rotate 90deg clockwise
         DecimalFormat df = new DecimalFormat("#0.0");
 
@@ -119,7 +116,7 @@ public class ClawAuto2025 extends LinearOpMode{
             telemetry.update();
             sleep(50);
         }
-       // odo.setPosition(fieldStartPos);
+        odo.setPosition(fieldStartPos);
         robot.start();
 
         if(shutdownps) positionSolver.triggerEvent(Robot.Events.STOP);
@@ -177,7 +174,7 @@ public class ClawAuto2025 extends LinearOpMode{
         //Vector3 parkingposidtion = new Vector3(54, -54, 0);
 
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
-      //  autoTasks.addStep(() -> odo.setPosition(humansidestart));
+        autoTasks.addStep(() -> odo.setPosition(humansidestart));
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
         autoTasks.addStep(() -> intake.tasks.setMotorsToRunConfig());
         autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1)); // h-slide in
@@ -239,7 +236,7 @@ public class ClawAuto2025 extends LinearOpMode{
 
     private void BucketAuto(TimedTask autoTasks) {
         Vector3 bucketsidestart = new Vector3(-14 - 3.0 / 8.0, -62, -90);
-        Vector3 beforespecimenhang = new Vector3(-10, -39.1, -90);
+        Vector3 beforespecimenhang = new Vector3(-10, -37.75, -90);
         Vector3 specimenhang = new Vector3(-10, -32.75, -90); //specimen must be lifted before hang
         Vector3 firstsample = new Vector3(-48.8, -38.5, 90);
         Vector3 Highbasketscore = new Vector3(-53.2, -53.7, 43.3);
@@ -250,7 +247,7 @@ public class ClawAuto2025 extends LinearOpMode{
         Vector3 park = new Vector3(-48.9, -40.9, 40);
 
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
-//        autoTasks.addStep(() -> odo.setPosition(bucketsidestart));
+        autoTasks.addStep(() -> odo.setPosition(bucketsidestart));
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
         autoTasks.addStep(() -> intake.tasks.setMotorsToRunConfig());
         autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1)); // h-slide in
