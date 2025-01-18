@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.lib.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveTeleop;
+import org.firstinspires.ftc.teamcode.parts.drive.settings.DriveTeleopSettings;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 import org.firstinspires.ftc.teamcode.parts.intake.IntakeTeleop;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
@@ -23,11 +24,12 @@ import java.text.DecimalFormat;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Vector3;
 
-@TeleOp(name="Flipper Teleop", group="Linear Opmode")
+@TeleOp(name="2A Flipper Teleop Arcade RED", group="Linear Opmode")
 public class FlipTeleopDive extends LinearOpMode {
     double tileSide = 23.5;
     Drive drive;
     Robot robot;
+    Intake intake;
     PositionSolver positionSolver;
     PositionTracker pt;
     Pinpoint odo;
@@ -35,7 +37,8 @@ public class FlipTeleopDive extends LinearOpMode {
     Vector3 fieldStartPos = new Vector3(-14.375,-62,90);
 
     public void initTeleop(){
-        new DriveTeleop(this.drive);
+        new DriveTeleop(drive, DriveTeleopSettings.makeArcade1(robot));
+        //new DriveTeleop(this.drive);
     }
 
     @Override
@@ -67,11 +70,13 @@ public class FlipTeleopDive extends LinearOpMode {
         pt.positionSourceId = Pinpoint.class;
         //positionSolver = new PositionSolver(drive); // removed so it won't rotate 90deg clockwise
 
-        Intake intake = new Intake(robot);
+        intake = new Intake(robot);
         new IntakeTeleop(intake);
 
         robot.init();
         odo.setPosition(fieldStartPos);
+
+        extraSettings();
 
         while (!isStarted()) {
             telemetry.addData("Not Started", "Not Started");
@@ -95,6 +100,12 @@ public class FlipTeleopDive extends LinearOpMode {
             telemetry.update();
         }
         robot.stop();
+    }
+
+    public void extraSettings() {
+        intake.isBlueGood = false;
+        intake.isYellowGood = true;
+        intake.isRedGood = true;
     }
 
     public void moveRobot(Vector3 target){
