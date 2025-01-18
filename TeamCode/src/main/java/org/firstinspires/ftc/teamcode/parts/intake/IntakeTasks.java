@@ -103,7 +103,7 @@ public class IntakeTasks {
         getSpecimen.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed));
         getSpecimen.addStep(() -> intake.getHardware().pinch.isDone());
         //getSpecimen.addStep(() -> intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftRaiseSpeciman));
-        getSpecimen.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftRaiseSpeciman, 1));
+        getSpecimen.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftRaiseSpeciman, 0.7));
         getSpecimen.addStep(intake::isLiftInTolerance);
 
         prepareToHangSpecimenTask.autoStart = false;
@@ -115,7 +115,7 @@ public class IntakeTasks {
         hangSpecimenTask.autoStart = false;
         hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchSuperLoose));
         //hangSpecimenTask.addStep(() -> intake.getHardware().bucketLiftMotor.setTargetPosition(intake.getSettings().positionLiftHangRelease));
-        hangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangRelease, 1));
+        hangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangRelease, 0.7));
         hangSpecimenTask.addStep(intake::isLiftInTolerance);
         hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen));
         hangSpecimenTask.addStep(safeTask::restart);
@@ -130,10 +130,12 @@ public class IntakeTasks {
         lowDumpIntake.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteParked));
 
         prepareToHangRobotTask.autoStart = false;
-        prepareToHangRobotTask.addStep(() -> intake.getHardware().robotHangMotor.setTargetPosition(intake.getSettings().positionHangReady));
+        //prepareToHangRobotTask.addStep(() -> intake.getHardware().robotHangMotor.setTargetPosition(intake.getSettings().positionHangReady));
+        prepareToHangRobotTask.addStep(() -> intake.setHangPosition(intake.getSettings().positionHangReady, 1));
 
         hangRobotTask.autoStart = false;
-        hangRobotTask.addStep(() -> intake.getHardware().robotHangMotor.setTargetPosition(intake.getSettings().positionHangFinal));
+        //hangRobotTask.addStep(() -> intake.getHardware().robotHangMotor.setTargetPosition(intake.getSettings().positionHangFinal));
+        hangRobotTask.addStep(() -> intake.setHangPosition(intake.getSettings().positionHangFinal, 1));
 
 
 //    public void constructSafeTask() {

@@ -67,16 +67,22 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
     }
 
     public void driverControls() {
-        parent.setUserSlidePower(-parent.parent.opMode.gamepad2.left_stick_y);
-        if (buttonMgr.getState(2, Buttons.back, State.wasPressed)) {
+        // e-stop, either driver
+        if (buttonMgr.getState(2, Buttons.back, State.wasPressed) ||
+                buttonMgr.getState(1, Buttons.back, State.wasPressed)) {
             parent.eStop();
         }
+
+        // *** DRIVER 2 CONTROLS ***
+        // Driver 2 - slide control
+        parent.setUserSlidePower(-parent.parent.opMode.gamepad2.left_stick_y);
+        // Driver 2 - start button is a "shift" key; anything below is if start is not pushed
         if (!buttonMgr.getState(2, Buttons.start, State.isPressed)) {
+            // Driver 2
             if (buttonMgr.getState(2, Buttons.x, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.safeTask.restart();
             }
-
             if (buttonMgr.getState(2, Buttons.y, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.prepareToIntakeTask.restart();
@@ -101,6 +107,49 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
                 parent.stopAllIntakeTasks();
                 parent.tasks.lowDumpIntake.restart();
             }
+            if (buttonMgr.getState(2, Buttons.left_bumper, State.wasTapped)) {
+                parent.setSpinner(parent.getSettings().spinnerOut);
+            }
+            if (buttonMgr.getState(2, Buttons.right_bumper, State.wasTapped)) {
+                parent.setSpinner(parent.getSettings().spinnerIn);
+            }
+            if (buttonMgr.getState(2, Buttons.right_bumper, State.wasHeld)) {
+                parent.setSpinner(parent.getSettings().spinnerOff);
+            }
+        }
+        // Driver 2 - start button is a "shift" key; anything below is when start is held first
+        else {
+            if (buttonMgr.getState(2, Buttons.dpad_up, State.wasSingleTapped)) {
+                parent.stopAllIntakeTasks();
+                parent.tasks.prepareToHangRobotTask.restart();
+            }
+            if (buttonMgr.getState(2, Buttons.dpad_right, State.wasSingleTapped)) {
+                parent.stopAllIntakeTasks();
+                parent.tasks.hangRobotTask.restart();
+            }
+            // this is for testing the autonomous sample task
+            if (buttonMgr.getState(2, Buttons.dpad_down, State.wasDoubleTapped)) {
+                parent.stopAllIntakeTasks();
+                parent.tasks.autonomousSample.restart();
+            }
+            // this is for inspection to show the maximum extent of the robot
+            if (buttonMgr.getState(2, Buttons.dpad_left, State.wasDoubleTapped)) {
+                parent.stopAllIntakeTasks();
+                parent.getHardware().park.setPosition(parent.getSettings().parkUp);
+                parent.getHardware().chute.setPosition(parent.getSettings().chuteDeposit);
+                parent.setSlidePosition(parent.getSettings().positionSlideMax);
+            }
+            // emergency home
+            if (buttonMgr.getState(2, Buttons.x, State.wasDoubleTapped)) {
+                parent.stopAllIntakeTasks();
+                parent.tasks.startAutoHome();
+            }
+        }
+
+        // *** DRIVER 1 CONTROLS ***
+        // Driver 1 - start button is a "shift" key; anything below is if start is not pushed
+        if (!buttonMgr.getState(1, Buttons.start, State.isPressed)) {
+            // Driver 1
             if (buttonMgr.getState(1, Buttons.x, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.prepareToGetSpecimen.restart();
@@ -117,28 +166,10 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
                 parent.stopAllIntakeTasks();
                 parent.tasks.hangSpecimenTask.restart();
             }
-        } else {
-            if (buttonMgr.getState(2, Buttons.dpad_up, State.wasSingleTapped)) {
-                parent.stopAllIntakeTasks();
-                parent.tasks.prepareToHangRobotTask.restart();
-            }
-            if (buttonMgr.getState(2, Buttons.dpad_up, State.wasDoubleTapped)) {
-                parent.stopAllIntakeTasks();
-                parent.tasks.autonomousSample.restart();
-            }
-            if (buttonMgr.getState(2, Buttons.dpad_right, State.wasSingleTapped)) {
-                parent.stopAllIntakeTasks();
-                parent.tasks.hangRobotTask.restart();
-            }
         }
-        if (buttonMgr.getState(2, Buttons.left_bumper, State.wasTapped)) {
-            parent.setSpinner(parent.getSettings().spinnerOut);
-        }
-        if (buttonMgr.getState(2, Buttons.right_bumper, State.wasTapped)) {
-            parent.setSpinner(parent.getSettings().spinnerIn);
-        }
-        if (buttonMgr.getState(2, Buttons.right_bumper, State.wasHeld)) {
-            parent.setSpinner(parent.getSettings().spinnerOff);
+        // Driver 1 - start button is a "shift" key; anything below is when start is held first
+        else {
+            // add shifted controls here
         }
     }
 }
