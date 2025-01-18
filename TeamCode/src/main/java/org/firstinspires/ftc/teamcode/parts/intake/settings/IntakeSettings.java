@@ -49,6 +49,9 @@ public class IntakeSettings {
     public final double pinchSuperLoose          = 0.545;
     public final int pinchSweepTime              = 1500;   // spec is 1250
 
+    public final double parkDown                 = 0.793;
+    public final double parkUp                   = 0.266;
+
     public final int positionSlideMin            = 10;
     public final int positionSlideMax            = 1200; // Physical limit = 1500; 1100 might be necessary if too long
     public final int positionSlideStartIntake    = 450;   //todo: finalize number

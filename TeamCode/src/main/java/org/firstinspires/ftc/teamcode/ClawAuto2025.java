@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.intake2.Intake2;
@@ -30,11 +29,12 @@ import om.self.task.other.TimedTask;
 import static om.self.ezftc.utils.Constants.tileSide;
 
 @Config
-@Autonomous(name="2a Claw Auto 2025", group="Test")
-public class ClawAuto2025 extends LinearOpMode {
+@Autonomous(name="Claw Auto 2025", group="Test")
+public class ClawAuto2025 extends LinearOpMode{
     public Function<Vector3, Vector3> transformFunc;
     public Vector3 customStartPos;
     public boolean shutdownps;
+    public boolean bucketSide;
     PositionSolver positionSolver;
     PositionTracker pt;
     Vector3 startPosition;
@@ -48,21 +48,18 @@ public class ClawAuto2025 extends LinearOpMode {
     /**************************/
     public int startDelay;
     private int parkPosition;
-    public boolean bucketSide = false;
 
-    public void initAuto() {
+    public void initAuto(){
         transformFunc = (v) -> v;
     }
 
-    private Vector3 tileToInchAuto(Vector3 tiles) {
+    private Vector3 tileToInchAuto(Vector3 tiles){
         return Constants.tileToInch(transformFunc.apply(tiles));
     }
 
-    private Vector3 tileToInchAutoNoZ(Vector3 tiles) {
-        return Constants.tileToInch(transformFunc.apply(tiles)).withZ(tiles.Z);
-    }
+    private Vector3 tileToInchAutoNoZ(Vector3 tiles){ return Constants.tileToInch(transformFunc.apply(tiles)).withZ(tiles.Z); }
 
-    public Vector3 fieldToTile(Vector3 p) {
+    public Vector3 fieldToTile(Vector3 p){
         return new Vector3(p.X / tileSide, p.Y / tileSide, p.Z);
     }
 
@@ -110,7 +107,7 @@ public class ClawAuto2025 extends LinearOpMode {
                 parkPosition = 0;
             }
 
-            if (startDelay > maxDelay) startDelay = maxDelay;
+            if(startDelay > maxDelay) startDelay = maxDelay;
 
             dashboardTelemetry.addData("position", "blah");
             telemetry.addData("PARK POSITION:", parkPosition == 0 ? "Park based off tags" : parkPosition == 1 ? "Park MID" : parkPosition == 2 ? "Park CORNER" : "Park BOARD");
@@ -122,7 +119,7 @@ public class ClawAuto2025 extends LinearOpMode {
         odo.setPosition(fieldStartPos);
         robot.start();
 
-        if (shutdownps) positionSolver.triggerEvent(Robot.Events.STOP);
+        if(shutdownps) positionSolver.triggerEvent(Robot.Events.STOP);
 
         // Setting up group container, task queue, and setting positionSolver target
         Group container = new Group("container", robot.taskManager);
@@ -162,9 +159,9 @@ public class ClawAuto2025 extends LinearOpMode {
         Vector3 beforethirdsample = new Vector3(44.5, -11.75, 180);
         Vector3 atthirdsample = new Vector3(61, -11.75, 180);
         Vector3 observationzone3 = new Vector3(61, -52.5, 180);
-        Vector3 beforespecimen2 = new Vector3(46, -52.5, 180);
+        Vector3 beforespecimen2 = new Vector3(46, -53, 180);
         Vector3 rotationbeforespecimen2 = new Vector3(46, -52.5, 90);
-        Vector3 atspecimen2 = new Vector3(46, -61.5, 90);
+        Vector3 atspecimen2 = new Vector3(46, -62, 90);
         Vector3 midwayspecimen2hang = new Vector3(23.5, -47, 0);
         Vector3 specimen2hang = new Vector3(8.75, -32.75, -90);
         Vector3 backmidwayspecimen2spot = new Vector3(23.5, -47, 0);
@@ -203,6 +200,7 @@ public class ClawAuto2025 extends LinearOpMode {
         positionSolver.addMoveToTaskEx(rotationbeforespecimen2, autoTasks);
         positionSolver.addMoveToTaskEx(atspecimen2, autoTasks);
         autoTasks.addStep(() -> intake.tasks.startAutoSpecimenPickup()); // grab specimen
+        autoTasks.addDelay(1000);
         positionSolver.addMoveToTaskEx(midwayspecimen2hang, autoTasks);
         autoTasks.addStep(() -> intake.setSpecimenPositions(2)); //
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));

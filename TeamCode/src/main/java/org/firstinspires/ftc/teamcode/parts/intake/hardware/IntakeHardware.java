@@ -25,13 +25,15 @@ public class IntakeHardware {
     public final ServoSSR flipper;
     public final ServoSSR chute;
     public final ServoSSR pinch;
+    public final ServoSSR park;
     public final NormalizedColorSensor colorSensor;
 
     public final DigitalChannel bucketLiftZeroSwitch;
     public final DigitalChannel slideZeroSwitch;
 
     public IntakeHardware(DcMotorEx bucketLiftMotor, DcMotorEx slideMotor, DcMotorEx robotHangMotor, DigitalChannel bucketLiftZeroSwitch, DigitalChannel slideZeroSwitch,
-                          ServoSSR spinner, ServoSSR flipper, ServoSSR chute, ServoSSR pinch, NormalizedColorSensor colorSensor) {
+                          ServoSSR spinner, ServoSSR flipper, ServoSSR chute, ServoSSR pinch, ServoSSR park,
+                          NormalizedColorSensor colorSensor) {
         this.bucketLiftMotor = bucketLiftMotor;
         this.horizSliderMotor = slideMotor;
         this.robotHangMotor = robotHangMotor;
@@ -41,6 +43,7 @@ public class IntakeHardware {
         this.flipper = flipper;
         this.chute = chute;
         this.pinch = pinch;
+        this.park = park;
         this.colorSensor = colorSensor;
     }
 //beans
@@ -65,6 +68,7 @@ public class IntakeHardware {
                 new ServoSSR(hardwareMap.get(Servo.class, "servo2")),
                 new ServoSSR(hardwareMap.get(Servo.class, "servo4")),
                 new ServoSSR(hardwareMap.get(Servo.class, "servo1")),
+                new ServoSSR(hardwareMap.get(Servo.class, "servo0B")),
                 hardwareMap.get(NormalizedColorSensor.class, "color")
         );
     }

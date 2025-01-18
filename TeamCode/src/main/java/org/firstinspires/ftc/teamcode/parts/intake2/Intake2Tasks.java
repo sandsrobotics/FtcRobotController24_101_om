@@ -17,6 +17,7 @@ public class Intake2Tasks {
     private final TimedTask autoSpecimenHangTask;
     private final TimedTask autoIntakeDropTask;
     private final TimedTask autoSamplePickupTask;
+    private final TimedTask autoRotateServoSafe;
 
     public Intake2Tasks(Intake2 intake, Robot robot) {
         this.intake = intake;
@@ -27,8 +28,9 @@ public class Intake2Tasks {
         autoBucketDropperTask = new TimedTask(TaskNames.autoBucketDropper, movementTask);
         autoSpecimenPickupTask = new TimedTask(TaskNames.autoSpecimenPickup, movementTask);
         autoSpecimenHangTask = new TimedTask(TaskNames.autoSpecimenHang, movementTask);
-        autoIntakeDropTask = new TimedTask(TaskNames.autoIntakeDrop, movementTask);
         autoSamplePickupTask = new TimedTask(TaskNames.autoSamplePickupTask, movementTask);
+        autoIntakeDropTask = new TimedTask(TaskNames.autoIntakeDrop, movementTask);
+        autoRotateServoSafe = new TimedTask(TaskNames.autoRotateServoSafe, movementTask);
     }
 
     public void constructAutoHome() {
@@ -149,6 +151,12 @@ public class Intake2Tasks {
         autoSamplePickupTask.addDelay(3000);
         autoSamplePickupTask.addStep(autoIntakeDropTask::restart);
     }
+    public void constructRotateServoSafe() {
+        autoRotateServoSafe.autoStart = false;
+        autoRotateServoSafe.addStep(() -> {
+            intake.getHardware().rotationServo.setPosition(0.5);
+        }, ()-> intake.getHardware().specimenServo.isDone());
+    }
 
     public void startAutoHome() {
         autoHomeTask.restart();
@@ -162,9 +170,7 @@ public class Intake2Tasks {
     public void startAutoSpecimenPickup() {
         autoSpecimenPickupTask.restart();
     }
-    public void startAutoSpecimenHang() {
-        autoSpecimenHangTask.restart();
-    }
+    public void startAutoSpecimenHang() {autoSpecimenHangTask.restart(); }
     public void startAutoIntakeDropTask() {
         autoIntakeDropTask.restart();
     }
@@ -191,6 +197,7 @@ public class Intake2Tasks {
         public final static String autoSpecimenPickup = "auto specimen pickup";
         public final static String autoSpecimenHang = "auto specimen hang";
         public final static String autoIntakeDrop = "drop block into bucket";
+        public final static String autoRotateServoSafe = "rotate servo to safe speed";
         public final static String autoSamplePickupTask = "auto sample pickup";
     }
 

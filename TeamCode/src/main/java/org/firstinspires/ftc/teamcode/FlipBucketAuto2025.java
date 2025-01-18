@@ -7,7 +7,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -15,7 +14,6 @@ import org.firstinspires.ftc.teamcode.lib.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
-import org.firstinspires.ftc.teamcode.parts.intake2.Intake2;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolverSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
@@ -34,8 +32,8 @@ import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
 
 @Config
-@Autonomous (name="Flip Auto 2025", group="Test")
-public class FlipAuto2025 extends LinearOpMode{
+@Autonomous (name="Flip Bucket Auto 2025", group="Test")
+public class FlipBucketAuto2025 extends LinearOpMode{
     public Function<Vector3, Vector3> transformFunc;
     public Vector3 customStartPos;
     public boolean shutdownps;
@@ -131,7 +129,7 @@ public class FlipAuto2025 extends LinearOpMode{
         //positionSolver.setNewTarget(pt.getCurrentPosition(), true);
 
         // Here is where we schedule the tasks for the autonomous run (testAuto function below run loop)
-        testAuto(autoTasks);
+        testBucketAuto(autoTasks);
 
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
@@ -282,8 +280,40 @@ public class FlipAuto2025 extends LinearOpMode{
     }
 
     private void testBucketAuto(TimedTask autoTasks) {
-        Vector3 bucketstartposition = new Vector3(-14 - 3.0/8.0, -60.5, 90);
-        Vector3 specimenpickup = new Vector3(45, -60.5, 90);
-        
+
+        // New settings
+        Vector3 posBucketSideStart = new Vector3(-14.375, -62, 90);
+        Vector3 posBucketScore = new Vector3(-53.5, -53.5, 45);
+        Vector3 posSample1 = new Vector3(-36, -39, 135);
+        Vector3 posSample2 = new Vector3(-46.5, -39, 135);
+        Vector3 posSample3 = new Vector3(-59, -42, 119);
+        Vector3 posPark = new Vector3(-23.5, -11, 180);
+        Vector3 posPrePark = new Vector3(-39, -11, 180);
+        // End New settings
+
+        /*  Don't run this; rewrite it  */
+
+        Vector3 specimenhang = new Vector3(-10, -35, -90); //specimen must be lifted before hang
+        Vector3 firstsample = new Vector3(-48.8, -37.37, 90);
+        Vector3 Highbasketscore = new Vector3(-48.9, -40.9, 40);
+        Vector3 secondsample = new Vector3(-58.8, -37.39, 90);
+        Vector3 Highbasketscore2 = new Vector3(-48.9, -40.9, 40);
+        Vector3 thirdsample = new Vector3(-55.3, -24.58, 180);
+        Vector3 Highbasketscore3 = new Vector3(-48.9, -40.9, 40);
+        Vector3 park = new Vector3(-48.9, -40.9, 40);
+
+        autoTasks.addStep(()-> intake.stopAllIntakeTasks());
+        autoTasks.addStep(()-> odo.setPosition(posBucketSideStart));
+        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
+//        autoTasks.addStep(()-> intake.tasks.setMotorsToRunConfig());
+//        autoTasks.addStep(()-> intake.setHorizontalSlidePosition(-1)); // h-slide in
+        positionSolver.addMoveToTaskEx(specimenhang, autoTasks);
+        positionSolver.addMoveToTaskEx(firstsample, autoTasks);
+        positionSolver.addMoveToTaskEx(Highbasketscore, autoTasks);
+        positionSolver.addMoveToTaskEx(secondsample, autoTasks);
+        positionSolver.addMoveToTaskEx(Highbasketscore2, autoTasks);
+        positionSolver.addMoveToTaskEx(thirdsample, autoTasks);
+        positionSolver.addMoveToTaskEx(park, autoTasks);
+        //positionSolver.addMoveToTaskEx(park, autoTasks);
     }
 }

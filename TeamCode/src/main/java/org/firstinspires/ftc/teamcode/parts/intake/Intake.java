@@ -189,6 +189,10 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         return currentBucketPos;
     }
 
+    public void setSpinner(double speed) {
+        getHardware().spinner.setPosition(speed);
+    }
+
     public double getSpecimanClawMax() {
         return getSettings().SpecimanClawMax;
     }
