@@ -160,6 +160,10 @@ public final class Drive extends ControllableLoopedPart<Robot,DriveSettings, Dri
         }
     }
 
+    public void lkUpdateConfig(DriveSettings driveSettings, DriveHardware drivehardware) {
+        setConfig(driveSettings, drivehardware);
+    }
+
     @Override
     public void onHardwareUpdate(DriveHardware driveHardware) {
 
