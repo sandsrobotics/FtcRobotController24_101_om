@@ -142,12 +142,14 @@ public class IntakeTasks {
         safeTask.autoStart = false;
         safeTask.addStep( () -> {
             //prepareToIntakeTask.runCommand(Group.Command.PAUSE);
+            intake.preventUserControl = true;
             intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen);
             intake.getHardware().flipper.setPosition(intake.getSettings().spintakeParked);
             intake.getHardware().chute.setPosition(intake.getSettings().chuteParked);
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
             intake.setSlidePosition(intake.getSettings().positionSlideOvershoot, 1);
             intake.setLiftPosition(intake.getSettings().positionLiftMin, 1);
+            intake.getHardware().park.setPosition(intake.getSettings().parkDown);
         });
         safeTask.addStep( () ->
             intake.isSlideInTolerance() &&
@@ -157,6 +159,7 @@ public class IntakeTasks {
         safeTask.addStep( () -> {
             intake.getHardware().flipper.disable();
             intake.getHardware().chute.disable();
+            intake.preventUserControl = false;
         });
 //    }
 
