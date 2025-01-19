@@ -135,7 +135,7 @@ public class PositionTracker extends LoopedPartImpl<Robot, PositionTrackerSettin
 
     @Override
     public void onHardwareUpdate(PositionTrackerHardware hardware) {
-        hardware.imu.initialize(hardware.parameters);
+        if (hardware.imu != null) hardware.imu.initialize(hardware.parameters);
 
 //        while (!hardware.imu..isGyroCalibrated())
 //        {

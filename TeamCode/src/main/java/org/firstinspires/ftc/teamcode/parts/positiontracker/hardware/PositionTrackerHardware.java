@@ -15,12 +15,12 @@ public class PositionTrackerHardware {
     }
 
     public static PositionTrackerHardware makeDefault(Robot robot){
-        IMU.Parameters parameters = new IMU.Parameters(
-                new RevHubOrientationOnRobot(
-                        RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                        RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
-                )
-        );
-        return new PositionTrackerHardware(robot.opMode.hardwareMap.get(IMU.class,"imu"), parameters);
+//        IMU.Parameters parameters = new IMU.Parameters(
+//                new RevHubOrientationOnRobot(
+//                        RevHubOrientationOnRobot.LogoFacingDirection.UP,
+//                        RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
+//                )
+//        );
+        return new PositionTrackerHardware(null, null);
     }
 }
