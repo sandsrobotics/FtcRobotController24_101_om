@@ -1,5 +1,6 @@
 package om.self.ezftc.core;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
@@ -38,10 +39,10 @@ public class Robot implements PartParent{
     public final BeanManager beanManager = new BeanManager();
 
     //other things
-    public final OpMode opMode;
+    public final LinearOpMode opMode;
     public ButtonMgr buttonMgr;
 
-    public Robot(OpMode opMode) {
+    public Robot(LinearOpMode opMode) {
         this.opMode = opMode;
         //add events
         eventManager.attachToEvent(Events.INIT, "load dependencies", beanManager::load);

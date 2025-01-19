@@ -114,7 +114,7 @@ public class IntakeSettings {
                 0,
                 150,
                 150,
-                0,
+                10,
                 3000,
                 0.05,
                 20,

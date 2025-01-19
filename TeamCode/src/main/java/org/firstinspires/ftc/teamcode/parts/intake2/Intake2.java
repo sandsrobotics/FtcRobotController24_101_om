@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.parts.intake2;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveControl;
 import org.firstinspires.ftc.teamcode.parts.intake2.hardware.IntakeHardware2;
@@ -12,6 +14,7 @@ import om.self.ezftc.core.part.ControllablePart;
 import om.self.supplier.consumer.EdgeConsumer;
 import om.self.task.core.Group;
 
+import static android.os.SystemClock.sleep;
 import static java.lang.Math.abs;
 
 public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHardware2, IntakeControl2> {
@@ -147,14 +150,15 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public void setSpecimenPositions(int position) {
         switch (position) {
             case 1: // Open position
-                tasks.startAutoSpecimenPickup();
+                stopAllIntakeTasks();
+                tasks.autoSpecimenPickupTask.restart();
                 break;
             case 2: // Close position
-                getHardware().bucketLiftMotor.setPower(1);
-                getHardware().bucketLiftMotor.setTargetPosition(getSettings().specimenHangPosition);
+                setLiftPosition(getSettings().specimenHangPosition,1);
                 break;
             case -1: // Open position
-                tasks.startAutoSpecimenHang();
+                stopAllIntakeTasks();
+                tasks.autoSpecimenHangTask.restart();
                 break;
 
         }
@@ -175,6 +179,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         }
     }
 
+    public void stopLift() { getHardware().bucketLiftMotor.setPower(0); }
+    public void setLiftPower (double m1) { getHardware().bucketLiftMotor.setPower(m1); }
+
     public void setRobotLiftPosition(int lift) {
         if (lift == 1) {
             setRobotLiftPositionUnsafe(7200); // top
@@ -188,12 +195,6 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             setRobotLiftPositionUnsafe(getRobotLiftPosition() - 50);
         //setBucketLiftPositionUnsafe
     }
-    public void moveRobotLiftToZero(int direction) {
-        if (direction == 1) { // Right bumper pressed
-            getHardware().robotLiftMotor.setTargetPosition(0);
-            getHardware().robotLiftMotor.setPower(1); // Power to move
-        }
-    }
 
     public void strafeRobot(DriveControl control) {
         if (abs(strafePower) > .01) {
@@ -202,11 +203,16 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public void setLiftPosition(int position, double power) {
+        if (position < 0 || position > 3000) {  // something very wrong so bail
+            stopLift();
+            return;
+        }
         slideTargetPosition = position;
-        getHardware().bucketLiftMotor.setPower(0);
+        stopLift();   // ???
         getHardware().bucketLiftMotor.setTargetPosition(slideTargetPosition);
-        getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        getHardware().bucketLiftMotor.setPower(power);
+        getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        setLiftPower(power);
+        //slideIsUnderControl = false;
     }
 
     public void stopIntakeSpin() {
@@ -217,22 +223,17 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     @Override
     public void onInit() {
         currentIntakeHeightPos = getSettings().intakeArmDefault;
-        getHardware().tiltServo.enable();
-        getHardware().tiltServo.setPosition(currentIntakeHeightPos); // default straight up position
+        //getHardware().tiltServo.enable();
+        getHardware().tiltServo.setPosition(currentIntakeHeightPos-.05); // default straight up position
+        parent.opMode.sleep(20);
+        getHardware().tiltServo.setPosition(currentIntakeHeightPos);
         stopIntakeSpin();
         currentRotationPos = 0.0;
         setHorizontalSlidePosition(-1); // pull slide in on init
         drive = getBeanManager().getBestMatch(Drive.class, false);
         pt = getBeanManager().getBestMatch(PositionTracker.class, false);
         tasks = new Intake2Tasks(this, parent);
-        tasks.constructAutoHome();
-        tasks.constructAutoBucketLift();
-        tasks.constructAutoBucketDropper();
-        tasks.constructAutoSpecimenPickup();
-        tasks.constructAutoSpecimenHang();
-        tasks.constructIntakeDrop();
-        tasks.constructRotateServoSafe();
-        tasks.constructSamplePickup();
+        tasks.constructAllIntakeTasks();
 
         //homing bucket lift setup
         homingBucketZero.setOnRise(() -> {
@@ -252,23 +253,14 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     @Override
     public void onRun(IntakeControl2 control) {
-
         if (modeName.equalsIgnoreCase("Teleop")) {
-            spinIntakeWithPower(control.sweeperPower);
-        }
-        if (parent.opMode instanceof TeleOp) {
             spinIntakeWithPower(control.sweeperPower);
         }
         incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
         incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
         setBucketLiftPosition(control.bucketLiftPosition);
-        moveRobotLiftToZero(control.robotLiftToZero);
         setSpecimenPositions(control.specimenServoPosition);
-        //getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition);
         setRobotLiftPosition(control.robotliftPosition);
-
-        //Todo: raise robot lift hooks ready height above low bar
-        //Todo: lower robot lift hooks just enough to lift robot
 
         // Check intake height and adjust rotation servo
         if (currentIntakeHeightPos >= 0.3) {
