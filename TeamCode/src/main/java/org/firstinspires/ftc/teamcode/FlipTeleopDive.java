@@ -6,10 +6,13 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
 import org.firstinspires.ftc.teamcode.lib.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveTeleop;
+import org.firstinspires.ftc.teamcode.parts.drive.hardware.DriveHardware;
+import org.firstinspires.ftc.teamcode.parts.drive.settings.DriveSettings;
 import org.firstinspires.ftc.teamcode.parts.drive.settings.DriveTeleopSettings;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 import org.firstinspires.ftc.teamcode.parts.intake.IntakeTeleop;
@@ -35,6 +38,7 @@ public class FlipTeleopDive extends LinearOpMode {
     Pinpoint odo;
   //Vector3 fieldStartPos = new Vector3(0,0,180);
     Vector3 fieldStartPos = new Vector3(-14.375,-62,90);
+    boolean testModeReverse = false;
 
     public void initTeleop(){
         new DriveTeleop(drive, DriveTeleopSettings.makeArcade1(robot));
@@ -50,6 +54,7 @@ public class FlipTeleopDive extends LinearOpMode {
         robot = new Robot(this);
         new BulkRead(robot);
         drive = new Drive(robot);
+//        drive = new Drive(robot, DriveSettings.makeDefault(), DriveHardware.lkTestChassis(robot.opMode.hardwareMap));
         initTeleop();
 
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
@@ -79,7 +84,17 @@ public class FlipTeleopDive extends LinearOpMode {
         extraSettings();
 
         while (!isStarted()) {
+            robot.buttonMgr.runLoop();
             telemetry.addData("Not Started", "Not Started");
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.x, ButtonMgr.State.wasDoubleTapped)) {
+                drive.lkUpdateConfig(DriveSettings.makeDefault(), DriveHardware.lkTestChassis(robot.opMode.hardwareMap));
+                testModeReverse = true;
+            }
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.x, ButtonMgr.State.wasSingleTapped)) {
+                drive.lkUpdateConfig(DriveSettings.makeDefault(), DriveHardware.makeDefault(robot.opMode.hardwareMap));
+                testModeReverse = false;
+            }
+            telemetry.addData("Drive motors", testModeReverse ? "Test Reverse (AndyMark Chassis)" : "Normal - Competition");
             dashboard.sendTelemetryPacket(packet);
             telemetry.update();
         }
