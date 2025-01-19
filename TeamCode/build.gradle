@@ -27,7 +27,7 @@ dependencies {
     implementation project(':FtcRobotController')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 
-    implementation files('lib/ftc265-3.0.0-pre.5.aar')
+    //implementation files('lib/ftc265-3.0.0-pre.5.aar')
     //implementation 'com.intel.realsense:librealsense:2.41.1-ftc265@aar'
 
     implementation 'org.apache.commons:commons-math3:3.6.1'
