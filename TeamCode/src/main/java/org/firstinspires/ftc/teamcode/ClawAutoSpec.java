@@ -109,7 +109,6 @@ public class ClawAutoSpec extends LinearOpMode{
 
             if(startDelay > maxDelay) startDelay = maxDelay;
 
-            dashboardTelemetry.addData("position", "blah");
             telemetry.addData("PARK POSITION:", parkPosition == 0 ? "Park based off tags" : parkPosition == 1 ? "Park MID" : parkPosition == 2 ? "Park CORNER" : "Park BOARD");
             telemetry.addData("START DELAY:", startDelay / 1000);
             dashboardTelemetry.update();
@@ -225,16 +224,13 @@ public class ClawAutoSpec extends LinearOpMode{
         Vector3 afterfirstredbar = new Vector3(36, -40, -90);
         Vector3 specimenpickup = new Vector3(45, -60.5, 90);
 
-//        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
-//        autoTasks.addStep(() -> intake.tasks.startAutoSamplePickup());
-//        autoTasks.addStep( () -> intake.tasks.autoSamplePickupTask.isDone());
-//        autoTasks.addDelay(250);
-//        autoTasks.addStep( ()-> {
-//            intake.getHardware().sliderServoLeft.setPosition(.65);
-//            intake.getHardware().sliderServoRight.setPosition(.65);
-//        });
-        autoTasks.addStep(() -> intake.tasks.startAutoBucketLift());
-        autoTasks.addStep(() -> intake.tasks.startAutoBucketDropper());
+        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
+        autoTasks.addStep(()-> intake.tasks.autoSamplePickupTask.restart());
+        autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.isDone());
+        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
+        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.isDone());
+        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.restart());
+        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.isDone());
     }
 
     private void BucketAuto(TimedTask autoTasks) {

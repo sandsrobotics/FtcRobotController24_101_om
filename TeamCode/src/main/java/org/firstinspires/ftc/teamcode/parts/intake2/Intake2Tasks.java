@@ -56,29 +56,25 @@ public class Intake2Tasks {
     /* ***** autoBucketLiftTask ******/
         autoBucketLiftTask.autoStart = false;
         autoBucketLiftTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
-        autoBucketLiftTask.addStep(()-> intake.getHardware().tiltServo.isDone() );
+        autoBucketLiftTask.addStep(()-> intake.getHardware().tiltServo.isDone());
+        //Todo: lift to a safe mid height then start the dropperServo Min below so it will be ready when the lift makes it to the top
         autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.stop());
-        autoBucketLiftTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
-        autoBucketLiftTask.addStep(()-> intake.getHardware().tiltServo.isDone() );
         autoBucketLiftTask.addStep(()-> intake.setLiftPosition(intake.getSettings().maxLiftPosition,1));
         autoBucketLiftTask.addStep(intake::isLiftInTolerance);
-        autoBucketLiftTask.addStep(()-> {
-            intake.getHardware().dropperServo.enable();
-            intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin);
-        });
+        autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.enable());
+        autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin));
         autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.isDone());
 
     /* ***** autoBucketDropperTask ******/
         autoBucketDropperTask.autoStart = false;
         autoBucketDropperTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoBucketDropperTask.addStep(()-> intake.getHardware().tiltServo.isDone() );
-        autoBucketDropperTask.addStep(()-> {
-            intake.getHardware().dropperServo.enable();
-            intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMax);
-        });
-        autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.isDone() );
+        autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.enable());
+        autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMax));
+        autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.isDone());
+        autoBucketDropperTask.addDelay(300); // leave bucket high to dump sample
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin));
-        autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.isDone() );
+        autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.isDone());
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.stop());
         autoBucketDropperTask.addStep(()-> intake.setLiftPosition(intake.getSettings().minLiftPosition,1));
         autoBucketDropperTask.addStep(intake::isLiftInTolerance);
@@ -104,36 +100,26 @@ public class Intake2Tasks {
     /* ***** autoIntakeDropTask ******/
         autoIntakeDropTask.autoStart = false;
         autoIntakeDropTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmAtBucket));
-//        autoIntakeDropTask.addStep( ()-> intake.getHardware().tiltServo.isDone());
-        autoIntakeDropTask.addStep(()-> {
-            intake.getHardware().intakeWheelServoLeft.setPosition(0.0);
-            intake.getHardware().intakeWheelServoRight.setPosition(0.0);
-        });
-        autoIntakeDropTask.addDelay(3000);  // transfer sample to bucket
+        autoIntakeDropTask.addStep(()-> intake.getHardware().tiltServo.isDone());
+        autoIntakeDropTask.addStep(()-> setIntakeWheels(0.0));
+        autoIntakeDropTask.addDelay(500);  // transfer sample to bucket
         autoIntakeDropTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoIntakeDropTask.addStep(()-> intake.getHardware().tiltServo.isDone());
-        autoIntakeDropTask.addStep(()-> {
-            intake.getHardware().intakeWheelServoLeft.setPosition(0.5);
-            intake.getHardware().intakeWheelServoRight.setPosition(0.5);
-        });
+        autoIntakeDropTask.addStep(()-> setIntakeWheels(0.5));
         autoIntakeDropTask.addStep(()-> intake.getHardware().dropperServo.stop());
 
     /* ***** autoSamplePickupTask ******/
         autoSamplePickupTask.autoStart = false;
-        autoSamplePickupTask.addStep(()-> {
-            intake.getHardware().intakeWheelServoLeft.setPosition(1.0);
-            intake.getHardware().intakeWheelServoRight.setPosition(1.0);
-        });
-        autoSamplePickupTask.addStep(()->intake.getHardware().tiltServo.setPosition(0.2));
+        autoSamplePickupTask.addStep(()-> setIntakeWheels(1.0));
+        autoSamplePickupTask.addStep(()->intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmAtSpecimen));
         autoSamplePickupTask.addStep(()-> intake.getHardware().tiltServo.isDone());
-        autoSamplePickupTask.addDelay(250); // needed?
-        autoSamplePickupTask.addStep(()-> {
-            intake.getHardware().intakeWheelServoLeft.setPosition(0.5);
-            intake.getHardware().intakeWheelServoRight.setPosition(0.5);
-            intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe);
-        });
+        autoSamplePickupTask.addDelay(200); // a bit of time to pickup sample
+        autoSamplePickupTask.addStep(()-> setIntakeWheels(0.5));
+        autoSamplePickupTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoSamplePickupTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         autoSamplePickupTask.addStep(autoIntakeDropTask::restart);
+        autoSamplePickupTask.addStep(autoIntakeDropTask::isDone);
+        autoSamplePickupTask.addDelay(200); // to make sure intake arm is clear.
 
         /* ***** autoRotateServoSafe ******/
         autoRotateServoSafe.autoStart = false;
@@ -170,6 +156,10 @@ public class Intake2Tasks {
         intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
+    public void setIntakeWheels(double speed) {
+        intake.getHardware().intakeWheelServoLeft.setPosition(speed);
+        intake.getHardware().intakeWheelServoRight.setPosition(speed);
+    }
     /***********************************************************************************/
     public static final class TaskNames {
         public final static String autoHome = "auto home";
