@@ -327,7 +327,8 @@ public class ServoSSR implements Servo {
      * @param power the desired "power"
      */
     public void setPower(double power) {
-        setPosition(0.5 + Math.signum(power) * Math.abs(power) / 2.0);
+        //setPosition(0.5 + Math.signum(power) * Math.abs(power) / 2.0);   // why overcomplicate it?
+        setPosition(0.5 * power + 0.5);
     }
 
     /**
