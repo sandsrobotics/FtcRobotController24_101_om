@@ -321,6 +321,23 @@ public class ServoSSR implements Servo {
         unknown = false;
     }
 
+    /**
+     * Set the servo "power" similar to CRServo.setPower() where the power is in the range -1 to 1
+     * instead of the normal servo range of 0 to 1.
+     * @param power the desired "power"
+     */
+    public void setPower(double power) {
+        setPosition(0.5 + Math.signum(power) * Math.abs(power) / 2.0);
+    }
+
+    /**
+     * Get the servo "power" similar to CRServo.getPower() where the power is in the range -1 to 1
+     * instead of the normal servo range of 0 to 1.
+     */
+    public double getPower() {
+        return servo.getPosition() * 2.0 - 1.0;
+    }
+
     // internal methods
 
     private long calcSweepTimerValue(double newPosition) {

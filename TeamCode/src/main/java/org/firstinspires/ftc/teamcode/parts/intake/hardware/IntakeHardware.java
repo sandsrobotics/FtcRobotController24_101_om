@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.teamcode.lib.ServoSSR;
 
@@ -43,6 +44,13 @@ public class IntakeHardware {
         this.park = park;
         this.colorSensor = colorSensor;
         //this.distanceSensor = distanceSensor;
+
+        DcMotorEx[] motors = {this.liftMotor, this.robotHangMotor};  //this.slideMotor is plenty fast
+        for(DcMotorEx motor : motors){
+            MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
+            motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+            motor.setMotorType(motorConfigurationType);
+        }
     }
 //beans
     public static IntakeHardware makeDefault(HardwareMap hardwareMap)  {
