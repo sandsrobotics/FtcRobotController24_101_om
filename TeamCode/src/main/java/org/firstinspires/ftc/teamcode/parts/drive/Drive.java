@@ -72,9 +72,9 @@ public final class Drive extends ControllableLoopedPart<Robot,DriveSettings, Dri
             y = rot[1];
         }
         double[] pows = dpc.convert(x,y,r);
-        getHardware().topLeftMotor.setPower(pows[0]);
-        getHardware().topRightMotor.setPower(pows[1]);
         getHardware().bottomLeftMotor.setPower(pows[2]);
+        getHardware().topRightMotor.setPower(pows[1]);
+        getHardware().topLeftMotor.setPower(pows[0]);
         getHardware().bottomRightMotor.setPower(pows[3]);
     }
 

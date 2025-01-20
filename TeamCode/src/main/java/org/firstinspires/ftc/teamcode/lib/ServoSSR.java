@@ -10,8 +10,9 @@ public class ServoSSR implements Servo {
     private final Servo servo;
     private double offset = 0.0;            // offset is useful for syncing a pair of servos or "calibrating" a replacement servo
     private boolean enabled = false;        // tracks whether or not the servo is (or should be) enabled
-    private boolean eStopped = false;       // tracks whether the servo is stopped in such a way that the position is unpredictable
-    private int sweepTime = 1500;           // the time in ms it takes the servo to move its entire range
+    private boolean eStopped = true;        // tracks whether the servo is stopped in such a way that the position is unpredictable
+    private boolean unknown = true;         // tracks whether the servo position is unknown (due to eStop or external shenanigans)
+    private int sweepTime = 1500;           // the time (in ms) it takes the servo to move its entire range (account for loading when setting!)
     private int wakeTime = 200;             // a short interval for the servo to move from disabled/parked to last position
     private long timer = 0;                 // a clock time to track whether a move should be complete
 
@@ -19,8 +20,9 @@ public class ServoSSR implements Servo {
         this.servo = servo;
     }
 
-    // Future improvement possibility: For servos with feedback (e.g., Axon Max+),
-    // add the ability to associate and configure an analog channel to read actual position and verify movement.
+    // Future improvement possibility 1: For servos with feedback (e.g., Axon Max+),
+    //     add the ability to associate and configure an analog channel to read actual position and verify movement.
+    // Future improvement possibility 2: Estimate servo position based on timer
 
     // setters
 
@@ -93,6 +95,7 @@ public class ServoSSR implements Servo {
     public void stop() {
         disable();
         eStopped = true;  // we no longer know where the servo is, so need to time accordingly next move
+        unknown = true;
     }
 
     /**
@@ -102,7 +105,12 @@ public class ServoSSR implements Servo {
      */
     public void disable() {
         //((ServoControllerEx) getController()).setServoPwmDisable(getPortNumber());
-        if (enabled && !isDone()) eStopped = true; // if not already disabled and in motion, assume worst and convert to estop
+        if (!isDone()) {
+            if (enabled) {       // these are separated for clarity; isDone() calls isEnabled() and potentially changes the enabled variable
+                eStopped = true; // if not already disabled and in motion, assume worst and convert to estop
+                unknown = true;
+            }
+        }
         ((ServoImplEx)servo).setPwmDisable();
         enabled = false;
         timer = 0;
@@ -115,7 +123,6 @@ public class ServoSSR implements Servo {
         //((ServoControllerEx) getController()).setServoPwmEnable(getPortNumber());
         ((ServoImplEx)servo).setPwmEnable();
         enabled = true;
-        //eStopped = false;
     }
 
     // status responders & getters
@@ -138,11 +145,13 @@ public class ServoSSR implements Servo {
 
     /**
      * Determine if the servo is expected to be finished moving
-     * (i.e., the timer associated with the servo movement is complete and the servo is enabled)
+     * (i.e., the timer associated with the servo movement is complete and the servo is enabled).
+     * <P>Note: if the servo gets disabled, this will not be true, even if it is re-enabled.
      * @return TRUE if the movement should be complete
      */
     public boolean isDone() {
-        return enabled && timer != 0 && System.currentTimeMillis() >= timer;
+//        return enabled && timer != 0 && System.currentTimeMillis() >= timer;
+        return isEnabled() && timer != 0 && isTimerDone();
     }
 
     /**
@@ -181,10 +190,23 @@ public class ServoSSR implements Servo {
     }
 
     /**
-     * Determine if the Pwm signal is enabled for the servo (as tracked internally by the wrapper)
+     * Determine if the Pwm signal is enabled for the servo
+     * (as tracked internally by the wrapper and checked against actual state of the controller)
      * @return TRUE if the servo Pwm is enabled
      */
     public boolean isEnabled() {
+        // does ServoControllerEx cache this, or does it have to query the hardware resulting in a time penalty?
+        boolean pwmState = ((ServoImplEx)servo).isPwmEnabled();
+        if (enabled && !pwmState) {   // detect pwmDisabled without using internal methods and assume the worst
+            enabled=false;
+            eStopped=true;
+            unknown=true;
+        }
+        else if (!enabled && pwmState) {   // detect pwmEnabled without using internal methods
+            enabled=true;
+            eStopped=false;
+            unknown=true;         // .getPosition() should work? But with all the trouble we've had, assume the worst.
+        }
         return enabled;
     }
 
@@ -193,7 +215,8 @@ public class ServoSSR implements Servo {
      * @return TRUE if the servo Pwm is disabled
      */
     public boolean isDisabled() {
-        return !enabled;
+//        return !enabled;
+        return !isEnabled();
     }
 
     /**
@@ -202,6 +225,7 @@ public class ServoSSR implements Servo {
      * @return TRUE if the servo is stopped
      */
     public boolean isStopped() {
+        isEnabled();      // added to check for external unpredictable disables that should be treated the same
         return eStopped;
     }
 
@@ -274,31 +298,33 @@ public class ServoSSR implements Servo {
 
     @Override
     public void setPosition(double position) {
-        /* This is untested */
-        // does ServoControllerEx cache this, or does it have to query the hardware resulting in a time penalty?
-        if (enabled && !((ServoImplEx)servo).isPwmEnabled()) {   // detect pwmDisabled without using internal methods and assume the worst
-            enabled=false;
-            eStopped=true;
-        }
-        /*-- end untested --*/
+        /* 1. Make sure the state variables are up to date */
+        isEnabled();
 
-//        if (enabled && isSetPosition(position)) return;    // has already been set (but not necessarily done moving), no need to update timer or position
+        /* 2. Don't update the timer if enabled and the position is already set the same */
         if (enabled && isSetPosition(position)) {
-            servo.setPosition(position - offset);
-            return;    // has already been set (but not necessarily done moving), no need to update timer or position
+            servo.setPosition(position - offset);          // this probably isn't needed, but added while debugging undesirable behavior
+            return;                                        // has already been set (but not necessarily done moving), no need to increment timer
         }
 
-        //if (!enabled) enable();
+        /* 3. Re-enable if necessary. Setting position should do this, but the very first position was observed to not work.
+           This also is now necessary for the updated isEnabled() method */
+        if (!enabled) enable();
+
+        /* 4. Calculate the timer and set the position */
         timer = calcSweepTimerValue(position);
         servo.setPosition(position - offset);
+
+        /* 5. Update tracking variables */
         enabled = true;                                    // setting a position re-enables, so update the trackers
         eStopped = false;
+        unknown = false;
     }
 
     // internal methods
 
     private long calcSweepTimerValue(double newPosition) {
-        if (eStopped) {  // allow full sweep time because position is unknown
+        if (unknown) {  // allow full sweep time because position is unknown
             return System.currentTimeMillis() + sweepTime;
         }
         if (isDone()) {  // enabled, timer not reset, timer complete = should be at last requested position

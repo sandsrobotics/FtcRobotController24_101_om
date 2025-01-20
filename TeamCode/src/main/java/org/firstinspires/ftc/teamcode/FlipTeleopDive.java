@@ -25,7 +25,7 @@ import java.text.DecimalFormat;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Vector3;
 
-@TeleOp(name="2A Flipper Teleop Arcade RED", group="Linear Opmode")
+@TeleOp(name="14273.3 Arcade RED", group="14273")
 public class FlipTeleopDive extends LinearOpMode {
     double tileSide = 23.5;
     Drive drive;
@@ -34,13 +34,11 @@ public class FlipTeleopDive extends LinearOpMode {
     PositionSolver positionSolver;
     PositionTracker pt;
     Pinpoint odo;
-  //Vector3 fieldStartPos = new Vector3(0,0,180);
     Vector3 fieldStartPos = new Vector3(-14.375,-62,90);
     boolean testModeReverse = false;
 
     public void initTeleop(){
         new DriveTeleop(drive, DriveTeleopSettings.makeArcade1(robot));
-        //new DriveTeleop(this.drive);
     }
 
     @Override
@@ -64,12 +62,9 @@ public class FlipTeleopDive extends LinearOpMode {
 //       EncoderTracker et = new EncoderTracker(pt);
 //       pt.positionSourceId = EncoderTracker.class;
 
-//        Add Pinpoint here
         odo = new Pinpoint(pt, true, "pinpoint",
                 -56.0, 52.0, 13.26291192f,
                 GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
-
-        //odo = new Pinpoint(pt);  //, true);
         pt.positionSourceId = Pinpoint.class;
         //positionSolver = new PositionSolver(drive); // removed so it won't rotate 90deg clockwise
 
@@ -84,6 +79,7 @@ public class FlipTeleopDive extends LinearOpMode {
         while (!isStarted()) {
             robot.buttonMgr.runLoop();
             telemetry.addData("Not Started", "Not Started");
+
             if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.x, ButtonMgr.State.wasDoubleTapped)) {
                 drive.lkUpdateConfig(DriveSettings.makeDefault(), DriveHardware.lkTestChassis(robot.opMode.hardwareMap));
                 testModeReverse = true;
