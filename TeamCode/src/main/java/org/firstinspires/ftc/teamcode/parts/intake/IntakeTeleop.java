@@ -10,7 +10,6 @@ import om.self.ezftc.core.part.LoopedPartImpl;
 
 public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, ObjectUtils.Null> {
     private IntakeTeleopSettings settings;
-    int myDelay = 1000;
     ButtonMgr buttonMgr;
 
     public IntakeTeleop(Intake parent) {
@@ -45,14 +44,15 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
     @Override
     public void onStart() {
         parent.setBaseController(() -> new IntakeControl(
-                (int) settings.sweepSpeedSupplier.get(),
-                (int) settings.sweepLiftSupplier.get(),
-                (int) settings.sweepSlideSupplier.get(),
-                (int) settings.bucketLiftSupplier.get(),
-                //           (int) settings.intakeSupplier.get(),
-                (int) settings.pinchSupplier.get(),
-                (int) settings.v_SlideSupplier.get(),
-                (int) settings.intakeAngleSupplier.get()
+                0,0,0,0,0,0,0
+//                (int) settings.sweepSpeedSupplier.get(),
+//                (int) settings.sweepLiftSupplier.get(),
+//                (int) settings.sweepSlideSupplier.get(),
+//                (int) settings.bucketLiftSupplier.get(),
+//                //           (int) settings.intakeSupplier.get(),
+//                (int) settings.pinchSupplier.get(),
+//                (int) settings.v_SlideSupplier.get(),
+//                (int) settings.intakeAngleSupplier.get()
         ), true);
     }
 
@@ -81,7 +81,7 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
             // Driver 2
             if (buttonMgr.getState(2, Buttons.x, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
-                parent.tasks.safeTask.restart();
+                parent.tasks.dockTask.restart();
             }
             if (buttonMgr.getState(2, Buttons.y, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
@@ -105,7 +105,7 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
             }
             if (buttonMgr.getState(2, Buttons.right_stick_button, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
-                parent.tasks.lowDumpIntake.restart();
+                parent.tasks.lowDumpIntakeTask.restart();
             }
             if (buttonMgr.getState(2, Buttons.left_bumper, State.wasTapped)) {
                 parent.setSpinner(parent.getSettings().spinnerOut);
@@ -130,14 +130,14 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
             // this is for testing the autonomous sample task
             if (buttonMgr.getState(2, Buttons.dpad_down, State.wasDoubleTapped)) {
                 parent.stopAllIntakeTasks();
-                parent.tasks.autonomousSample.restart();
+                parent.tasks.autonomousSampleTask.restart();
             }
             // this is for inspection to show the maximum extent of the robot
             if (buttonMgr.getState(2, Buttons.dpad_left, State.wasDoubleTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.getHardware().park.setPosition(parent.getSettings().parkUp);
                 parent.getHardware().chute.setPosition(parent.getSettings().chuteDeposit);
-                parent.setSlidePosition(parent.getSettings().positionSlideMax);
+                parent.setSlidePosition(parent.getSettings().positionSlideMax, 0.25);
             }
             // emergency home
             if (buttonMgr.getState(2, Buttons.x, State.wasSingleTapped)) {
@@ -155,11 +155,11 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
             // Driver 1
             if (buttonMgr.getState(1, Buttons.x, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
-                parent.tasks.prepareToGetSpecimen.restart();
+                parent.tasks.prepareToGetSpecimenTask.restart();
             }
             if (buttonMgr.getState(1, Buttons.y, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
-                parent.tasks.getSpecimen.restart();
+                parent.tasks.getSpecimenTask.restart();
             }
             if (buttonMgr.getState(1, Buttons.b, State.wasTapped)) {
                 parent.stopAllIntakeTasks();

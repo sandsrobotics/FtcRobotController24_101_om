@@ -22,7 +22,6 @@ import static java.lang.Math.abs;
 public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardware, IntakeControl> {
     public int slideTargetPosition;
     public int liftTargetPosition;
-    double motorPower = 0;
     private int currentSlidePos;
     private int currentBucketPos;
     public IntakeTasks tasks;
@@ -51,48 +50,61 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         setConfig(settings, hardware);
     }
 
-    private void setSlideToHomeConfig() {
-        double power = -0.125;
-
-        getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        //getHardware().rightLiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-
-        getHardware().horizSliderMotor.setPower(power);
-        //getHardware().rightLiftMotor.setPower(power);
-    }
+//    private void setSlideToHomeConfig() {
+//        double power = -0.125;
+//
+//        getHardware().slideMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+//        //getHardware().rightLiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+//
+//        getHardware().slideMotor.setPower(power);
+//        //getHardware().rightLiftMotor.setPower(power);
+//    }
 
     private void setMotorsToRunConfig() {
-        getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        getHardware().horizSliderMotor.setPower(IntakeHardware.slideHoldPower);
-        getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        getHardware().slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        getHardware().slideMotor.setPower(IntakeHardware.slideHoldPower);
+        getHardware().slideMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
-        getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        getHardware().bucketLiftMotor.setPower(IntakeHardware.bucketHoldPower);
-        getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        getHardware().liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        getHardware().liftMotor.setPower(IntakeHardware.liftHoldPower);
+        getHardware().liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
         getHardware().robotHangMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         getHardware().robotHangMotor.setPower(0);
     }
 
-    public void slideWithPower(double power, boolean force) {
-        if (Math.abs(power) < getSettings().minRegisterVal) return;
-
-        if (power < 0)
-            power *= getSettings().maxSlideSpeed;
-        else
-            power *= getSettings().maxSlideSpeed;
-
-        if (force)
-            setSlidePositionUnsafe(getSlidePosition() + (int) power);
-        else
-            setSlidePosition(getSlidePosition() + (int) power);
+    private void initializeServos() {
+        // apply settings
+        getHardware().spinner.setSweepTime(getSettings().spinnerSweepTime);
+        getHardware().flipper.setSweepTime(getSettings().flipperSweepTime).setOffset(getSettings().flipperOffset);
+        getHardware().chute.setSweepTime(getSettings().chuteSweepTime).setOffset(getSettings().chuteOffset);
+        getHardware().pinch.setSweepTime(getSettings().pinchSweepTime).setOffset(getSettings().pinchOffset);
+        getHardware().park.setSweepTime(getSettings().parkSweepTime).setOffset(getSettings().parkOffset);
+        // apply initial position?
+        getHardware().spinner.setPosition(getSettings().spinnerOff);
+        getHardware().flipper.setPosition(getSettings().flipperParked);
+        getHardware().chute.setPosition(getSettings().chuteParked);
+        getHardware().pinch.setPosition(getSettings().pinchFullOpen);
+        getHardware().park.setPosition(getSettings().parkDown);
     }
+
+//    public void slideWithPower(double power, boolean force) {
+//        if (Math.abs(power) < getSettings().minRegisterVal) return;
+//
+//        if (power < 0)
+//            power *= getSettings().maxSlideSpeed;
+//        else
+//            power *= getSettings().maxSlideSpeed;
+//
+//        if (force)
+//            setSlidePositionUnsafe(getSlidePosition() + (int) power);
+//        else
+//            setSlidePosition(getSlidePosition() + (int) power);
+//    }
 
 //    public void sweepWithPower(double power) {
 //        getHardware().intakeFlipperServo.setPower(power);
 //    }
-
-    // Some new helper code
 
     public void setSlidePosition(int position, double power) {
         if (position < getSettings().positionSlideOvershoot || position > getSettings().positionSlideMax) {  // something very wrong so bail
@@ -101,10 +113,12 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         }
         slideTargetPosition = position;
         stopSlide();   // ???
-        getHardware().horizSliderMotor.setTargetPosition(slideTargetPosition);
-        getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        getHardware().slideMotor.setTargetPosition(slideTargetPosition);
+        getHardware().slideMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         setSlidePower(power);
+        slideIsUnderControl = false;
     }
+
     public void setLiftPosition(int position, double power) {
         if (position < getSettings().positionLiftMin || position > getSettings().positionLiftMax) {  // something very wrong so bail
             stopLift();
@@ -112,83 +126,81 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         }
         liftTargetPosition = position;
         stopLift();   // ???
-        getHardware().bucketLiftMotor.setTargetPosition(liftTargetPosition);
-        getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        getHardware().liftMotor.setTargetPosition(liftTargetPosition);
+        getHardware().liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         setLiftPower(power);
-        slideIsUnderControl = false;
     }
+
     public void setHangPosition(int position, double power) {
         getHardware().robotHangMotor.setTargetPosition(position);
         getHardware().robotHangMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         getHardware().robotHangMotor.setPower(power);
     }
 
-    public void stopSlide() { getHardware().horizSliderMotor.setPower(0); }
-    public void stopLift() { getHardware().bucketLiftMotor.setPower(0); }
-    public void setSlidePower (double m0) { getHardware().horizSliderMotor.setPower(m0); }
-    public void setLiftPower (double m1) { getHardware().bucketLiftMotor.setPower(m1); }
+    public void stopSlide() { getHardware().slideMotor.setPower(0); }
+    public void stopLift() { getHardware().liftMotor.setPower(0); }
+    public void setSlidePower (double m0) { getHardware().slideMotor.setPower(m0); }
+    public void setLiftPower (double m1) { getHardware().liftMotor.setPower(m1); }
 
-    //
+//    public void setSlidePosition(int position) {
+//        setSlidePositionUnsafe(Math.min(getSettings().positionSlideMax, Math.max(getSettings().positionSlideMin, position)));
+//    }
+//
+//    private void setSlidePositionUnsafe(int position) {
+//        slideTargetPosition = position;
+//        getHardware().slideMotor.setTargetPosition(position);
+//    }
 
-    public void setSlidePosition(int position) {
-        setSlidePositionUnsafe(Math.min(getSettings().maxSlidePosition, Math.max(getSettings().minSlidePosition, position)));
-    }
+//    private void changeSlidePosition(int position) {
+//        if (position > -1) {
+//            if(position > 0)
+//                setSlidePosition(getSettings().maxSlidePosition);
+//            else setSlidePosition(0);
+//        }
+//    }
 
-    private void setSlidePositionUnsafe(int position) {
-        slideTargetPosition = position;
-        getHardware().horizSliderMotor.setTargetPosition(position);
-    }
+//    private void setBucketLiftPosition(int position) {
+//        if (position == -1) { // go down
+//            setBucketLiftPositionUnsafe(getSettings().minLiftPosition);
+//        } else if ( position == 1) { // go up
+//            setBucketLiftPositionUnsafe(getSettings().bucketMaxPos);
+//        }
+//    }
 
-    private void changeSlidePosition(int position) {
-        if (position > -1) {
-            if(position > 0)
-                setSlidePosition(getSettings().maxSlidePosition);
-            else setSlidePosition(0);
-        }
-    }
-
-    private void setBucketLiftPosition(int position) {
-        if (position == -1) { // go down
-            setBucketLiftPositionUnsafe(getSettings().minLiftPosition);
-        } else if ( position == 1) { // go up
-            setBucketLiftPositionUnsafe(getSettings().bucketMaxPos);
-        }
-    }
-
-    private void setBucketLiftPositionUnsafe(int position) {
-        getHardware().bucketLiftMotor.setTargetPosition(position);
-    }
+//    private void setBucketLiftPositionUnsafe(int position) {
+//        getHardware().liftMotor.setTargetPosition(position);
+//    }
 
     public boolean isSlideInTolerance() {
-        return Math.abs(slideTargetPosition - getSlidePosition()) <= getSettings().tolerance;
+        return Math.abs(slideTargetPosition - getSlidePosition()) <= getSettings().toleranceSlide;
     }
 
     public boolean isLiftInTolerance() {
-        return Math.abs(liftTargetPosition - currentBucketPos) <= getSettings().tolerance;
+        return Math.abs(liftTargetPosition - currentBucketPos) <= getSettings().toleranceLift;
     }
 
-    public void setIntakePosition(int position) {
-        /* See alternate controls concept in IntakeTeleop */
-//        if (position == 2) { // safe
-//            stopAllIntakeTasks();
-//            tasks.safeTask.restart();
-//        } else if ( position == 1) { // go up
-//            stopAllIntakeTasks();
-//            tasks.prepareToIntakeTask.restart();
-//        }else if ( position == 3) { // go up
-//            stopAllIntakeTasks();
-//            tasks.autoIntakeTask.restart();
-//        }else if ( position == 4) { // go up
-//            stopAllIntakeTasks();
-//            tasks.transferTask.restart();
-//        }else if ( position == 5) { // go up
-//            stopAllIntakeTasks();
-//            tasks.prepareToDepositTask.restart();
-//        }else if ( position == 6) { // go up
-//            stopAllIntakeTasks();
-//            tasks.depositTask.restart();
-//        }
-    }
+//    public void setIntakePosition(int position) {
+//        /* See alternate controls concept in IntakeTeleop */
+////        if (position == 2) { // safe
+////            stopAllIntakeTasks();
+////            tasks.dockTask.restart();
+////        } else if ( position == 1) { // go up
+////            stopAllIntakeTasks();
+////            tasks.prepareToIntakeTask.restart();
+////        }else if ( position == 3) { // go up
+////            stopAllIntakeTasks();
+////            tasks.autoIntakeTask.restart();
+////        }else if ( position == 4) { // go up
+////            stopAllIntakeTasks();
+////            tasks.transferTask.restart();
+////        }else if ( position == 5) { // go up
+////            stopAllIntakeTasks();
+////            tasks.prepareToDepositTask.restart();
+////        }else if ( position == 6) { // go up
+////            stopAllIntakeTasks();
+////            tasks.depositTask.restart();
+////        }
+//    }
 
     public int getSlidePosition() {
         return currentSlidePos;
@@ -202,35 +214,35 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         getHardware().spinner.setPosition(speed);
     }
 
-    public double getSpecimanClawMax() {
-        return getSettings().SpecimanClawMax;
-    }
-    public double getSpecimanClawMin() {
-        return  getSettings().specimanClawMin;
-    }
-    private void setSpecimanClaw(int position) {
-        if (position==-1) {//open specimanServo
-            getHardware().pinch.setPosition(getSpecimanClawMax());
-        } else if ( position == 1) { // close specimanServo
-            getHardware().pinch.setPosition(getSpecimanClawMin());
-        }
-    }
+//    public double getSpecimanClawMax() {
+//        return getSettings().SpecimanClawMax;
+//    }
+//    public double getSpecimanClawMin() {
+//        return  getSettings().specimanClawMin;
+//    }
+//    private void setSpecimanClaw(int position) {
+//        if (position==-1) {//open specimanServo
+//            getHardware().pinch.setPosition(getSpecimanClawMax());
+//        } else if ( position == 1) { // close specimanServo
+//            getHardware().pinch.setPosition(getSpecimanClawMin());
+//        }
+//    }
 
-    public double getIntakeAngleMin() {
-        return  getSettings().intakeAngleMin;
-
-    }
-    public double getIntakeAngleMax() {
-        return getSettings().intakeAngleMax;
-    }
-   // private void setIntakeAngle(int position) {
-  //      if (position==1) {
-  //          getHardware().flipper.setPosition(getIntakeAngleMin());
-     //   }
-   //     else if (position==-1) {
-       //     getHardware().flipper.setPosition(getIntakeAngleMax());
-     //   }
-   // }
+//    public double getIntakeAngleMin() {
+//        return  getSettings().intakeAngleMin;
+//
+//    }
+//    public double getIntakeAngleMax() {
+//        return getSettings().intakeAngleMax;
+//    }
+//   // private void setIntakeAngle(int position) {
+//  //      if (position==1) {
+//  //          getHardware().flipper.setPosition(getIntakeAngleMin());
+//     //   }
+//   //     else if (position==-1) {
+//       //     getHardware().flipper.setPosition(getIntakeAngleMax());
+//     //   }
+//   // }
 
     public void eStop() {
         preventUserControl = false;
@@ -248,51 +260,52 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 
     public void stopAllIntakeTasks() {
         preventUserControl = false;
-        tasks.movementTask.runCommand(Group.Command.PAUSE);
-        tasks.movementTask.getActiveRunnables().clear(); // this is the magic sauce... must be used after the PAUSE or it will stop working
-    }
-    public int getV_Slide_Min() {
-        return getSettings().v_Slide_Min;
+        tasks.intakeTasksGroup.runCommand(Group.Command.PAUSE);
+        tasks.intakeTasksGroup.getActiveRunnables().clear(); // this is the magic sauce... must be used after the PAUSE or it will stop working
     }
 
-    private void setV_Slide(int position) {
-        if (position == 2) {
-            getHardware().bucketLiftMotor.setTargetPosition(50);
-        }
-        else if (position==-2) {
-            getHardware().bucketLiftMotor.setTargetPosition(2800);
-        }
-        else if (position==-1) {
-            getHardware().bucketLiftMotor.setTargetPosition(20);
+//    public int getV_Slide_Min() {
+//        return getSettings().v_Slide_Min;
+//    }
 
-//            }
-        } else if ( position == 1) {
-            getHardware().bucketLiftMotor.setTargetPosition(1440);
-
-//            }
-        }
-    }
+//    private void setV_Slide(int position) {
+//        if (position == 2) {
+//            getHardware().liftMotor.setTargetPosition(50);
+//        }
+//        else if (position==-2) {
+//            getHardware().liftMotor.setTargetPosition(2800);
+//        }
+//        else if (position==-1) {
+//            getHardware().liftMotor.setTargetPosition(20);
+//
+////            }
+//        } else if ( position == 1) {
+//            getHardware().liftMotor.setTargetPosition(1440);
+//
+////            }
+//        }
+//    }
     public void setUserSlidePower(double power) {
         if (preventUserControl) return;
-        if (power > 0 && getHardware().horizSliderMotor.getCurrentPosition() >= getSettings().positionSlideMax) {
+        if (power > 0 && getHardware().slideMotor.getCurrentPosition() >= getSettings().positionSlideMax) {
             setSlidePosition(getSettings().positionSlideMax, 0.25);
            // slideIsUnderControl = false;
             return;
         }
-        if (power < 0 && getHardware().horizSliderMotor.getCurrentPosition() <= getSettings().positionSlideMin) {
+        if (power < 0 && getHardware().slideMotor.getCurrentPosition() <= getSettings().positionSlideMin) {
             setSlidePosition(getSettings().positionSlideMin, 0.25);
            // slideIsUnderControl = false;
             return;
         }
         if (power == 0 && slideIsUnderControl) {
-            setSlidePosition(getHardware().horizSliderMotor.getCurrentPosition(), 0.25);
+            setSlidePosition(getHardware().slideMotor.getCurrentPosition(), 0.25);
             return;
         }
         if (power == 0) {
             return;
         }
         slideIsUnderControl = true;
-        getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        getHardware().slideMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         setSlidePower(power);
 
     }
@@ -310,16 +323,20 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         if (hue > 65 && hue < 160) lastSample = 2; // Yellow = 2
         if (hue > 160) lastSample = 3; // Blue = 3
         return lastSample; // Nothing detected
-   }
-   public boolean isSampleGood(int sample) {
+    }
+    public boolean isSampleGood(int sample) {
         if (sample == 1 && isRedGood) return true;
         if (sample == 2 && isYellowGood) return true;
         if (sample == 3 && isBlueGood) return true;
         return false;
-   }
-   public boolean isSampleGood() {
+    }
+    public boolean isSampleGood() {
         return isSampleGood(identifySampleColor());
-   }
+    }
+
+//    public void setParkServoUp() {
+//        getHardware().park.setPosition(getSettings().parkUp);
+//    }
 
     public void strafeRobot(DriveControl control) {
         if (abs(spinnerSliderPower) > .01) {
@@ -329,21 +346,19 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     @Override
     public void onInit() {
         setMotorsToRunConfig();
+        initializeServos();
         tasks = new IntakeTasks(this, parent);
         tasks.constructAllIntakeTasks();
 
         // this is part of the resets lift to 0 each time it hits the limit switch
         homingVSlideZero.setOnRise(() -> {
-            getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-//            getHardware().bucketLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            getHardware().bucketLiftMotor.setTargetPosition(0);
-//            liftTargetPosition = 0;
-            setLiftPosition(20,0.125);
+            getHardware().liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            setLiftPosition(10,0.125);
         });
         //homing hslide slide setup
         homingHSlideZero.setOnRise(() -> {
-            getHardware().horizSliderMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            setSlidePosition(20,0.125);
+            getHardware().slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            setSlidePosition(10,0.125);
         });
     }
 
@@ -356,18 +371,18 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public void onRun(IntakeControl control) {
 //        sweepWithPower(control.sweeperPower);
 //        setSweepPosition(control.sweepLiftPosition);
- //       changeSlidePosition(control.sweepSlidePosition);
+//        changeSlidePosition(control.sweepSlidePosition);
 //lk        setBucketLiftPosition(control.bucketLiftPosition);
-      //  setIntakePosition(control.intakePosition);
+//        setIntakePosition(control.intakePosition);
 //lk        setSpecimanClaw(control.pinchPosition); // jas
 //lk        setV_Slide(control.v_SlidePosition); // jas
-       // setIntakeAngle(control.intakeAngleSupplier); // jas
+//        setIntakeAngle(control.intakeAngleSupplier); // jas
 
         spinnerSliderPower = 0.0; // control.strafePower;
-        currentSlidePos = getHardware().horizSliderMotor.getCurrentPosition();
-        currentBucketPos = getHardware().bucketLiftMotor.getCurrentPosition();
+        currentSlidePos = getHardware().slideMotor.getCurrentPosition();
+        currentBucketPos = getHardware().liftMotor.getCurrentPosition();
 
-        homingVSlideZero.accept(getHardware().bucketLiftZeroSwitch.getState());
+        homingVSlideZero.accept(getHardware().liftZeroSwitch.getState());
         homingHSlideZero.accept(getHardware().slideZeroSwitch.getState());
     }
 
@@ -387,35 +402,5 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         public static final String distanceController = "distance controller";
     }
 
-
-//    public double getDistance() {
-//        return ((DistanceSensor) getHardware().colorSensor).getDistance(DistanceUnit.CM);
-//    }
-//
-//    public boolean isSampleGood() {
-//        return isSampleGood(getSampleType());
-//    }
-//    public boolean isSampleGood(int sample) {
-//        if (sample==1 && isRedGood) return true;
-//        if (sample==2 && isYellowGood) return true;
-//        if (sample==3 && isBlueGood) return true;
-//        return false;
-//    }
-//
-//    public int getSampleType() {
-//        float[] hsvValues = new float[3];
-//        NormalizedRGBA colors = getHardware().colorSensor.getNormalizedColors();
-//        Color.colorToHSV(colors.toColor(), hsvValues);
-//        int hue = (int) hsvValues[0];
-//        int type = -1;
-//        if (hue < 60) type = 1;                //red     // red sometimes triggers as 60. Better to wait for a better read?
-//        if (hue >= 65 && hue <= 160) type = 2; //yellow
-//        if (hue > 160) type = 3;               //blue
-//        if (hue == 0) type = 0;
-//        //lastHue = hue;  // for debugging
-//        //lastType = type;
-//        lastSample = type;
-//        return type;
-//    }
 }
 

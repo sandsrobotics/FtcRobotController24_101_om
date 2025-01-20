@@ -2,10 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.parts.drive.DriveTeleop;
-import org.firstinspires.ftc.teamcode.parts.drive.settings.DriveTeleopSettings;
-
-@TeleOp(name="2B Flipper Teleop Arcade BLUE", group="Linear Opmode")
+@TeleOp(name="14273.4 Arcade BLUE", group="14273")
 public class FlipTeleopDiveBlue extends FlipTeleopDive {
     @Override
     public void extraSettings() {

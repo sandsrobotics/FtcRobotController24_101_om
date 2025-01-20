@@ -7,7 +7,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -15,7 +14,6 @@ import org.firstinspires.ftc.teamcode.lib.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
-import org.firstinspires.ftc.teamcode.parts.intake2.Intake2;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolverSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
@@ -28,14 +26,13 @@ import java.util.function.Function;
 
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Constants;
-import om.self.ezftc.utils.Vector;
 import om.self.ezftc.utils.Vector3;
 import om.self.supplier.suppliers.EdgeSupplier;
 import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
 
 @Config
-@Autonomous (name="Flip Auto 2025", group="Test")
+@Autonomous (name="14273.2 SPECIMEN/HUMAN", group="14273")
 public class FlipAuto2025 extends LinearOpMode{
     public Function<Vector3, Vector3> transformFunc;
     public Vector3 customStartPos;
@@ -192,7 +189,7 @@ public class FlipAuto2025 extends LinearOpMode{
         autoTasks.addStep(()-> odo.setPosition(humansidestart));
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.slowSettings));
         // close pincer on initial specimen
-        autoTasks.addStep(()-> intake.tasks.getSpecimen.restart());
+        autoTasks.addStep(()-> intake.tasks.getSpecimenTask.restart());
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         // raise for specimen hang
         autoTasks.addStep(()-> intake.tasks.prepareToHangSpecimenTask.restart());
@@ -216,7 +213,7 @@ public class FlipAuto2025 extends LinearOpMode{
             positionSolver.addMoveToTaskEx(observationzonepickup, autoTasks);
             autoTasks.addDelay(200);
             // close pincer on initial specimen
-            autoTasks.addStep(() -> intake.tasks.getSpecimen.restart());
+            autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
             autoTasks.addDelay(250);
             positionSolver.addMoveToTaskEx(midwayspecimen2hang, autoTasks);
             autoTasks.addDelay(250);
@@ -244,7 +241,7 @@ public class FlipAuto2025 extends LinearOpMode{
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
             positionSolver.addMoveToTaskEx(observationzonepickup, autoTasks);
             autoTasks.addDelay(200);
-            autoTasks.addStep(() -> intake.tasks.getSpecimen.restart());
+            autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
             autoTasks.addDelay(250);
             positionSolver.addMoveToTaskEx(midwayspecimen3hang, autoTasks);
             autoTasks.addDelay(250);
@@ -299,7 +296,7 @@ public class FlipAuto2025 extends LinearOpMode{
 
         {
             // Pre-Loaded Specimen.
-            autoTasks.addStep(() -> intake.tasks.getSpecimen.restart());
+            autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
             positionSolver.addMoveToTaskEx(p_2, autoTasks);
             autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
             autoTasks.addDelay(200);
@@ -357,7 +354,7 @@ public class FlipAuto2025 extends LinearOpMode{
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
         positionSolver.addMoveToTaskEx(pos_three, autoTasks);
-        autoTasks.addStep(() -> intake.tasks.getSpecimen.restart());
+        autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
         autoTasks.addDelay(250);
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
         positionSolver.addMoveToTaskEx(pos_four, autoTasks);

@@ -32,7 +32,7 @@ import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
 
 @Config
-@Autonomous (name="Flip Bucket Auto 2025", group="Test")
+@Autonomous (name="14273.1 BUCKET", group="14273")
 public class FlipBucketAuto2025 extends LinearOpMode{
     public Function<Vector3, Vector3> transformFunc;
     public Vector3 customStartPos;
@@ -201,9 +201,9 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         autoTasks.addDelay(200);
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
         autoTasks.addDelay(200);
-        autoTasks.addStep(() -> intake.tasks.autonomousSample.restart());
+        autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
         autoTasks.addDelay(250);
-        autoTasks.addStep(() -> intake.tasks.autonomousSample.isDone());
+        autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());
         autoTasks.addDelay(100);
 
         // Deposit Sample in High-Basket.
@@ -226,6 +226,7 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         positionSolver.addMoveToTaskEx(pos_three, autoTasks);
         autoTasks.addDelay(200);
         // Touch Level-1 bar.
-        intake.getHardware().park.setPosition(intake.getSettings().parkUp);
+        //intake.getHardware().park.setPosition(intake.getSettings().parkUp);  // haha! You forgot to add as task. That's why it pops up at the start!
+        autoTasks.addStep(() -> intake.getHardware().park.setPosition(intake.getSettings().parkUp));
     }
 }
