@@ -187,6 +187,7 @@ public class ClawAuto2025 extends LinearOpMode{
         positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
         autoTasks.addDelay(200);
         autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
+        autoTasks.addDelay(200);
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
@@ -259,7 +260,7 @@ public class ClawAuto2025 extends LinearOpMode{
         positionSolver.addMoveToTaskEx(specimenhang, autoTasks);
         autoTasks.addDelay(200);
         autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
-//        autoTasks.addDelay(200);
+        autoTasks.addDelay(200);
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(beforespecimenhang, autoTasks);
         positionSolver.addMoveToTaskEx(firstsample, autoTasks);

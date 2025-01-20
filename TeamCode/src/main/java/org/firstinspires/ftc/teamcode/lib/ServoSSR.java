@@ -282,7 +282,12 @@ public class ServoSSR implements Servo {
         }
         /*-- end untested --*/
 
-        if (enabled && isSetPosition(position)) return;    // has already been set (but not necessarily done moving), no need to update timer or position
+//        if (enabled && isSetPosition(position)) return;    // has already been set (but not necessarily done moving), no need to update timer or position
+        if (enabled && isSetPosition(position)) {
+            servo.setPosition(position - offset);
+            return;    // has already been set (but not necessarily done moving), no need to update timer or position
+        }
+
         //if (!enabled) enable();
         timer = calcSweepTimerValue(position);
         servo.setPosition(position - offset);
