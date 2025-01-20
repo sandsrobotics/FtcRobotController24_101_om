@@ -220,9 +220,13 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public void initializeServos() {
         getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp -.05); // default straight up position
         getHardware().dropperServo.setPosition(.714);
+        getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition +.05);
         parent.opMode.sleep(100);
         getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp);
+        getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition);
         getHardware().dropperServo.setPosition(.716);
+        parent.opMode.sleep(100);
+        getHardware().dropperServo.stop();
     }
 
     @Override
