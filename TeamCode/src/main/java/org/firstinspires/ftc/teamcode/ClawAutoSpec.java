@@ -129,9 +129,9 @@ public class ClawAutoSpec extends LinearOpMode{
         if (bucketSide)
             BucketAuto(autoTasks);
         else {
-            //SpecAuto(autoTasks);
+            SpecAuto(autoTasks);
 //            SpecAuto_old(autoTasks);
-            testAuto2(autoTasks);
+//            testAuto2(autoTasks);
         }
 
         while (opModeIsActive()) {
@@ -225,6 +225,7 @@ public class ClawAutoSpec extends LinearOpMode{
         Vector3 specimenpickup = new Vector3(45, -60.5, 90);
 
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultNoAlwaysRunSettings));
         autoTasks.addStep(()-> intake.tasks.autoSamplePickupTask.restart());
         autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.isDone());
         autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
@@ -263,13 +264,15 @@ public class ClawAutoSpec extends LinearOpMode{
         positionSolver.addMoveToTaskEx(firstsample, autoTasks);
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
         autoTasks.addDelay(250);
-        autoTasks.addStep(() -> intake.tasks.startAutoSamplePickup());
+        autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.restart());
         autoTasks.addStep( () -> intake.tasks.autoSamplePickupTask.isDone());
         autoTasks.addDelay(250);
         positionSolver.addMoveToTaskEx(Highbasketscore, autoTasks);
         autoTasks.addDelay(500);
-        autoTasks.addStep(() -> intake.tasks.startAutoBucketLift());
-        autoTasks.addStep(() -> intake.tasks.startAutoBucketDropper());
+        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
+        autoTasks.addStep( () -> intake.tasks.autoBucketLiftTask.isDone());
+        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.restart());
+        autoTasks.addStep( () -> intake.tasks.autoBucketDropperTask.isDone());
 //        autoTasks.addStep(()->
 //        positionSolver.addMoveToTaskEx(secondsample, autoTasks);
 //        positionSolver.addMoveToTaskEx(Highbasketscore2, autoTasks);

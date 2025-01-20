@@ -95,7 +95,7 @@ public class IntakeSettings2 {
                 0,
                 1,
                 0.01,
-                0.38,
+                0.2,
                 0.5,
                 0.485,
                 0.68,
