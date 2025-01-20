@@ -55,13 +55,11 @@ public class Intake2Tasks {
 
     /* ***** autoBucketLiftTask ******/
         autoBucketLiftTask.autoStart = false;
-        autoBucketLiftTask.addStep(() -> {
-            intake.getHardware().tiltServo.setPosition(0.3);
-            intake.getHardware().dropperServo.stop();
-        });
+        autoBucketLiftTask.addStep(() ->intake.getHardware().dropperServo.stop());
+        autoBucketLiftTask.addStep(() -> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoBucketLiftTask.addStep( ()-> intake.getHardware().tiltServo.isDone() );
 
-        autoBucketLiftTask.addStep( ()-> intake.setLiftPosition(intake.getSettings().maxLiftPosition,1));
+        autoBucketLiftTask.addStep( ()-> intake.setLiftPosition(intake.getSettings().minLiftPosition,1));
         autoBucketLiftTask.addStep(intake::isLiftInTolerance);
 
         autoBucketLiftTask.addStep( ()->{
@@ -83,14 +81,16 @@ public class Intake2Tasks {
 
         autoBucketDropperTask.addStep(() -> intake.getHardware().dropperServo.stop());
 
-        autoBucketDropperTask.addStep( ()-> intake.setLiftPosition(intake.getSettings().minLiftPosition,1));
+        autoBucketDropperTask.addStep( ()-> intake.setLiftPosition(intake.getSettings().maxLiftPosition,1));
         autoBucketDropperTask.addStep(intake::isLiftInTolerance);
 
+        autoBucketDropperTask.addStep(() -> {intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe);});
+        autoBucketDropperTask.addStep( ()-> intake.getHardware().tiltServo.isDone() );
 
     /* ***** autoSpecimenPickupTask ******/
         autoSpecimenPickupTask.autoStart = false;
         autoSpecimenPickupTask.addStep(() -> {
-            intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmDefault);
+            intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmStraightUp);
         });
         autoSpecimenPickupTask.addStep( ()-> intake.getHardware().tiltServo.isDone() );
         autoSpecimenPickupTask.addStep(() -> {// default straight up position
@@ -104,7 +104,7 @@ public class Intake2Tasks {
     /* ***** autoSpecimenHangTask ******/
         autoSpecimenHangTask.autoStart = false;
 
-        autoSpecimenHangTask.addStep( ()-> intake.setLiftPosition(intake.getSettings().specimenServoOpenHeight,1));
+        autoSpecimenHangTask.addStep( ()-> intake.setLiftPosition(intake.getSettings().specimenServoOpenHeight,.7));
         autoSpecimenHangTask.addStep(intake::isLiftInTolerance);
 
         autoSpecimenHangTask.addStep(() ->
@@ -116,43 +116,45 @@ public class Intake2Tasks {
 
     /* ***** autoIntakeDropTask ******/
         autoIntakeDropTask.autoStart = false;
-        autoIntakeDropTask.addStep(() -> intake.getHardware().tiltServo.setPosition(0.64));
-        autoIntakeDropTask.addStep( ()-> intake.getHardware().tiltServo.isDone() );
+        autoIntakeDropTask.addStep(() -> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmAtBucket));
+//        autoIntakeDropTask.addStep( ()-> intake.getHardware().tiltServo.isDone() );
 
         autoIntakeDropTask.addStep(() -> {
             intake.getHardware().intakeWheelServoLeft.setPosition(0.0);
             intake.getHardware().intakeWheelServoRight.setPosition(0.0);
         });
-        autoIntakeDropTask.addDelay(500);
-        autoIntakeDropTask.addStep(() -> {intake.getHardware().tiltServo.setPosition(.52);});
+        autoIntakeDropTask.addDelay(3000);  // transfer sample to bucket
+        autoIntakeDropTask.addStep(() -> {intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe);});
         autoIntakeDropTask.addStep( ()-> intake.getHardware().tiltServo.isDone());
 
         autoIntakeDropTask.addStep(() -> {
             intake.getHardware().intakeWheelServoLeft.setPosition(0.5);
             intake.getHardware().intakeWheelServoRight.setPosition(0.5);
         });
+        autoIntakeDropTask.addStep(() -> intake.getHardware().dropperServo.stop());
 
     /* ***** autoSamplePickupTask ******/
         autoSamplePickupTask.autoStart = false;
         autoSamplePickupTask.addStep(()-> {
             intake.getHardware().intakeWheelServoLeft.setPosition(1.0);
             intake.getHardware().intakeWheelServoRight.setPosition(1.0);
-            intake.getHardware().tiltServo.setPosition(0.2);
         });
+        autoSamplePickupTask.addStep(()->intake.getHardware().tiltServo.setPosition(0.2));
         autoSamplePickupTask.addStep( ()-> intake.getHardware().tiltServo.isDone());
-        autoSamplePickupTask.addDelay(1000); // needed?
+
+        autoSamplePickupTask.addDelay(250); // needed?
 
         autoSamplePickupTask.addStep(()-> {
             intake.getHardware().intakeWheelServoLeft.setPosition(0.5);
             intake.getHardware().intakeWheelServoRight.setPosition(0.5);
-            intake.getHardware().tiltServo.setPosition(0.52);
+            intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe);
         });
         autoSamplePickupTask.addStep( ()-> intake.getHardware().tiltServo.isDone());
         autoSamplePickupTask.addStep(autoIntakeDropTask::restart);
 
         /* ***** autoRotateServoSafe ******/
         autoRotateServoSafe.autoStart = false;
-        autoRotateServoSafe.addStep(() -> intake.getHardware().rotationServo.setPosition(0.5));
+        autoRotateServoSafe.addStep(() -> intake.getHardware().rotationServo.setPosition(intake.getSettings().intakeArmSafe));
         autoRotateServoSafe.addStep( ()-> intake.getHardware().rotationServo.isDone());
     }
 
@@ -175,7 +177,7 @@ public class Intake2Tasks {
     }
 
     private void setSlideToHomeConfig() {
-        double power = -0.125;
+        double power = -0.3;
         intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         intake.getHardware().bucketLiftMotor.setPower(power);
     }

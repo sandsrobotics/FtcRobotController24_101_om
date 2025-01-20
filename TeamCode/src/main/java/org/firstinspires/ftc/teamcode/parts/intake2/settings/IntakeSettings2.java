@@ -16,9 +16,10 @@ public class IntakeSettings2 {
     public final double maxServoLeftSlide;
     public final double minServoRightSlide;
     public final double maxServoRightSlide;
-    public final double intakeArmMin;
-    public final double intakeArmMax;
-    public final double intakeArmDefault;
+    public final double intakeArmAtSpecimen;
+    public final double intakeArmAtBucket;
+    public final double intakeArmStraightUp;
+    public final double intakeArmSafe;
     public final double rotationServoMin;
     public final double rotationServoMax;
     public final double rotationServoStep;
@@ -30,11 +31,12 @@ public class IntakeSettings2 {
     public final int specimenHangPosition;
     public final int specimenServoOpenHeight;
 
+
     public IntakeSettings2(int minSlidePosition, int maxSlidePosition, int maxSlideSpeed, double tiltServoDownPosition,
                            double tiltServoUpPosition, int maxDownLiftSpeed, int maxUpLiftSpeed, int minLiftPosition,
                            int maxLiftPosition, double minRegisterVal, int tolerance, double minServoLeftSlide,
                            double maxServoLeftSlide, double minServoRightSlide, double maxServoRightSlide,
-                           double intakeArmMin, double intakeArmMax, double intakeArmDefault,
+                           double intakeArmAtSpecimen, double intakeArmAtBucket, double intakeArmStraightUp, double intakeArmSafe,
                            double rotationServoMin, double rotationServoMax, double rotationServoStep, double dropperServoMax, double dropperServoMin,
                            double specimenServoOpenPosition, double specimenServoClosePosition, int specimenSafeHeight,
                            int specimenHangPosition, int specimenServoOpenHeight) {
@@ -53,9 +55,10 @@ public class IntakeSettings2 {
         this.maxServoLeftSlide = maxServoLeftSlide;
         this.minServoRightSlide = minServoRightSlide;
         this.maxServoRightSlide = maxServoRightSlide;
-        this.intakeArmMin = intakeArmMin;
-        this.intakeArmMax = intakeArmMax;
-        this.intakeArmDefault = intakeArmDefault;
+        this.intakeArmAtSpecimen = intakeArmAtSpecimen;
+        this.intakeArmAtBucket = intakeArmAtBucket;
+        this.intakeArmStraightUp = intakeArmStraightUp;
+        this.intakeArmSafe = intakeArmSafe;
         this.rotationServoMin = rotationServoMin;
         this.rotationServoMax = rotationServoMax;
         this.rotationServoStep = rotationServoStep;
@@ -88,11 +91,12 @@ public class IntakeSettings2 {
                 0.21,
                 0.64,
                 0.52,
+                0.48,
                 0,
                 1,
                 0.01,
-                0.74,
-                1,
+                0.38,
+                0.5,
                 0.485,
                 0.68,
                 461,

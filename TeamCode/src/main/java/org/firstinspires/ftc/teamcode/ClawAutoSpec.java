@@ -29,8 +29,8 @@ import om.self.task.other.TimedTask;
 import static om.self.ezftc.utils.Constants.tileSide;
 
 @Config
-@Autonomous(name="1A Claw Spec Auto", group="Test")
-public class ClawAuto2025 extends LinearOpMode{
+@Autonomous(name="1A Claw Spec", group="Claw")
+public class ClawAutoSpec extends LinearOpMode{
     public Function<Vector3, Vector3> transformFunc;
     public Vector3 customStartPos;
     public boolean shutdownps;
@@ -131,8 +131,8 @@ public class ClawAuto2025 extends LinearOpMode{
             BucketAuto(autoTasks);
         else {
             //SpecAuto(autoTasks);
-            SpecAuto_old(autoTasks);
-//            testAuto2(autoTasks);
+//            SpecAuto_old(autoTasks);
+            testAuto2(autoTasks);
         }
 
         while (opModeIsActive()) {
@@ -225,15 +225,16 @@ public class ClawAuto2025 extends LinearOpMode{
         Vector3 afterfirstredbar = new Vector3(36, -40, -90);
         Vector3 specimenpickup = new Vector3(45, -60.5, 90);
 
-        autoTasks.addStep(() -> intake.tasks.startAutoSamplePickup());
-        autoTasks.addDelay(5000);
-        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
-//        autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1));
-//        positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
-//        positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
-//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
-//        positionSolver.addMoveToTaskEx(specimenpickup, autoTasks);
-//        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenPickup());
+//        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
+//        autoTasks.addStep(() -> intake.tasks.startAutoSamplePickup());
+//        autoTasks.addStep( () -> intake.tasks.autoSamplePickupTask.isDone());
+//        autoTasks.addDelay(250);
+//        autoTasks.addStep( ()-> {
+//            intake.getHardware().sliderServoLeft.setPosition(.65);
+//            intake.getHardware().sliderServoRight.setPosition(.65);
+//        });
+        autoTasks.addStep(() -> intake.tasks.startAutoBucketLift());
+        autoTasks.addStep(() -> intake.tasks.startAutoBucketDropper());
     }
 
     private void BucketAuto(TimedTask autoTasks) {
@@ -250,7 +251,7 @@ public class ClawAuto2025 extends LinearOpMode{
 
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
         autoTasks.addStep(() -> odo.setPosition(bucketsidestart));
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
         autoTasks.addStep(() -> intake.tasks.setMotorsToRunConfig());
         autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1)); // h-slide in
         // close specimen pincer
@@ -259,16 +260,18 @@ public class ClawAuto2025 extends LinearOpMode{
         positionSolver.addMoveToTaskEx(beforespecimenhang, autoTasks);
         positionSolver.addMoveToTaskEx(specimenhang, autoTasks);
         autoTasks.addDelay(200);
-        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
+        autoTasks.addStep( () -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
         autoTasks.addDelay(200);
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(beforespecimenhang, autoTasks);
         positionSolver.addMoveToTaskEx(firstsample, autoTasks);
-//        autoTasks.addDelay(250);
+        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
+        autoTasks.addDelay(250);
         autoTasks.addStep(() -> intake.tasks.startAutoSamplePickup());
+        autoTasks.addStep( () -> intake.tasks.autoSamplePickupTask.isDone());
         autoTasks.addDelay(250);
         positionSolver.addMoveToTaskEx(Highbasketscore, autoTasks);
-        autoTasks.addDelay(1000);
+        autoTasks.addDelay(500);
         autoTasks.addStep(() -> intake.tasks.startAutoBucketLift());
         autoTasks.addStep(() -> intake.tasks.startAutoBucketDropper());
 //        autoTasks.addStep(()->

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.parts.intake2;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
@@ -14,7 +13,6 @@ import om.self.ezftc.core.part.ControllablePart;
 import om.self.supplier.consumer.EdgeConsumer;
 import om.self.task.core.Group;
 
-import static android.os.SystemClock.sleep;
 import static java.lang.Math.abs;
 
 public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHardware2, IntakeControl2> {
@@ -107,9 +105,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             if (Math.abs(direction) != 0) {
                 double adjustment = 0.01 * Math.signum(direction);
                 currentIntakeHeightPos = Math.max(
-                        getSettings().intakeArmMin,
+                        getSettings().intakeArmAtSpecimen,
                         Math.min(
-                                getSettings().intakeArmMax,
+                                getSettings().intakeArmAtBucket,
                                 currentIntakeHeightPos + adjustment
                         )
                 );
@@ -136,7 +134,6 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public void setHorizontalSlidePosition(int position) {
         switch (position) {
             case 1:
-                getHardware().sliderServoLeft.setPosition(getSettings().minServoLeftSlide);
                 getHardware().sliderServoLeft.setPosition(getSettings().minServoLeftSlide);
                 getHardware().sliderServoRight.setPosition(getSettings().minServoRightSlide);
                 break;
@@ -220,13 +217,18 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         getHardware().intakeWheelServoRight.setPosition(0.5);
     }
 
+    public void initializeServos() {
+        getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp -.05); // default straight up position
+        getHardware().dropperServo.setPosition(.714);
+        parent.opMode.sleep(100);
+        getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp);
+        getHardware().dropperServo.setPosition(.716);
+    }
+
     @Override
     public void onInit() {
-        currentIntakeHeightPos = getSettings().intakeArmDefault;
-        //getHardware().tiltServo.enable();
-        getHardware().tiltServo.setPosition(currentIntakeHeightPos-.05); // default straight up position
-        parent.opMode.sleep(20);
-        getHardware().tiltServo.setPosition(currentIntakeHeightPos);
+        currentIntakeHeightPos = getSettings().intakeArmStraightUp;
+        initializeServos();
         stopIntakeSpin();
         currentRotationPos = 0.0;
         setHorizontalSlidePosition(-1); // pull slide in on init
@@ -253,14 +255,14 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     @Override
     public void onRun(IntakeControl2 control) {
-        if (modeName.equalsIgnoreCase("Teleop")) {
-            spinIntakeWithPower(control.sweeperPower);
-        }
-        incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
-        incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
-        setBucketLiftPosition(control.bucketLiftPosition);
-        setSpecimenPositions(control.specimenServoPosition);
-        setRobotLiftPosition(control.robotliftPosition);
+//        if (modeName.equalsIgnoreCase("Teleop")) {
+//            spinIntakeWithPower(control.sweeperPower);
+//        }
+//        incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
+//        incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
+//        setBucketLiftPosition(control.bucketLiftPosition);
+//        setSpecimenPositions(control.specimenServoPosition);
+//        setRobotLiftPosition(control.robotliftPosition);
 
         // Check intake height and adjust rotation servo
         if (currentIntakeHeightPos >= 0.3) {
@@ -284,6 +286,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public void onStart() {
         drive.addController(ControllerNames.distanceController, this::strafeRobot);
         drive.addController(ControllerNames.specController, this::doSpecRange);
+        getHardware().dropperServo.stop();
         tasks.startAutoHome();
     }
 
