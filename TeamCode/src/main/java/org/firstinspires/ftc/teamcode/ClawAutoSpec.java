@@ -29,7 +29,7 @@ import om.self.task.other.TimedTask;
 import static om.self.ezftc.utils.Constants.tileSide;
 
 @Config
-@Autonomous(name="1A Claw Spec", group="Claw")
+@Autonomous(name="27050 Specimen/Human", group="27050")
 public class ClawAutoSpec extends LinearOpMode{
     public Function<Vector3, Vector3> transformFunc;
     public Vector3 customStartPos;

@@ -21,7 +21,7 @@ import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Vector3;
 import static om.self.ezftc.utils.Constants.tileSide;
 
-@TeleOp(name="1A Claw Teleop", group="Claw")
+@TeleOp(name="27050 Teleop", group="27050")
 public class ClawTeleop extends LinearOpMode {
     Drive drive;
     Robot robot;
@@ -64,13 +64,8 @@ public class ClawTeleop extends LinearOpMode {
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
             robot.run();
-            telemetry.addData("position", pt.getCurrentPosition());
-            telemetry.addData("tile position", fieldToTile(pt.getCurrentPosition()));
-            telemetry.addData("Slide Position", intake.getSlidePosition());
-            telemetry.addData("H-Slide Position",intake.getHSlidePosition());
+            telemetry.addData("position tracker", pt.getCurrentPosition());
             telemetry.addData("time", System.currentTimeMillis() - start);
-            telemetry.addData("Robot lift Position", intake.getRobotLiftPosition());
-            telemetry.addData("Bucket Zero", intake.getHardware().bucketLiftZeroSwitch.getState());
             dashboard.sendTelemetryPacket(packet);
             telemetry.update();
         }

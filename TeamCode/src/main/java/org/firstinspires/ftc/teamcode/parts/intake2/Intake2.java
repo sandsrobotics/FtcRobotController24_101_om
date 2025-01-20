@@ -16,13 +16,13 @@ import om.self.task.core.Group;
 import static java.lang.Math.abs;
 
 public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHardware2, IntakeControl2> {
-    public int slideTargetPosition;
+    public int bucketLiftTargetPosition;
     double motorPower = 0;
-    private double currentSlidePos = 0.5;
+    private int currentBucketLiftPos = 20;
     private double currentIntakeHeightPos = 0.5;
     private double currentRotationPos = 0.0;
     private double currentHorizontalSlidePos = 0.781;
-    private int currentLiftPos;
+//    private int currentLiftPos;
     // Watch for bucket lift zero
     private final EdgeConsumer homingBucketZero = new EdgeConsumer();
     protected Drive drive;
@@ -61,20 +61,20 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public boolean isLiftInTolerance() {
-        return abs(slideTargetPosition - getSlidePosition()) <= getSettings().tolerance;
+        return abs(bucketLiftTargetPosition - getBucketLiftPosition()) <= getSettings().tolerance;
     }
 
-    public double getSlidePosition() {
-        return currentSlidePos;
+    public int getBucketLiftPosition() {
+        return currentBucketLiftPos;
     }
 
     public double getHSlidePosition() {
         return currentIntakeHeightPos;
     }
 
-    public int getRobotLiftPosition() {
-        return currentLiftPos;
-    }
+//    public int getRobotLiftPosition() {
+//        return currentLiftPos;
+//    }
 
     public void incrementRotationServo(int direction) {
         double step = getSettings().rotationServoStep;
@@ -189,7 +189,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     public void incrementalBucketUpDown(int position) {
         if (position == 1)
-            setRobotLiftPositionUnsafe(getRobotLiftPosition() - 50);
+            setRobotLiftPositionUnsafe(getBucketLiftPosition() - 50);
         //setBucketLiftPositionUnsafe
     }
 
@@ -204,9 +204,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             stopLift();
             return;
         }
-        slideTargetPosition = position;
+        bucketLiftTargetPosition = position;
         stopLift();   // ???
-        getHardware().bucketLiftMotor.setTargetPosition(slideTargetPosition);
+        getHardware().bucketLiftMotor.setTargetPosition(bucketLiftTargetPosition);
         getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         setLiftPower(power);
         //slideIsUnderControl = false;
@@ -255,14 +255,14 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     @Override
     public void onRun(IntakeControl2 control) {
-//        if (modeName.equalsIgnoreCase("Teleop")) {
-//            spinIntakeWithPower(control.sweeperPower);
-//        }
-//        incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
-//        incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
-//        setBucketLiftPosition(control.bucketLiftPosition);
-//        setSpecimenPositions(control.specimenServoPosition);
-//        setRobotLiftPosition(control.robotliftPosition);
+        if (modeName.equalsIgnoreCase("Teleop")) {
+            spinIntakeWithPower(control.sweeperPower);
+        }
+        incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
+        incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
+        setBucketLiftPosition(control.bucketLiftPosition);
+        setSpecimenPositions(control.specimenServoPosition);
+        setRobotLiftPosition(control.robotliftPosition);
 
         // Check intake height and adjust rotation servo
         if (currentIntakeHeightPos >= 0.3) {
@@ -273,10 +273,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         }
 
         strafePower = control.strafePower;
-        //Todo: test code needs control refactoring - rearrange controller A and B to suit drivers
         homingBucketZero.accept(getHardware().bucketLiftZeroSwitch.getState());
-        currentLiftPos = getHardware().robotLiftMotor.getCurrentPosition(); //0.32
-        currentSlidePos = getHardware().bucketLiftMotor.getCurrentPosition();
+        currentBucketLiftPos = getHardware().bucketLiftMotor.getCurrentPosition();
         parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
         parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
         parent.opMode.telemetry.addData("bucketLiftMotor postion", getHardware().bucketLiftMotor.getCurrentPosition());

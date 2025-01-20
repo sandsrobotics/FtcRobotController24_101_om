@@ -49,17 +49,20 @@ public class Intake2Tasks {
         autoHomeTask.addStep(() -> {
             intake.getHardware().bucketLiftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             intake.getHardware().bucketLiftMotor.setTargetPosition(20);
-            intake.slideTargetPosition = 20;
+            intake.bucketLiftTargetPosition = 20;
             setMotorsToRunConfig();
         });
 
     /* ***** autoBucketLiftTask ******/
         autoBucketLiftTask.autoStart = false;
+        autoBucketDropperTask.addStep(() -> {intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe);});
+        autoBucketDropperTask.addStep( ()-> intake.getHardware().tiltServo.isDone() );
+
         autoBucketLiftTask.addStep(() ->intake.getHardware().dropperServo.stop());
         autoBucketLiftTask.addStep(() -> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoBucketLiftTask.addStep( ()-> intake.getHardware().tiltServo.isDone() );
 
-        autoBucketLiftTask.addStep( ()-> intake.setLiftPosition(intake.getSettings().minLiftPosition,1));
+        autoBucketLiftTask.addStep( ()-> intake.setLiftPosition(intake.getSettings().maxLiftPosition,1));
         autoBucketLiftTask.addStep(intake::isLiftInTolerance);
 
         autoBucketLiftTask.addStep( ()->{
@@ -70,6 +73,9 @@ public class Intake2Tasks {
 
     /* ***** autoBucketDropperTask ******/
         autoBucketDropperTask.autoStart = false;
+        autoBucketDropperTask.addStep(() -> {intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe);});
+        autoBucketDropperTask.addStep( ()-> intake.getHardware().tiltServo.isDone() );
+
         autoBucketDropperTask.addStep(() -> {
             intake.getHardware().dropperServo.enable();
             intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMax);
@@ -81,11 +87,8 @@ public class Intake2Tasks {
 
         autoBucketDropperTask.addStep(() -> intake.getHardware().dropperServo.stop());
 
-        autoBucketDropperTask.addStep( ()-> intake.setLiftPosition(intake.getSettings().maxLiftPosition,1));
+        autoBucketDropperTask.addStep( ()-> intake.setLiftPosition(intake.getSettings().minLiftPosition,1));
         autoBucketDropperTask.addStep(intake::isLiftInTolerance);
-
-        autoBucketDropperTask.addStep(() -> {intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe);});
-        autoBucketDropperTask.addStep( ()-> intake.getHardware().tiltServo.isDone() );
 
     /* ***** autoSpecimenPickupTask ******/
         autoSpecimenPickupTask.autoStart = false;
