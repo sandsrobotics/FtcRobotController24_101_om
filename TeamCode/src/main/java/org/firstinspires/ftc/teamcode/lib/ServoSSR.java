@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.lib;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
@@ -337,6 +338,33 @@ public class ServoSSR implements Servo {
      */
     public double getPower() {
         return servo.getPosition() * 2.0 - 1.0;
+    }
+
+    /**
+     * If using a Blinkin LED device, sets the Blinkin to a desired pattern number.
+     * It does this by converting that number to a pulse width between 1000-2000 μs, and converting that to a 0-1 servo position.
+     * <P>For this to work, the servo controller must be set to use the full range of 500-2500 μs,
+     * which can be set by using the .setFullPwmRange() method.
+     * @param pattern the desired pattern number between 1 and 100
+     */
+    public void setBlinkinPattern(int pattern) {
+        // Q: Why do this craziness instead of defining the servo port as a Blinkin?
+        // A: Because that changes the stored config and other things. Easier to just use all the servo ports as servos.
+        if (pattern<1 || pattern>100) return;              // Or throw an error? Legal Blinkin patterns are between 1 and 100
+        int pulseWidth = 995 + 10*pattern;                 // Convert pattern number to pulse width between 1000-2000 μs)
+        double setting = (pulseWidth - 500) / 2000.0;      // Covert pulse width to 0-1 servo position (based on 500-2500 μs)
+        servo.setPosition(setting);
+    }
+
+    /**
+     * If using a Blinkin LED device, sets the Blinkin to a desired pattern by name.
+     * It does this by converting that name to a pulse width between 1000-2000 μs, and converting that to a 0-1 servo position.
+     * <P>For this to work, the servo controller must be set to use the full range of 500-2500 μs,
+     * which can be set by using the .setFullPwmRange() method.
+     * @param pattern the desired pattern from enum RevBlinkinLedDriver.BlinkinPattern
+     */
+    public void setBlinkinPattern(RevBlinkinLedDriver.BlinkinPattern pattern) {
+        setBlinkinPattern(pattern.ordinal()+1);            // Ordinal starts at 0, so need to add 1 (convert 0-99 to 1-100)
     }
 
     // internal methods
