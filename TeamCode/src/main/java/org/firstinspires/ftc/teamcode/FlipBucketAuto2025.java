@@ -163,8 +163,8 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         Vector3 p_5 = new Vector3(-36, -39, 135);
         Vector3 p_6 = new Vector3(-46.5, -39, 135);
         Vector3 p_7 = new Vector3(-59, -42, 119);
-        Vector3 p_8 = new Vector3(-39, -11, 180);
-        Vector3 p_9 = new Vector3(-23.5, -11, 180);
+        Vector3 p_8 = new Vector3(-39, -11, 0);
+        Vector3 p_9 = new Vector3(-23.5, -11, 0);
 
         // End New settings
         autoTasks.addStep(()-> intake.stopAllIntakeTasks());
@@ -192,7 +192,7 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         grabAndDepositSample(autoTasks, p_6, p_7, p_3);
 
         // ParK for AutoAscent.
-        parkForAutoAscent(autoTasks, p_6, p_8, p_9);
+        parkForAutoAscent(autoTasks, p_8, p_9);
     }
 
     private void grabAndDepositSample (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three) {
@@ -202,7 +202,7 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
         autoTasks.addDelay(200);
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
-        autoTasks.addDelay(250);
+        autoTasks.addDelay(100);
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());
         autoTasks.addDelay(100);
 
@@ -214,19 +214,16 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         autoTasks.addStep(() -> intake.tasks.depositTask.restart());
         autoTasks.addDelay(250);
         autoTasks.addStep(() -> intake.tasks.depositTask.isDone());
-        autoTasks.addDelay(250);
+        autoTasks.addDelay(100);
     }
 
-    private void parkForAutoAscent (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three) {
+    private void parkForAutoAscent (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two) {
         // Grab Sample.
         positionSolver.addMoveToTaskEx(pos_one, autoTasks);
         autoTasks.addDelay(200);
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
         autoTasks.addDelay(200);
-        positionSolver.addMoveToTaskEx(pos_three, autoTasks);
-        autoTasks.addDelay(200);
         // Touch Level-1 bar.
-        //intake.getHardware().park.setPosition(intake.getSettings().parkUp);  // haha! You forgot to add as task. That's why it pops up at the start!
         autoTasks.addStep(() -> intake.getHardware().park.setPosition(intake.getSettings().parkUp));
     }
 }
