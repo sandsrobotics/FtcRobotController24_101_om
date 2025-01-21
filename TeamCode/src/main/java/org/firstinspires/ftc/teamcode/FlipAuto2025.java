@@ -185,21 +185,21 @@ public class FlipAuto2025 extends LinearOpMode{
         Vector3 specimen3hang = new Vector3(5.75, -32.75, -90);
         Vector3 parkingposition = new Vector3(54, -54, 0);
 
-        autoTasks.addStep(()-> intake.stopAllIntakeTasks());
-        autoTasks.addStep(()-> odo.setPosition(humansidestart));
-        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.slowSettings));
+        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
+        autoTasks.addStep(() -> odo.setPosition(humansidestart));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
         // close pincer on initial specimen
-        autoTasks.addStep(()-> intake.tasks.getSpecimenTask.restart());
+        autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         // raise for specimen hang
-        autoTasks.addStep(()-> intake.tasks.prepareToHangSpecimenTask.restart());
+        autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
         autoTasks.addDelay(200);
         positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
         autoTasks.addDelay(200);
         // clip specimen on bar
-        autoTasks.addStep(()-> intake.tasks.hangSpecimenTask.restart());
+        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
         autoTasks.addDelay(200);
-        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.loseSettings));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         autoTasks.addDelay(200);
         positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
@@ -290,9 +290,9 @@ public class FlipAuto2025 extends LinearOpMode{
         Vector3 p_00 = new Vector3(54, -54, -90);
 
         // Reset and Get Ready.
-        autoTasks.addStep(()-> intake.stopAllIntakeTasks());
-        autoTasks.addStep(()-> odo.setPosition(p_1));
-        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.slowSettings));
+        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
+        autoTasks.addStep(() -> odo.setPosition(p_1));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
 
         {
             // Pre-Loaded Specimen.
@@ -310,7 +310,7 @@ public class FlipAuto2025 extends LinearOpMode{
 
         {
             // Move Samples to ObservationZone.
-            autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.slowSettings));
+            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
 
             // First Sample to ObservationZone.
             positionSolver.addMoveToTaskEx(p_4, autoTasks);

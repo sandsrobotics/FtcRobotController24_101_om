@@ -94,19 +94,19 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         robot.init();
 
         while (!isStarted()) {
-            if(new EdgeSupplier(()-> robot.opMode.gamepad1.right_bumper).isRisingEdge()) {
+            if(new EdgeSupplier(() -> robot.opMode.gamepad1.right_bumper).isRisingEdge()) {
                 startDelay += 1000;
             }
-            else if(new EdgeSupplier(()->robot.opMode.gamepad1.left_bumper).isRisingEdge()) {
+            else if(new EdgeSupplier(() -> robot.opMode.gamepad1.left_bumper).isRisingEdge()) {
                 startDelay -= 1000;
                 if(startDelay < 0) startDelay = 0;
-            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.a).isRisingEdge()) {
+            } else if(new EdgeSupplier(() -> robot.opMode.gamepad1.a).isRisingEdge()) {
                 parkPosition = 1;
-            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.b).isRisingEdge()) {
+            } else if(new EdgeSupplier(() -> robot.opMode.gamepad1.b).isRisingEdge()) {
                 parkPosition = 2;
-            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.x).isRisingEdge()) {
+            } else if(new EdgeSupplier(() -> robot.opMode.gamepad1.x).isRisingEdge()) {
                 parkPosition = 3;
-            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.y).isRisingEdge()) {
+            } else if(new EdgeSupplier(() -> robot.opMode.gamepad1.y).isRisingEdge()) {
                 parkPosition = 0;
             }
 
@@ -167,9 +167,9 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         Vector3 p_9 = new Vector3(-23.5, -11, 0);
 
         // End New settings
-        autoTasks.addStep(()-> intake.stopAllIntakeTasks());
-        autoTasks.addStep(()-> odo.setPosition(p_1));
-        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.slowSettings));
+        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
+        autoTasks.addStep(() -> odo.setPosition(p_1));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
 
         {
             // Deposit Pre-loaded Sample in High-basket
