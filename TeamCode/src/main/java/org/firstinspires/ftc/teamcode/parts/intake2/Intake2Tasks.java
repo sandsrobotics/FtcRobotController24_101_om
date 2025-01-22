@@ -18,6 +18,7 @@ public class Intake2Tasks {
     public final TimedTask autoIntakeDropTask;
     public final TimedTask autoSamplePickupTask;
     public final TimedTask autoRotateServoSafe;
+    public final TimedTask autoSpecimenSetTask;
 
     public Intake2Tasks(Intake2 intake, Robot robot) {
         this.intake = intake;
@@ -31,6 +32,7 @@ public class Intake2Tasks {
         autoSamplePickupTask = new TimedTask(TaskNames.autoSamplePickupTask, movementTask);
         autoIntakeDropTask = new TimedTask(TaskNames.autoIntakeDrop, movementTask);
         autoRotateServoSafe = new TimedTask(TaskNames.autoRotateServoSafe, movementTask);
+        autoSpecimenSetTask = new TimedTask(TaskNames.autoSpecimenSet, movementTask);
     }
 
     public void constructAllIntakeTasks() {
@@ -52,6 +54,10 @@ public class Intake2Tasks {
             intake.bucketLiftTargetPosition = 20;
             setMotorsToRunConfig();
         });
+    /* ***** autoSpecimenHang ******/
+        autoSpecimenSetTask.autoStart = false;
+        autoSpecimenSetTask.addStep(()-> intake.setLiftPosition(intake.getSettings().specimenHangPosition,1));
+        autoSpecimenSetTask.addStep(intake::isLiftInTolerance);
 
     /* ***** autoBucketLiftTask ******/
         autoBucketLiftTask.autoStart = false;
@@ -141,6 +147,7 @@ public class Intake2Tasks {
     public void startAutoIntakeDropTask() {
         autoIntakeDropTask.restart();
     }
+    public void startAutoSpecimenSet() {autoSpecimenSetTask.restart();}
     public void startAutoSamplePickup() {
         autoSamplePickupTask.restart();
     }
@@ -170,6 +177,7 @@ public class Intake2Tasks {
         public final static String autoIntakeDrop = "drop block into bucket";
         public final static String autoRotateServoSafe = "rotate servo to safe speed";
         public final static String autoSamplePickupTask = "auto sample pickup";
+        public final static String autoSpecimenSet = "auto specimen set";
     }
 
     public static final class Events {
