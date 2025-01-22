@@ -158,9 +158,12 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         // TODO: Rename the positions to be  more descriptive.
         Vector3 p_1 = new Vector3(-14.375, -62, 90);
         Vector3 p_2 = new Vector3(-14.375, -48, 90);
+        Vector3 p_pre_3 = new Vector3(-53.5, -53.5, 90);
         Vector3 p_3 = new Vector3(-53.5, -53.5, 45);
         Vector3 p_4 = new Vector3(-38, -48, 90);
+        Vector3 p_pre_5 = new Vector3(-36, -39, 45);
         Vector3 p_5 = new Vector3(-36, -39, 135);
+        Vector3 p_pre_6 = new Vector3(-46.5, -39, 45);
         Vector3 p_6 = new Vector3(-46.5, -39, 135);
         Vector3 p_7 = new Vector3(-59, -42, 119);
         Vector3 p_8 = new Vector3(-39, -11, 0);
@@ -169,24 +172,24 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         // End New settings
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
         autoTasks.addStep(() -> odo.setPosition(p_1));
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
 
         {
             // Deposit Pre-loaded Sample in High-basket
             positionSolver.addMoveToTaskEx(p_2, autoTasks);
             positionSolver.addMoveToTaskEx(p_3, autoTasks);
-            autoTasks.addDelay(200);
+            autoTasks.addDelay(100);
             autoTasks.addStep(() -> intake.tasks.depositTask.restart());
-            autoTasks.addDelay(200);
+//            autoTasks.addDelay(200);
             autoTasks.addStep(() -> intake.tasks.depositTask.isDone());
-            autoTasks.addDelay(200);
+            autoTasks.addDelay(100);
         }
 
         // First Sample.
-        grabAndDepositSample(autoTasks, p_4, p_5, p_3);
+        grabAndDepositSample(autoTasks, p_pre_5, p_5, p_3);
 
         // Second Sample.
-        grabAndDepositSample(autoTasks, p_4, p_6, p_3);
+        grabAndDepositSample(autoTasks, p_pre_6, p_6, p_3);
 
         // Third Sample.
         grabAndDepositSample(autoTasks, p_6, p_7, p_3);
@@ -198,9 +201,9 @@ public class FlipBucketAuto2025 extends LinearOpMode{
     private void grabAndDepositSample (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three) {
         // Grab Sample.
         positionSolver.addMoveToTaskEx(pos_one, autoTasks);
-        autoTasks.addDelay(200);
+//        autoTasks.addDelay(100);
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
-        autoTasks.addDelay(200);
+        autoTasks.addDelay(100);
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
         autoTasks.addDelay(100);
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());
@@ -208,11 +211,11 @@ public class FlipBucketAuto2025 extends LinearOpMode{
 
         // Deposit Sample in High-Basket.
         positionSolver.addMoveToTaskEx(pos_one, autoTasks);
-        autoTasks.addDelay(200);
+//        autoTasks.addDelay(100);
         positionSolver.addMoveToTaskEx(pos_three, autoTasks);
-        autoTasks.addDelay(200);
+        autoTasks.addDelay(100);
         autoTasks.addStep(() -> intake.tasks.depositTask.restart());
-        autoTasks.addDelay(250);
+//        autoTasks.addDelay(100);
         autoTasks.addStep(() -> intake.tasks.depositTask.isDone());
         autoTasks.addDelay(100);
     }

@@ -77,6 +77,8 @@ public class IntakeTasks {
         autonomousSampleTask.addStep(() -> intake.isSlideInTolerance() || (intake.sampleDistance() < 1.5));
         // end new stuff
         autonomousSampleTask.addStep(prepareToTransferTask::restart);
+        autonomousSampleTask.addStep(prepareToTransferTask::isDone);
+        autonomousSampleTask.addDelay(250);
         autonomousSampleTask.addStep(transferTask::isDone);
         /* todo: This needs more testing, improvement */
 
@@ -92,6 +94,7 @@ public class IntakeTasks {
 
         /* == Task: prepareToGetSpecimenTask == */
         prepareToGetSpecimenTask.autoStart = false;
+        prepareToGetSpecimenTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideSpecimen, 0.2));
         prepareToGetSpecimenTask.addStep(() -> {
             intake.setLiftPosition(intake.getSettings().positionLiftGetSpecimen, 1);
             intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen);
@@ -101,6 +104,7 @@ public class IntakeTasks {
 
         /* == Task: getSpecimenTask == */
         getSpecimenTask.autoStart = false;
+        getSpecimenTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideSpecimen, 0.2));
         getSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed));
         getSpecimenTask.addStep(() -> intake.getHardware().pinch.isDone());
         getSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftRaiseSpeciman, 0.7));
@@ -108,12 +112,14 @@ public class IntakeTasks {
 
         /* == Task: prepareToHangSpecimenTask == */
         prepareToHangSpecimenTask.autoStart = false;
+        prepareToHangSpecimenTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideSpecimen, 0.2));
         prepareToHangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchLoose));
         prepareToHangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangReady, 1));
         prepareToHangSpecimenTask.addStep(intake::isLiftInTolerance);
 
         /* == Task: hangSpecimenTask == */
         hangSpecimenTask.autoStart = false;
+        hangSpecimenTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideSpecimen, 0.2));
         hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchSuperLoose));
         hangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangRelease, 0.7));
         hangSpecimenTask.addStep(intake::isLiftInTolerance);
@@ -194,7 +200,9 @@ public class IntakeTasks {
         depositTask.addStep(() -> intake.isLiftInTolerance() && intake.getHardware().chute.isDone());
         depositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteDeposit));
         depositTask.addStep(() -> intake.getHardware().chute.isDone());
-        depositTask.addDelay(500);
+        depositTask.addDelay(100);
+        depositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteParked));
+        depositTask.addStep(() -> intake.getHardware().chute.isDone());
         depositTask.addStep(dockTask::restart);
 
         /* == Task: autoIntakeTask == */
