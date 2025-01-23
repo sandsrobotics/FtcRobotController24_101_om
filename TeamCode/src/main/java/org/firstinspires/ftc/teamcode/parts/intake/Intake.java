@@ -25,6 +25,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     private int currentSlidePos;
     private int currentBucketPos;
     public IntakeTasks tasks;
+    public LedTasks leds;
     public boolean isRedGood = true;
     public boolean isYellowGood = true;
     public boolean isBlueGood = false;
@@ -322,6 +323,18 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         if (hue > 20 && hue < 60) lastSample = 1; // Red = 1
         if (hue > 65 && hue < 160) lastSample = 2; // Yellow = 2
         if (hue > 160) lastSample = 3; // Blue = 3
+        switch (lastSample) {
+            case 1:
+                leds.isRed.restart();
+                break;
+            case 2:
+                leds.isYellow.restart();
+                break;
+            case 3:
+                leds.isBlue.restart();
+                break;
+            default:
+        }
         return lastSample; // Nothing detected
     }
     public boolean isSampleGood(int sample) {
@@ -349,6 +362,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         initializeServos();
         tasks = new IntakeTasks(this, parent);
         tasks.constructAllIntakeTasks();
+        leds = new LedTasks(this, parent);
+        leds.constructAllLedTasks();
 
         // this is part of the resets lift to 0 each time it hits the limit switch
         homingVSlideZero.setOnRise(() -> {

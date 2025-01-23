@@ -146,6 +146,8 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
             }
             if (buttonMgr.getState(2, Buttons.y, State.wasSingleTapped)) {
                 parent.isYellowGood = !parent.isYellowGood;
+                if (parent.isYellowGood) parent.leds.yellowGood.restart();
+                else parent.leds.yellowBad.restart();
             }
         }
 
