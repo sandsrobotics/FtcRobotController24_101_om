@@ -174,7 +174,7 @@ public class IntakeTasks {
             intake.getHardware().chute.setPosition(intake.getSettings().chuteParked);
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOut);
         });
-        transferTask.addDelay(1500);
+        transferTask.addDelay(500); // 1500
         transferTask.addStep(() -> {
             intake.getHardware().flipper.disable();
             intake.getHardware().chute.disable();
@@ -200,7 +200,7 @@ public class IntakeTasks {
         depositTask.addStep(() -> intake.isLiftInTolerance() && intake.getHardware().chute.isDone());
         depositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteDeposit));
         depositTask.addStep(() -> intake.getHardware().chute.isDone());
-        depositTask.addDelay(100);
+        depositTask.addDelay(100); // 200
         depositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteParked));
         depositTask.addStep(() -> intake.getHardware().chute.isDone());
         depositTask.addStep(dockTask::restart);

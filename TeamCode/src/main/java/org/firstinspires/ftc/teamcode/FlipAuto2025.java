@@ -293,25 +293,26 @@ public class FlipAuto2025 extends LinearOpMode{
         // Reset and Get Ready.
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
         autoTasks.addStep(() -> odo.setPosition(p_1));
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
 
         {
             // Pre-Loaded Specimen.
             autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
             positionSolver.addMoveToTaskEx(p_2, autoTasks);
             autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
-            autoTasks.addDelay(200);
+            autoTasks.addDelay(100);
+            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
             positionSolver.addMoveToTaskEx(p_3, autoTasks);
             autoTasks.addDelay(200);
             autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
             autoTasks.addDelay(200);
             positionSolver.addMoveToTaskEx(p_2, autoTasks);
-            autoTasks.addDelay(200);
+            autoTasks.addDelay(100);
         }
 
         {
             // Move Samples to ObservationZone.
-            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
+            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
 
             // First Sample to ObservationZone.
             positionSolver.addMoveToTaskEx(p_4, autoTasks);
@@ -353,13 +354,13 @@ public class FlipAuto2025 extends LinearOpMode{
                                         Vector3 pos_four, Vector3 prePosition, Vector3 position) {
         // Specimen Pickup and Hang.
 //        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
-        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
+//        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
         positionSolver.addMoveToTaskEx(pos_three, autoTasks);
         autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
         autoTasks.addDelay(250);
         positionSolver.addMoveToTaskEx(pos_four, autoTasks);
-//        autoTasks.addDelay(250);
         positionSolver.addMoveToTaskEx(prePosition, autoTasks);
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
         autoTasks.addDelay(200);

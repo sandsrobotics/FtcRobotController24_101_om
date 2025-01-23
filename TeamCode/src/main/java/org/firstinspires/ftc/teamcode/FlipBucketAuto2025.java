@@ -172,15 +172,16 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         // End New settings
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
         autoTasks.addStep(() -> odo.setPosition(p_1));
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
 
         {
             // Deposit Pre-loaded Sample in High-basket
             positionSolver.addMoveToTaskEx(p_2, autoTasks);
+            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
             positionSolver.addMoveToTaskEx(p_3, autoTasks);
             autoTasks.addDelay(100);
             autoTasks.addStep(() -> intake.tasks.depositTask.restart());
-//            autoTasks.addDelay(200);
+            autoTasks.addDelay(100);
             autoTasks.addStep(() -> intake.tasks.depositTask.isDone());
             autoTasks.addDelay(100);
         }
@@ -200,22 +201,26 @@ public class FlipBucketAuto2025 extends LinearOpMode{
 
     private void grabAndDepositSample (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three) {
         // Grab Sample.
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(pos_one, autoTasks);
 //        autoTasks.addDelay(100);
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
         autoTasks.addDelay(100);
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
-        autoTasks.addDelay(100);
+//        autoTasks.addDelay(100);
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());
         autoTasks.addDelay(100);
 
         // Deposit Sample in High-Basket.
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(pos_one, autoTasks);
 //        autoTasks.addDelay(100);
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
         positionSolver.addMoveToTaskEx(pos_three, autoTasks);
         autoTasks.addDelay(100);
         autoTasks.addStep(() -> intake.tasks.depositTask.restart());
-//        autoTasks.addDelay(100);
+//        autoTasks.addDelay(200);
         autoTasks.addStep(() -> intake.tasks.depositTask.isDone());
         autoTasks.addDelay(100);
     }
