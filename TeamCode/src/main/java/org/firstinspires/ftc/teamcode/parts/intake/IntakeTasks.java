@@ -65,16 +65,26 @@ public class IntakeTasks {
         });
         autonomousSampleTask.addStep(() -> intake.getHardware().flipper.isDone());
         autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().autoSampleSlideDistance, 1));
-        autonomousSampleTask.addStep(intake::isSlideInTolerance);
+        autonomousSampleTask.addStep(intake::isSlideInTolerance); // todo: consider a timeout in case it jams against the field border at Sample3
         autonomousSampleTask.addDelay(250); //500
         autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideMin, 1));
 //        autonomousSampleTask.addStep(intake::isSlideInTolerance);
         // start new stuff - comment out if not working or worse and uncomment previous line
-        autonomousSampleTask.addStep(() -> intake.isSlideInTolerance() || (intake.sampleDistance() < 1.5));
-        autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().autoSampleSlideDistance, 1));
-        autonomousSampleTask.addStep(() -> intake.isSlideInTolerance() || (intake.sampleDistance() < 1.5));
-        autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideMin, 1));
-        autonomousSampleTask.addStep(() -> intake.isSlideInTolerance() || (intake.sampleDistance() < 1.5));
+//        autonomousSampleTask.addStep(() -> intake.isSlideInTolerance() || (intake.sampleDistance() < 1.5));
+//        autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().autoSampleSlideDistance, 1));
+//        autonomousSampleTask.addStep(() -> intake.isSlideInTolerance() || (intake.sampleDistance() < 1.5));
+//        autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideMin, 1));
+//        autonomousSampleTask.addStep(() -> intake.isSlideInTolerance() || (intake.sampleDistance() < 1.5));
+        // revised steps to bypass actions if sample is/was detected
+        autonomousSampleTask.addStep(() -> intake.isSamplePresent() || intake.isSlideInTolerance());
+        autonomousSampleTask.addStep(() -> {
+            if (!intake.wasSamplePresent()) intake.setSlidePosition(intake.getSettings().autoSampleSlideDistance, 1);
+        });
+        autonomousSampleTask.addStep(() -> intake.wasSamplePresent() || intake.isSamplePresent() || intake.isSlideInTolerance());
+        autonomousSampleTask.addStep(() -> {
+            if (!intake.wasSamplePresent()) intake.setSlidePosition(intake.getSettings().positionSlideMin, 1);
+        });
+        autonomousSampleTask.addStep(() -> intake.wasSamplePresent() || intake.isSamplePresent() || intake.isSlideInTolerance());
         // end new stuff
         autonomousSampleTask.addStep(prepareToTransferTask::restart);
         autonomousSampleTask.addStep(prepareToTransferTask::isDone);
@@ -174,7 +184,7 @@ public class IntakeTasks {
             intake.getHardware().chute.setPosition(intake.getSettings().chuteParked);
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOut);
         });
-        transferTask.addDelay(500); // 1500
+        transferTask.addDelay(500); // 1500  //todo: Are you SURE this is a good idea?
         transferTask.addStep(() -> {
             intake.getHardware().flipper.disable();
             intake.getHardware().chute.disable();
@@ -215,7 +225,7 @@ public class IntakeTasks {
         autoIntakeTask.addStep(() -> intake.getHardware().flipper.isDone());
         autoIntakeTask.addStep(() -> intake.getHardware().flipper.disable());
         //end lk
-        autoIntakeTask.addStep(() -> (intake.sampleDistance() < 1.5));
+        autoIntakeTask.addStep(() -> (intake.sampleDistance() <= intake.goodSampleDistance));
         autoIntakeTask.addStep(() -> (intake.identifySampleColor() > 0));
         autoIntakeTask.addStep(() -> {
             if (intake.isSampleGood(intake.lastSample)) {
