@@ -221,10 +221,12 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp -.05); // default straight up position
         getHardware().dropperServo.setPosition(.714);
         getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition +.05);
+        getHardware().rotationServo.setPosition(.5 +.05);
         parent.opMode.sleep(100);
         getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp);
         getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition);
         getHardware().dropperServo.setPosition(.716);
+        getHardware().rotationServo.setPosition(.5);
         parent.opMode.sleep(100);
         getHardware().dropperServo.stop();
     }
@@ -261,21 +263,20 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public void onRun(IntakeControl2 control) {
         if (modeName.equalsIgnoreCase("Teleop")) {
             spinIntakeWithPower(control.sweeperPower);
-        }
-        incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
-        incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
-        setBucketLiftPosition(control.bucketLiftPosition);
-        setSpecimenPositions(control.specimenServoPosition);
-        setRobotLiftPosition(control.robotliftPosition);
+            incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
+            incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
+            setBucketLiftPosition(control.bucketLiftPosition);
+            setSpecimenPositions(control.specimenServoPosition);
+            setRobotLiftPosition(control.robotliftPosition);
 
-        // Check intake height and adjust rotation servo
-        if (currentIntakeHeightPos >= 0.3) {
-            currentRotationPos = 0.5;
-            getHardware().rotationServo.setPosition(currentRotationPos);
-        } else {
-            incrementRotationServo(control.rotationServoDirection);
+            // Check intake height and adjust rotation servo
+            if (currentIntakeHeightPos >= 0.3) {
+                currentRotationPos = 0.5;
+                getHardware().rotationServo.setPosition(currentRotationPos);
+            } else {
+                incrementRotationServo(control.rotationServoDirection);
+            }
         }
-
         strafePower = control.strafePower;
         homingBucketZero.accept(getHardware().bucketLiftZeroSwitch.getState());
         currentBucketLiftPos = getHardware().bucketLiftMotor.getCurrentPosition();
