@@ -30,7 +30,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public boolean isBlueGood = false;
     public int lastSample = -1;
     public double lastSampleDistance = 10;
-    public final double goodSampleDistance = 1.5;
+//    public final double goodSampleDistance = 1.5;
     public boolean slideIsUnderControl = false;
     public boolean preventUserControl = false;
     protected Drive drive;
@@ -318,8 +318,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         return lastSampleDistance;
     }
     public boolean isSamplePresent (boolean pollSensor) {
-        if (!pollSensor) return lastSampleDistance <= goodSampleDistance;
-        return sampleDistance() <= goodSampleDistance;
+        if (!pollSensor) return lastSampleDistance <= getSettings().distSampleGood;
+        return sampleDistance() <= getSettings().distSampleGood;
     }
     public boolean isSamplePresent () {
         return isSamplePresent(true);

@@ -81,6 +81,10 @@ public class  IntakeSettings {
     public final int positionHangFinal           = 745; //todo: get number
     public final int toleranceHang               = 20;
 
+    public final double distSampleGood           = 1.5;
+    public final double distSampleUnload         = 3.0;  // todo: get good number
+    public final double distSampleEmpty          = 9.0;  // todo: verify it doesn't see tubing
+
 //    public static boolean slideOverride          = false;
 
     public IntakeSettings() { /*int minSlidePosition, int maxSlidePosition, int maxSlideSpeed, double tiltServoDownPosition,
