@@ -176,8 +176,10 @@ public class FlipBucketAuto2025 extends LinearOpMode{
 
         {
             // Deposit Pre-loaded Sample in High-basket
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_2, autoTasks);
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_3, autoTasks);
             autoTasks.addDelay(100);
             autoTasks.addStep(() -> intake.tasks.depositTask.restart());
@@ -202,9 +204,11 @@ public class FlipBucketAuto2025 extends LinearOpMode{
     private void grabAndDepositSample (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three) {
         // Grab Sample.
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_one, autoTasks);
 //        autoTasks.addDelay(100);
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
         autoTasks.addDelay(100);
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
@@ -214,9 +218,11 @@ public class FlipBucketAuto2025 extends LinearOpMode{
 
         // Deposit Sample in High-Basket.
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_one, autoTasks);
 //        autoTasks.addDelay(100);
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_three, autoTasks);
         autoTasks.addDelay(100);
         autoTasks.addStep(() -> intake.tasks.depositTask.restart());
@@ -227,8 +233,10 @@ public class FlipBucketAuto2025 extends LinearOpMode{
 
     private void parkForAutoAscent (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two) {
         // Grab Sample.
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_one, autoTasks);
         autoTasks.addDelay(200);
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
         autoTasks.addDelay(200);
         // Touch Level-1 bar.

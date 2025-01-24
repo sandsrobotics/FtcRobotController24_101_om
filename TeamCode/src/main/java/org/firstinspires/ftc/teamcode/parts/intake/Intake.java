@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveControl;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
@@ -35,6 +36,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public boolean preventUserControl = false;
     protected Drive drive;
     private double spinnerSliderPower = 0.0;
+    public boolean debugMode = false;
     // this is part of the resets lift to 0 each time it hits the limit switch
     private final EdgeConsumer homingVSlideZero = new EdgeConsumer();
     private final EdgeConsumer homingHSlideZero = new EdgeConsumer();
@@ -347,6 +349,12 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
     public boolean isSampleGood() {
         return isSampleGood(identifySampleColor());
+    }
+
+    public boolean debugDelay() {
+        if (!debugMode) return true;
+        return (parent.buttonMgr.getState(1, ButtonMgr.Buttons.x, ButtonMgr.State.wasTapped) ||
+                parent.buttonMgr.getState(1, ButtonMgr.Buttons.y, ButtonMgr.State.isPressed));
     }
 
 //    public void setParkServoUp() {

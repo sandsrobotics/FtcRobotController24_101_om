@@ -65,8 +65,10 @@ public class IntakeTasks {
         });
         autonomousSampleTask.addStep(() -> intake.getHardware().flipper.isDone());
         autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().autoSampleSlideDistance, 1));
-        autonomousSampleTask.addStep(intake::isSlideInTolerance); // todo: consider a timeout in case it jams against the field border at Sample3
-        autonomousSampleTask.addDelay(250); //500
+//        autonomousSampleTask.addStep(intake::isSlideInTolerance); // todo: consider a timeout in case it jams against the field border at Sample3
+        autonomousSampleTask.addTimedStep(() -> {}, () -> intake.isSamplePresent() || intake.isSlideInTolerance(), 1500);
+//        autonomousSampleTask.addDelay(250); //500
+        autonomousSampleTask.addTimedStep(() -> {}, intake::isSamplePresent, 250);
         autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideMin, 1));
 //        autonomousSampleTask.addStep(intake::isSlideInTolerance);
         // start new stuff - comment out if not working or worse and uncomment previous line
