@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.parts.positiontracker.hardware.PositionTra
 import org.firstinspires.ftc.teamcode.parts.positiontracker.pinpoint.Pinpoint;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.settings.PositionTrackerSettings;
 import java.text.DecimalFormat;
+import java.util.Objects;
 import java.util.function.Function;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Constants;
@@ -235,26 +236,32 @@ public class ClawAutoSpec extends LinearOpMode{
         autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.isDone());
     }
 
-    private void grabAndDepositSample (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three) {
+    private void grabAndDepositSample (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two) {
         // Grab Sample.
 //      positionSolver.addMoveToTaskEx(pos_one, autoTasks);
+        Vector3 thirdsample = new Vector3(-55.3, -24.58, 180);
 //        autoTasks.addDelay(200);
-        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
-        autoTasks.addDelay(200);
-        autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.restart());
-        autoTasks.addDelay(100);
-        autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.isDone());
-        autoTasks.addDelay(100);
+        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
+//        autoTasks.addDelay(200);
+        if (Objects.equals(pos_one, thirdsample)) {
+            autoTasks.addStep(() -> intake.tasks.autoSamplePickupTaskHack.restart());
+            autoTasks.addStep(() -> intake.tasks.autoSamplePickupTaskHack.isDone());
+        } else {
+            autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.restart());
+            autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.isDone());
+        }
+//        autoTasks.addDelay(100);
 
         // Deposit Sample in High-Basket.
-        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
-        autoTasks.addDelay(200);
-        positionSolver.addMoveToTaskEx(pos_three, autoTasks);
+//        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
+//        autoTasks.addDelay(200);
+        positionSolver.addMoveToTaskExNoWait(pos_two, autoTasks);
         autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
         autoTasks.addStep( () -> intake.tasks.autoBucketLiftTask.isDone());
+
         autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.restart());
         autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.isDone());
-        autoTasks.addDelay(100);
+//        autoTasks.addDelay(100);
     }
 
     private void BucketAuto(TimedTask autoTasks) {
@@ -262,8 +269,8 @@ public class ClawAutoSpec extends LinearOpMode{
         Vector3 beforespecimenhang = new Vector3(-10, -39, -90);
         Vector3 specimenhang = new Vector3(-10, -32.75, -90); //specimen must be lifted before hang
         Vector3 firstsample = new Vector3(-48.8, -38.5, 90);
-        Vector3 Highbasketscore = new Vector3(-53.2, -53.7, 43.3);
-        Vector3 secondsample = new Vector3(-58.8, -38.5, 90);
+        Vector3 Highbasketscore = new Vector3(-53.2, -53.7, 45);
+        Vector3 secondsample = new Vector3(-57.8, -38.5, 90);
         Vector3 Highbasketscore2 = new Vector3(-48.9, -40.9, 40);
         Vector3 thirdsample = new Vector3(-55.3, -24.58, 180);
         Vector3 Highbasketscore3 = new Vector3(-48.9, -40.9, 40);
@@ -276,11 +283,11 @@ public class ClawAutoSpec extends LinearOpMode{
         autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1)); // h-slide in
         // close specimen pincer
         autoTasks.addStep(() -> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
-        positionSolver.addMoveToTaskEx(beforespecimenhang, autoTasks);
+        positionSolver.addMoveToTaskExNoWait(beforespecimenhang, autoTasks);
         autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.restart()); // prepare for specimen hang
         autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.isDone());
         positionSolver.addMoveToTaskEx(specimenhang, autoTasks);
-        autoTasks.addDelay(200);
+//        autoTasks.addDelay(200);
         autoTasks.addStep( () -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
         autoTasks.addDelay(200);
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
@@ -288,13 +295,13 @@ public class ClawAutoSpec extends LinearOpMode{
 //        positionSolver.addMoveToTaskEx(firstsample, autoTasks);
 
         // First Sample.
-        grabAndDepositSample(autoTasks, firstsample, firstsample, Highbasketscore);
+        grabAndDepositSample(autoTasks, firstsample, Highbasketscore);
 
         // Second Sample.
-        grabAndDepositSample(autoTasks, secondsample, secondsample, Highbasketscore);
+        grabAndDepositSample(autoTasks, secondsample, Highbasketscore);
 
         // Third Sample.
-        grabAndDepositSample(autoTasks, thirdsample, thirdsample, Highbasketscore);
+        grabAndDepositSample(autoTasks, thirdsample, Highbasketscore);
 
 //        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
 //        autoTasks.addDelay(250);

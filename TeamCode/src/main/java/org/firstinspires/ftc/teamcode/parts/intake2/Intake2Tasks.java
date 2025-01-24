@@ -19,6 +19,7 @@ public class Intake2Tasks {
     public final TimedTask autoSamplePickupTask;
     public final TimedTask autoRotateServoSafe;
     public final TimedTask autoSpecimenSetTask;
+    public final TimedTask autoSamplePickupTaskHack;
 
     public Intake2Tasks(Intake2 intake, Robot robot) {
         this.intake = intake;
@@ -33,6 +34,7 @@ public class Intake2Tasks {
         autoIntakeDropTask = new TimedTask(TaskNames.autoIntakeDrop, movementTask);
         autoRotateServoSafe = new TimedTask(TaskNames.autoRotateServoSafe, movementTask);
         autoSpecimenSetTask = new TimedTask(TaskNames.autoSpecimenSet, movementTask);
+        autoSamplePickupTaskHack = new TimedTask(TaskNames.autoSamplePickupTaskHack, movementTask);
     }
 
     public void constructAllIntakeTasks() {
@@ -69,7 +71,7 @@ public class Intake2Tasks {
         autoBucketLiftTask.addStep(intake::isLiftInTolerance);
         autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.enable());
         autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin));
-        autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.isDone());
+//        autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.isDone());
 
     /* ***** autoBucketDropperTask ******/
         autoBucketDropperTask.autoStart = false;
@@ -78,7 +80,7 @@ public class Intake2Tasks {
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.enable());
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMax));
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.isDone());
-        autoBucketDropperTask.addDelay(500); // leave bucket high to dump sample
+//        autoBucketDropperTask.addDelay(500); // leave bucket high to dump sample
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin));
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.isDone());
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.stop());
@@ -131,8 +133,23 @@ public class Intake2Tasks {
         autoRotateServoSafe.autoStart = false;
         autoRotateServoSafe.addStep(()-> intake.getHardware().rotationServo.setPosition(intake.getSettings().intakeArmSafe));
         autoRotateServoSafe.addStep(()-> intake.getHardware().rotationServo.isDone());
-    }
 
+        /* ***** autoSamplePickupTaskHack ******/
+        autoSamplePickupTaskHack.autoStart = false;
+        autoSamplePickupTaskHack.addStep(()-> intake.getHardware().rotationServo.setPosition(0.821));
+        autoSamplePickupTask.addStep(() -> intake.getHardware().rotationServo.isDone());
+        autoSamplePickupTaskHack.addStep(()-> setIntakeWheels(1.0));
+        autoSamplePickupTaskHack.addStep(()->intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmAtSpecimen));
+        autoSamplePickupTaskHack.addStep(()-> intake.getHardware().tiltServo.isDone());
+        autoSamplePickupTaskHack.addDelay(200); // a bit of time to pickup sample //0.175
+        autoSamplePickupTaskHack.addStep(()-> intake.getHardware().rotationServo.setPosition(0.483));
+        autoSamplePickupTaskHack.addStep(()-> setIntakeWheels(0.5));
+        autoSamplePickupTaskHack.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
+        autoSamplePickupTaskHack.addStep(()-> intake.getHardware().tiltServo.isDone());
+        autoSamplePickupTaskHack.addStep(autoIntakeDropTask::restart);
+        autoSamplePickupTaskHack.addStep(autoIntakeDropTask::isDone);
+        autoSamplePickupTaskHack.addDelay(200);
+    }
     public void startAutoHome() {
         autoHomeTask.restart();
     }
@@ -150,6 +167,12 @@ public class Intake2Tasks {
     public void startAutoSpecimenSet() {autoSpecimenSetTask.restart();}
     public void startAutoSamplePickup() {
         autoSamplePickupTask.restart();
+    }
+    public void startAutoSamplePickupHack() {
+        autoSamplePickupTaskHack.restart();
+    }
+    public void startAutoRotateServoSafe() {
+        autoRotateServoSafe.restart();
     }
 
     private void setSlideToHomeConfig() {
@@ -177,6 +200,7 @@ public class Intake2Tasks {
         public final static String autoIntakeDrop = "drop block into bucket";
         public final static String autoRotateServoSafe = "rotate servo to safe speed";
         public final static String autoSamplePickupTask = "auto sample pickup";
+        public final static String autoSamplePickupTaskHack = "auto sample pickup hack";
         public final static String autoSpecimenSet = "auto specimen set";
     }
 
