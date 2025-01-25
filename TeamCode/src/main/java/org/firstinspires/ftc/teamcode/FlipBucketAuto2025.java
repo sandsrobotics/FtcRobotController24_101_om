@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
 import org.firstinspires.ftc.teamcode.lib.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
@@ -94,22 +95,27 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         robot.init();
 
         while (!isStarted()) {
-            if(new EdgeSupplier(() -> robot.opMode.gamepad1.right_bumper).isRisingEdge()) {
+            robot.buttonMgr.runLoop();
+            // example configuration capability during init
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.right_bumper, ButtonMgr.State.wasTapped)) {
                 startDelay += 1000;
             }
-            else if(new EdgeSupplier(() -> robot.opMode.gamepad1.left_bumper).isRisingEdge()) {
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.left_bumper, ButtonMgr.State.wasTapped)) {
                 startDelay -= 1000;
                 if(startDelay < 0) startDelay = 0;
-            } else if(new EdgeSupplier(() -> robot.opMode.gamepad1.a).isRisingEdge()) {
+            }
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.a, ButtonMgr.State.wasTapped)) {
                 parkPosition = 1;
-            } else if(new EdgeSupplier(() -> robot.opMode.gamepad1.b).isRisingEdge()) {
+            }
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.b, ButtonMgr.State.wasTapped)) {
                 parkPosition = 2;
-            } else if(new EdgeSupplier(() -> robot.opMode.gamepad1.x).isRisingEdge()) {
+            }
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.x, ButtonMgr.State.wasTapped)) {
                 parkPosition = 3;
-            } else if(new EdgeSupplier(() -> robot.opMode.gamepad1.y).isRisingEdge()) {
+            }
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.y, ButtonMgr.State.wasTapped)) {
                 parkPosition = 0;
             }
-
             if(startDelay > maxDelay) startDelay = maxDelay;
 
             telemetry.addData("PARK POSITION:", parkPosition == 0 ? "Normal mid wall" : parkPosition == 1 ? "Park MID" : parkPosition == 2 ? "Park CORNER" : "Park BOARD");
@@ -180,6 +186,7 @@ public class FlipBucketAuto2025 extends LinearOpMode{
             positionSolver.addMoveToTaskEx(p_2, autoTasks);
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
               autoTasks.addStep(() -> intake.debugDelay());
+              //autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftReady, 1));
             positionSolver.addMoveToTaskEx(p_3, autoTasks);
             autoTasks.addDelay(100);
             autoTasks.addStep(() -> intake.tasks.depositTask.restart());
@@ -205,6 +212,7 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         // Grab Sample.
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
           autoTasks.addStep(() -> intake.debugDelay());
+          //autoTasks.addStep(() -> intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor));  //flipperSafe?
         positionSolver.addMoveToTaskEx(pos_one, autoTasks);
 //        autoTasks.addDelay(100);
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
@@ -220,6 +228,8 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
           autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_one, autoTasks);
+          //autoTasks.addStep(() -> intake.tasks.transferTask.isDone());
+          //autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftReady, 1));
 //        autoTasks.addDelay(100);
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
           autoTasks.addStep(() -> intake.debugDelay());
@@ -234,12 +244,13 @@ public class FlipBucketAuto2025 extends LinearOpMode{
     private void parkForAutoAscent (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two) {
         // Grab Sample.
           autoTasks.addStep(() -> intake.debugDelay());
+          //autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(pos_one, autoTasks);
+        autoTasks.addStep(() -> intake.getHardware().park.setPosition(intake.getSettings().parkUp));  // lk moved up
         autoTasks.addDelay(200);
           autoTasks.addStep(() -> intake.debugDelay());
+          //autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
         autoTasks.addDelay(200);
-        // Touch Level-1 bar.
-        autoTasks.addStep(() -> intake.getHardware().park.setPosition(intake.getSettings().parkUp));
     }
 }

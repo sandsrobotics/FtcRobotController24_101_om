@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
 import org.firstinspires.ftc.teamcode.lib.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
@@ -94,22 +95,27 @@ public class FlipAuto2025 extends LinearOpMode{
         robot.init();
 
         while (!isStarted()) {
-            if(new EdgeSupplier(()-> robot.opMode.gamepad1.right_bumper).isRisingEdge()) {
+            robot.buttonMgr.runLoop();
+            // example configuration capability during init
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.right_bumper, ButtonMgr.State.wasTapped)) {
                 startDelay += 1000;
             }
-            else if(new EdgeSupplier(()->robot.opMode.gamepad1.left_bumper).isRisingEdge()) {
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.left_bumper, ButtonMgr.State.wasTapped)) {
                 startDelay -= 1000;
                 if(startDelay < 0) startDelay = 0;
-            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.a).isRisingEdge()) {
+            }
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.a, ButtonMgr.State.wasTapped)) {
                 parkPosition = 1;
-            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.b).isRisingEdge()) {
+            }
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.b, ButtonMgr.State.wasTapped)) {
                 parkPosition = 2;
-            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.x).isRisingEdge()) {
+            }
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.x, ButtonMgr.State.wasTapped)) {
                 parkPosition = 3;
-            } else if(new EdgeSupplier(()->robot.opMode.gamepad1.y).isRisingEdge()) {
+            }
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.y, ButtonMgr.State.wasTapped)) {
                 parkPosition = 0;
             }
-
             if(startDelay > maxDelay) startDelay = maxDelay;
 
             telemetry.addData("PARK POSITION:", parkPosition == 0 ? "Normal mid wall" : parkPosition == 1 ? "Park MID" : parkPosition == 2 ? "Park CORNER" : "Park BOARD");
@@ -189,74 +195,111 @@ public class FlipAuto2025 extends LinearOpMode{
         autoTasks.addStep(() -> odo.setPosition(humansidestart));
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
         // close pincer on initial specimen
-        autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
+        //autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());  // lk this raises the lift a little too, not needed here
+        autoTasks.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed));
+        autoTasks.addStep(() -> intake.getHardware().pinch.isDone());
+          autoTasks.addStep(() -> intake.debugDelay());
+          //autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangReady, 1));
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         // raise for specimen hang
+          autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
         autoTasks.addDelay(200);
         positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
         autoTasks.addDelay(200);
         // clip specimen on bar
+          autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
         autoTasks.addDelay(200);
+          autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         autoTasks.addDelay(200);
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(rightbeforesample, autoTasks);
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(atfirstsample, autoTasks);
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(observationzone1, autoTasks);
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(observationzoneprepickup, autoTasks);
         {
             // Second Specimen Hang
+              autoTasks.addStep(() -> intake.debugDelay());
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
             positionSolver.addMoveToTaskEx(observationzonepickup, autoTasks);
             autoTasks.addDelay(200);
             // close pincer on initial specimen
-            autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
+              autoTasks.addStep(() -> intake.debugDelay());
+            autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());  // should wait for this complete, or figure exact delay
             autoTasks.addDelay(250);
+              autoTasks.addStep(() -> intake.debugDelay());
+              //autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangReady, 1));  // maybe too wobbly?
             positionSolver.addMoveToTaskEx(midwayspecimen2hang, autoTasks);
             autoTasks.addDelay(250);
+              autoTasks.addStep(() -> intake.debugDelay());
+              //autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangReady, 1));  // here might work better?
             positionSolver.addMoveToTaskEx(rightbeforespecimenbar2, autoTasks);
+              autoTasks.addStep(() -> intake.debugDelay());
             autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
             autoTasks.addDelay(200);
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(specimenbar2, autoTasks);
             autoTasks.addDelay(200);
-            autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
+              autoTasks.addStep(() -> intake.debugDelay());
+            autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart()); // should wait for this complete, or figure exact delay
             autoTasks.addDelay(200);
+              autoTasks.addStep(() -> intake.debugDelay());
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
             positionSolver.addMoveToTaskEx(rightbeforespecimenbar2, autoTasks);
         }
         {
             //Moving Third Sample.
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(afterfirstredbar2, autoTasks);
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(beforesecondsample, autoTasks);
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(atsecondsample, autoTasks);
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(observationzone2, autoTasks);
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(observationzoneprepickup2, autoTasks);
             autoTasks.addDelay(200);
 
 
             // Third Specimen Hang.
+              autoTasks.addStep(() -> intake.debugDelay());
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
             positionSolver.addMoveToTaskEx(observationzonepickup, autoTasks);
             autoTasks.addDelay(200);
-            autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
+              autoTasks.addStep(() -> intake.debugDelay());
+            autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());  // should wait for this complete, or figure exact delay
             autoTasks.addDelay(250);
+              autoTasks.addStep(() -> intake.debugDelay());
+              //autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangReady, 1));  // maybe too wobbly?
             positionSolver.addMoveToTaskEx(midwayspecimen3hang, autoTasks);
             autoTasks.addDelay(250);
+              autoTasks.addStep(() -> intake.debugDelay());
+              //autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangReady, 1));  // here might work better?
             positionSolver.addMoveToTaskEx(rightbeforespecimenbar3, autoTasks);
             autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
             autoTasks.addDelay(200);
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(specimenbar3, autoTasks);
             autoTasks.addDelay(200);
-            autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
+              autoTasks.addStep(() -> intake.debugDelay());
+            autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart()); // should wait for this complete, or figure exact delay
             autoTasks.addDelay(200);
+              autoTasks.addStep(() -> intake.debugDelay());
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
             positionSolver.addMoveToTaskEx(rightbeforespecimenbar3, autoTasks);
         }
         {
             // Park.
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(parkingposition, autoTasks);
         }
 }
@@ -297,15 +340,21 @@ public class FlipAuto2025 extends LinearOpMode{
 
         {
             // Pre-Loaded Specimen.
+              autoTasks.addStep(() -> intake.debugDelay());
             autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_2, autoTasks);
+              autoTasks.addStep(() -> intake.debugDelay());
             autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
             autoTasks.addDelay(100);
+              autoTasks.addStep(() -> intake.debugDelay());
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
             positionSolver.addMoveToTaskEx(p_3, autoTasks);
             autoTasks.addDelay(200);
+              autoTasks.addStep(() -> intake.debugDelay());
             autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
             autoTasks.addDelay(200);
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_2, autoTasks);
             autoTasks.addDelay(100);
         }
@@ -315,19 +364,29 @@ public class FlipAuto2025 extends LinearOpMode{
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
 
             // First Sample to ObservationZone.
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_4, autoTasks);
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_5, autoTasks);
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_6, autoTasks);
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_7, autoTasks);
 
             // Second Sample to ObservationZone.
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_pre_8, autoTasks);
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_8, autoTasks);
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_9, autoTasks);
 
             // Third Sample to ObservationZone.
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_pre_10, autoTasks);
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_10, autoTasks);
+              autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_11, autoTasks);
         }
 
@@ -345,6 +404,7 @@ public class FlipAuto2025 extends LinearOpMode{
 
         {
             // Park.
+              autoTasks.addStep(() -> intake.debugDelay());
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
             positionSolver.addMoveToTaskEx(p_00, autoTasks);
         }
@@ -355,19 +415,29 @@ public class FlipAuto2025 extends LinearOpMode{
         // Specimen Pickup and Hang.
 //        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
 //        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
+          autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_three, autoTasks);
+          autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
         autoTasks.addDelay(250);
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_four, autoTasks);
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(prePosition, autoTasks);
+          autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
         autoTasks.addDelay(200);
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(position, autoTasks);
         autoTasks.addDelay(200);
+          autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
         autoTasks.addDelay(200);
+          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(prePosition, autoTasks);
     }
  }
