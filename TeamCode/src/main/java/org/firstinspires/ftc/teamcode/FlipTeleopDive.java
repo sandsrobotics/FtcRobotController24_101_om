@@ -105,6 +105,7 @@ public class FlipTeleopDive extends LinearOpMode {
             telemetry.addData("Slide Position", intake.getSlidePosition());
             telemetry.addData("Lift Position", intake.getLiftPosition());
             telemetry.addData("time", System.currentTimeMillis() - start);
+//            telemetry.addData("Rear Distance (inches)", intake.readRearDistance());  // this costs loop time, so remove when done
             dashboard.sendTelemetryPacket(packet);
             telemetry.update();
         }

@@ -30,7 +30,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     private int currentSlidePos;
     private int currentBucketPos;
     public int lastSample = -1;
-    public double lastSampleDistance = 10;
+    public double lastSampleDistance = 10;  // in cm
+    public double lastRearDistance = 323;  // in inches
     private double spinnerSliderPower = 0.0;    // what is this?
 
     public boolean isRedGood = true;
@@ -184,13 +185,13 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         setSlidePower(power);
     }
 
-    public double sampleDistance() {
+    public double readSampleDistance() {
         lastSampleDistance = ((DistanceSensor) getHardware().colorSensor).getDistance(DistanceUnit.CM);
         return lastSampleDistance;
     }
     public boolean isSamplePresent (boolean pollSensor) {
         if (!pollSensor) return lastSampleDistance <= getSettings().distSampleGood;
-        return sampleDistance() <= getSettings().distSampleGood;
+        return readSampleDistance() <= getSettings().distSampleGood;
     }
     public boolean isSamplePresent () {
         return isSamplePresent(true);
@@ -198,6 +199,11 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public boolean wasSamplePresent () {  // don't use this unless you've read the sensor very recently
         return isSamplePresent(false);
     }
+//
+//    public double readRearDistance() {
+//        lastRearDistance = getHardware().distanceSensor.getDistance(DistanceUnit.INCH);
+//        return lastRearDistance;
+//    }
 
     public int identifySampleColor() {
         float[] hsvValues = new float[3];

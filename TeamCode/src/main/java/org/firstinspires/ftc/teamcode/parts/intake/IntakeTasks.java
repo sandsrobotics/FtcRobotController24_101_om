@@ -187,7 +187,7 @@ public class IntakeTasks {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOut);
         });
 //        transferTask.addDelay(500); // 1500  //todo: Are you SURE this is a good idea?
-        transferTask.addTimedStep(() -> {}, () -> intake.sampleDistance() >= intake.getSettings().distSampleEmpty, 1000);
+        transferTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleEmpty, 1000);
         transferTask.addDelay(500);  // a bit of time to truly finish; test and change as necessary
         transferTask.addStep(() -> {
             intake.getHardware().flipper.disable();
@@ -229,7 +229,7 @@ public class IntakeTasks {
         autoIntakeTask.addStep(() -> intake.getHardware().flipper.isDone());
         autoIntakeTask.addStep(() -> intake.getHardware().flipper.disable());
         //end lk
-        autoIntakeTask.addStep(() -> (intake.sampleDistance() <= intake.getSettings().distSampleGood));
+        autoIntakeTask.addStep(() -> (intake.readSampleDistance() <= intake.getSettings().distSampleGood));
         autoIntakeTask.addStep(() -> (intake.identifySampleColor() > 0));
         autoIntakeTask.addStep(() -> {
             if (intake.isSampleGood(intake.lastSample)) {
@@ -252,7 +252,7 @@ public class IntakeTasks {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerSlowOut);
         });
         //prepareToTransferTask.addDelay(350);
-        prepareToTransferTask.addTimedStep(() -> {}, () -> intake.sampleDistance() >= intake.getSettings().distSampleUnload, 350);
+        prepareToTransferTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleUnload, 350);
         prepareToTransferTask.addStep(() -> {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
             transferTask.restart();
