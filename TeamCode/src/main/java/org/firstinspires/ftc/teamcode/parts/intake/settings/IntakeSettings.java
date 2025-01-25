@@ -28,12 +28,12 @@ public class  IntakeSettings {
     public final double spinnerSlowOut           = 0.35;  //todo: finalize number
     public final int spinnerSweepTime            = 100;  //probably not relevant
 
-    public final double flipperFloor            = 0.859;
-    public final double flipperAlmostFloor      = 0.844;
-    public final double flipperSafe             = 0.698;
-    public final double flipperVertical         = 0.527;
-    public final double flipperBalanced         = 0.468;
-    public final double flipperParked           = 0.275;
+    public final double flipperFloor            = 0.839;  // 0.859
+    public final double flipperAlmostFloor      = 0.824; // 0.844
+    public final double flipperSafe             = 0.678; // 0.698
+    public final double flipperVertical         = 0.507; // 0.527
+    public final double flipperBalanced         = 0.448; // 0.468
+    public final double flipperParked           = 0.255; // 0.275
     public final int flipperSweepTime           = 1500;   // spec is 1250
     public final double flipperOffset           = 0.0;
 
@@ -83,7 +83,7 @@ public class  IntakeSettings {
 
     public final double distSampleGood           = 1.5;
     public final double distSampleUnload         = 3.0;  // todo: get good number
-    public final double distSampleEmpty          = 9.0;  // todo: verify it doesn't see tubing
+    public final double distSampleEmpty          = 5.5;  // todo: verify it doesn't see tubing
 
 //    public static boolean slideOverride          = false;
 
