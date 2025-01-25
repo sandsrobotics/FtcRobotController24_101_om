@@ -71,7 +71,7 @@ public class Intake2Tasks {
         autoBucketLiftTask.addStep(intake::isLiftInTolerance);
         autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.enable());
         autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin));
-//        autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.isDone());
+//        autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.isDone()); //if greater than 500 set servo straight
 
     /* ***** autoBucketDropperTask ******/
         autoBucketDropperTask.autoStart = false;
@@ -110,7 +110,7 @@ public class Intake2Tasks {
         autoIntakeDropTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmAtBucket));
         autoIntakeDropTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         autoIntakeDropTask.addStep(()-> setIntakeWheels(0.0));
-        autoIntakeDropTask.addDelay(500);  // transfer sample to bucket
+        autoIntakeDropTask.addDelay(100);  // transfer sample to bucket
         autoIntakeDropTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoIntakeDropTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         autoIntakeDropTask.addStep(()-> setIntakeWheels(0.5));
@@ -118,16 +118,20 @@ public class Intake2Tasks {
 
     /* ***** autoSamplePickupTask ******/
         autoSamplePickupTask.autoStart = false;
-        autoSamplePickupTask.addStep(()-> setIntakeWheels(1.0));
+        autoSamplePickupTask.addStep(()-> setIntakeWheels(1.0)); //forward
         autoSamplePickupTask.addStep(()->intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmAtSpecimen));
         autoSamplePickupTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         autoSamplePickupTask.addDelay(200); // a bit of time to pickup sample
+//        autoSamplePickupTask.addStep(() -> intake.drive.moveRobot(intake.pt.getCurrentPosition().addZ(0.5)));
+//        autoSamplePickupTask.addDelay(100);
+//        autoSamplePickupTask.addStep(() -> intake.drive.moveRobot(intake.pt.getCurrentPosition().addZ(-0.5)));
+//        autoSamplePickupTask.addDelay(100);
         autoSamplePickupTask.addStep(()-> setIntakeWheels(0.5));
         autoSamplePickupTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoSamplePickupTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         autoSamplePickupTask.addStep(autoIntakeDropTask::restart);
         autoSamplePickupTask.addStep(autoIntakeDropTask::isDone);
-        autoSamplePickupTask.addDelay(200); // to make sure intake arm is clear.
+//        autoSamplePickupTask.addDelay(100);
 
         /* ***** autoRotateServoSafe ******/
         autoRotateServoSafe.autoStart = false;
@@ -137,7 +141,7 @@ public class Intake2Tasks {
         /* ***** autoSamplePickupTaskHack ******/
         autoSamplePickupTaskHack.autoStart = false;
         autoSamplePickupTaskHack.addStep(()-> intake.getHardware().rotationServo.setPosition(0.821));
-        autoSamplePickupTask.addStep(() -> intake.getHardware().rotationServo.isDone());
+        autoSamplePickupTaskHack.addStep(() -> intake.getHardware().rotationServo.isDone());
         autoSamplePickupTaskHack.addStep(()-> setIntakeWheels(1.0));
         autoSamplePickupTaskHack.addStep(()->intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmAtSpecimen));
         autoSamplePickupTaskHack.addStep(()-> intake.getHardware().tiltServo.isDone());
