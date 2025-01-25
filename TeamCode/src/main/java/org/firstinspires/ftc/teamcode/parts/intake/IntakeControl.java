@@ -5,7 +5,6 @@ public class IntakeControl {
     public int sweepLiftPosition;
     public int sweepSlidePosition;
     public int bucketLiftPosition;
-   // public int intakePosition;
     public int pinchPosition;
     public int v_SlidePosition;
     public int intakeAngleSupplier;
@@ -19,7 +18,6 @@ public class IntakeControl {
         this.sweepLiftPosition = sweeperLiftPosition;
         this.sweepSlidePosition = sweepSlidePosition;
         this.bucketLiftPosition = bucketLiftPosition;
-      //  this.intakePosition = intakePosition;
         this.pinchPosition = pinchPosition;
         this.v_SlidePosition = v_SlidePosition;
         this.intakeAngleSupplier = intakeAngleSupplier;

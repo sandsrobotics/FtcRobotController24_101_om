@@ -45,14 +45,6 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
     public void onStart() {
         parent.setBaseController(() -> new IntakeControl(
                 0,0,0,0,0,0,0
-//                (int) settings.sweepSpeedSupplier.get(),
-//                (int) settings.sweepLiftSupplier.get(),
-//                (int) settings.sweepSlideSupplier.get(),
-//                (int) settings.bucketLiftSupplier.get(),
-//                //           (int) settings.intakeSupplier.get(),
-//                (int) settings.pinchSupplier.get(),
-//                (int) settings.v_SlideSupplier.get(),
-//                (int) settings.intakeAngleSupplier.get()
         ), true);
     }
 
@@ -135,7 +127,7 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
             // this is for inspection to show the maximum extent of the robot
             if (buttonMgr.getState(2, Buttons.dpad_left, State.wasDoubleTapped)) {
                 parent.stopAllIntakeTasks();
-                parent.getHardware().park.setPosition(parent.getSettings().parkUp);
+//                parent.getHardware().park.setPosition(parent.getSettings().parkUp);
                 parent.getHardware().chute.setPosition(parent.getSettings().chuteDeposit);
                 parent.setSlidePosition(parent.getSettings().positionSlideMax, 0.25);
             }
