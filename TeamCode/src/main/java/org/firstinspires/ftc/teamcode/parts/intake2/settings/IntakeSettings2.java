@@ -30,6 +30,8 @@ public class IntakeSettings2 {
     public final int specimenSafeHeight;
     public final int specimenHangPosition;
     public final int specimenServoOpenHeight;
+    public final double parkServoPosition;
+    public final double parkServoPositionParked;
 
 
     public IntakeSettings2(int minSlidePosition, int maxSlidePosition, int maxSlideSpeed, double tiltServoDownPosition,
@@ -39,7 +41,7 @@ public class IntakeSettings2 {
                            double intakeArmAtSpecimen, double intakeArmAtBucket, double intakeArmStraightUp, double intakeArmSafe,
                            double rotationServoMin, double rotationServoMax, double rotationServoStep, double dropperServoMax, double dropperServoMin,
                            double specimenServoOpenPosition, double specimenServoClosePosition, int specimenSafeHeight,
-                           int specimenHangPosition, int specimenServoOpenHeight) {
+                           int specimenHangPosition, int specimenServoOpenHeight, double parkServoPosition, double parkServoPositionParked) {
         this.minSlidePosition = minSlidePosition;
         this.maxSlidePosition = maxSlidePosition;
         this.maxSlideSpeed = maxSlideSpeed;
@@ -69,6 +71,8 @@ public class IntakeSettings2 {
         this.specimenSafeHeight = specimenSafeHeight;
         this.specimenHangPosition = specimenHangPosition;
         this.specimenServoOpenHeight = specimenServoOpenHeight;
+        this.parkServoPosition = parkServoPosition;
+        this.parkServoPositionParked = parkServoPositionParked;
     }
 
     public static IntakeSettings2 makeDefault() {
@@ -101,7 +105,10 @@ public class IntakeSettings2 {
                 0.68,
                 461,
                 1392,
-                920
+                920,
+                0.9,
+                0.247
+
         );
     }
 }

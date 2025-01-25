@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.parts.intake2.hardware;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -29,12 +30,14 @@ public class IntakeHardware2 {
     public final DigitalChannel bucketLiftZeroSwitch;
     public final ServoSSR dropperServo;
     public final ServoSSR specimenServo;
-    //public final Rev2mDistanceSensor specDistance;
+    public final ServoSSR parkServo;
+    public final Rev2mDistanceSensor rangeSensor;
+    public final RevColorSensorV3 specColorSensor;
 
     public IntakeHardware2(DcMotorEx bucketLiftMotor, DcMotorEx robotLiftMotor, Servo sliderServoLeft,
                            Servo sliderServoRight, ServoSSR tiltServo, ServoSSR rotationServo,
                            Servo intakeWheelServoLeft, Servo intakeWheelServoRight, DigitalChannel liftZeroSwitch,
-                           DigitalChannel bucketLiftZeroSwitch, ServoSSR dropperServo, ServoSSR specimenServo){
+                           DigitalChannel bucketLiftZeroSwitch, ServoSSR dropperServo, ServoSSR specimenServo, ServoSSR parkServo, Rev2mDistanceSensor rangeSensor, RevColorSensorV3 specColorSensor){
                            //Rev2mDistanceSensor specDistance) {
         this.bucketLiftMotor = bucketLiftMotor;
         this.robotLiftMotor = robotLiftMotor;
@@ -48,6 +51,9 @@ public class IntakeHardware2 {
         this.bucketLiftZeroSwitch = bucketLiftZeroSwitch;
         this.dropperServo = dropperServo;
         this.specimenServo = specimenServo;
+        this.parkServo = parkServo;
+        this.rangeSensor = rangeSensor;
+        this.specColorSensor = specColorSensor;
         //this.specDistance = specDistance;
     }
 
@@ -64,6 +70,10 @@ public class IntakeHardware2 {
 
         ServoSettings intakeWheelServoLeftSettings = new ServoSettings(ServoSettings.Number.THREE_B, Servo.Direction.FORWARD);
         ServoSettings intakeWheelServoRightSettings = new ServoSettings(ServoSettings.Number.ONE_B, Servo.Direction.REVERSE);
+
+        Rev2mDistanceSensor rangeSensor = hardwareMap.get(Rev2mDistanceSensor.class, "range_sensor");
+        RevColorSensorV3 specColorSensor = hardwareMap.get(RevColorSensorV3.class, "color_sensor");
+
         DigitalChannel bucketLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital1");
         bucketLiftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
         DigitalChannel robotLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital0");
@@ -82,7 +92,10 @@ public class IntakeHardware2 {
                 bucketLiftZeroSwitch,
                 robotLiftZeroSwitch,
                 dropperServoSettings.makeServoSSR(hardwareMap),
-                specimenServoSettings.makeServoSSR(hardwareMap)
+                specimenServoSettings.makeServoSSR(hardwareMap),
+                parkServoSettings.makeServoSSR(hardwareMap),
+                rangeSensor,
+                specColorSensor
                 //specDistance
         );
     }

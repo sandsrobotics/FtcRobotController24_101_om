@@ -133,9 +133,8 @@ public class ClawAutoSpec extends LinearOpMode{
         if (bucketSide)
             BucketAuto(autoTasks);
         else {
-//            SpecAuto(autoTasks);
-//          SpecAuto_old(autoTasks);
-            testAuto2(autoTasks);
+            SpecAuto(autoTasks);
+//            testAuto2(autoTasks);
         }
 
         while (opModeIsActive()) {
@@ -149,79 +148,6 @@ public class ClawAutoSpec extends LinearOpMode{
             telemetry.update();
         }
         robot.stop();
-    }
-
-    private void SpecAuto_old(TimedTask autoTasks) {
-        Vector3 humansidestart = new Vector3(14 + 3.0 / 8.0, -62, -90);
-        Vector3 rightbeforespecimenbar = new Vector3(11.75, -39.75, -90);
-        Vector3 specimenbar = new Vector3(11.75, -32.75, -90);
-        Vector3 afterfirstredbar = new Vector3(36, -42, -90);
-        Vector3 rightbeforesample = new Vector3(36, -11.75, -90);
-        Vector3 atfirstsample = new Vector3(44.5, -11.75, 180);
-        Vector3 observationzone1 = new Vector3(44.5, -52.5, 180);
-        Vector3 beforesecondsample = new Vector3(44.5, -11.75, 180);
-        Vector3 atsecondsample = new Vector3(54.5, -11.75, 180);
-        Vector3 observationzone2 = new Vector3(54.5, -52.5, 180);
-        Vector3 beforethirdsample = new Vector3(44.5, -11.75, 180);
-        Vector3 atthirdsample = new Vector3(61, -11.75, 180);
-        Vector3 observationzone3 = new Vector3(61, -52.5, 180);
-        Vector3 beforespecimen2 = new Vector3(46, -53, 180);
-        Vector3 rotationbeforespecimen2 = new Vector3(46, -52.5, 90);
-        Vector3 atspecimen2 = new Vector3(46, -62, 90);
-        Vector3 midwayspecimen2hang = new Vector3(23.5, -47, 0);
-        Vector3 specimen2hang = new Vector3(8.75, -32.75, -90);
-        Vector3 backmidwayspecimen2spot = new Vector3(23.5, -47, 0);
-        Vector3 atspecimen3 = new Vector3(46, -61.5, 90);
-        Vector3 midwayspecimen3hang = new Vector3(23.5, -47, 0);
-        Vector3 specimen3hang = new Vector3(5.75, -32.75, -90);
-        Vector3 parkingposition = new Vector3(54, -54, 0);
-        //Vector3 parkingposidtion = new Vector3(54, -54, 0);
-
-        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
-        autoTasks.addStep(() -> odo.setPosition(humansidestart));
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.superSlowSettings));
-        autoTasks.addStep(() -> intake.tasks.setMotorsToRunConfig());
-        autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1)); // h-slide in
-        // close specimen pincer
-        autoTasks.addStep(() -> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
-        positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
-        autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.restart()); // prepare for specimen hang
-        autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.isDone());
-        autoTasks.addDelay(500);
-        positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
-        autoTasks.addDelay(200);
-        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
-        autoTasks.addDelay(200);
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-        positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
-        positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
-        positionSolver.addMoveToTaskEx(rightbeforesample, autoTasks);
-        positionSolver.addMoveToTaskEx(atfirstsample, autoTasks);
-        positionSolver.addMoveToTaskEx(observationzone1, autoTasks);
-        positionSolver.addMoveToTaskEx(beforesecondsample, autoTasks);
-        positionSolver.addMoveToTaskEx(atsecondsample, autoTasks);
-        positionSolver.addMoveToTaskEx(observationzone2, autoTasks);
-        positionSolver.addMoveToTaskEx(beforethirdsample, autoTasks);
-        positionSolver.addMoveToTaskEx(atthirdsample, autoTasks);
-        positionSolver.addMoveToTaskEx(observationzone3, autoTasks);
-        positionSolver.addMoveToTaskEx(beforespecimen2, autoTasks);
-        positionSolver.addMoveToTaskEx(rotationbeforespecimen2, autoTasks);
-        positionSolver.addMoveToTaskEx(atspecimen2, autoTasks);
-        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenPickup()); // grab specimen
-        autoTasks.addDelay(1000);
-        positionSolver.addMoveToTaskEx(midwayspecimen2hang, autoTasks);
-        autoTasks.addStep(() -> intake.setSpecimenPositions(2)); //
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
-        positionSolver.addMoveToTaskEx(specimen2hang, autoTasks);
-        autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
-        positionSolver.addMoveToTaskEx(backmidwayspecimen2spot, autoTasks);
-        positionSolver.addMoveToTaskEx(atspecimen3, autoTasks);
-//        autoTasks.addDelay(2000);
-//        positionSolver.addMoveToTaskEx(midwayspecimen3hang, autoTasks);
-//        positionSolver.addMoveToTaskEx(specimen3hang, autoTasks);
-//        autoTasks.addDelay(2000);
-//        positionSolver.addMoveToTaskEx(parkingposition, autoTasks);
-        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
     }
 
     private void testAuto2(TimedTask autoTasks) {
@@ -294,25 +220,33 @@ public class ClawAutoSpec extends LinearOpMode{
         autoTasks.addStep( () -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
         autoTasks.addDelay(200);
         //Todo: try PositionSolverSettings tighter than looseSettings will slow but may pickup more often
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
         positionSolver.addMoveToTaskEx(beforespecimenhang, autoTasks);
+
         // First Sample.
         grabAndDepositSample(autoTasks, firstsample, Highbasketscore);
         // Second Sample.
         grabAndDepositSample(autoTasks, secondsample, Highbasketscore);
         // Third Sample.
         grabAndDepositSample(autoTasks, thirdsample, Highbasketscore);
+
         positionSolver.addMoveToTaskEx(park, autoTasks);
         positionSolver.addMoveToTaskEx(park2, autoTasks);
+
+        intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked);
         //Todo: add park stick task to touch submersible
     }
 
     private void SpecAuto(TimedTask autoTasks) {
         Vector3 humansidestart = new Vector3(14 + 3.0/8.0, -62, -90);
-        Vector3 rightbeforespecimenbar = new Vector3(11.75, -37.75, -90);
-        Vector3 rightbeforespecimenbar2 = new Vector3(8.75, -37.75, -90);
 
-        Vector3 rightbeforespecimenbar3 = new Vector3(5.75, -37.75, -90);
+//        Vector3 rightbeforespecimenbar = new Vector3(11.75, -37.75, -90);
+        Vector3 rightbeforespecimenbar = new Vector3(11.75, -39, -90);
+//        Vector3 rightbeforespecimenbar2 = new Vector3(8.75, -37.75, -90);
+        Vector3 rightbeforespecimenbar2 = new Vector3(8.75, -39, -90);
+//        Vector3 rightbeforespecimenbar3 = new Vector3(5.75, -37.75, -90);
+        Vector3 rightbeforespecimenbar3 = new Vector3(5.75, -39, -90);
+
         Vector3 specimenbar = new Vector3(11.75, -32.75, -90);
         Vector3 specimenbar2 = new Vector3(8.75, -32.75, -90);
         Vector3 specimenbar3 = new Vector3(5.75, -32.75, -90);
@@ -351,7 +285,8 @@ public class ClawAutoSpec extends LinearOpMode{
         autoTasks.addStep(() -> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         // raise for specimen hang
-        autoTasks.addStep(() -> intake.setSpecimenPositions(2)); // prepare for specimen hang
+        autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.restart()); // prepare for specimen hang
+        autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.isDone()); // prepare for specimen hang
         autoTasks.addDelay(200);
         positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
         autoTasks.addDelay(200);
