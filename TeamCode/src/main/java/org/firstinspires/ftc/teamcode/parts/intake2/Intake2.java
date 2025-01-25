@@ -30,12 +30,13 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public Intake2Tasks tasks;
     protected PositionTracker pt;
     boolean startSpecRange = false;
-    private final String modeName;
+    public boolean isTeleop;
 
     //***** Constructors *****
     public Intake2(Robot parent, String modeName) {
         super(parent, "Slider", () -> new IntakeControl2(0.5, 0, 0, 0, 0, 0, 0, 0, 0));
-        this.modeName = modeName;
+        this.isTeleop = modeName.equalsIgnoreCase("Teleop");
+
         setConfig(
                 IntakeSettings2.makeDefault(),
                 IntakeHardware2.makeDefault(parent.opMode.hardwareMap)
@@ -261,7 +262,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     @Override
     public void onRun(IntakeControl2 control) {
-        if (modeName.equalsIgnoreCase("Teleop")) {
+        if (isTeleop) {
             spinIntakeWithPower(control.sweeperPower);
             incrementIntakeUpDown(control.sweepLiftPosition); // intake angle incremental angle
             incrementHorizontalSlide(control.sweepSlidePosition); // intake slide in/out all the way
