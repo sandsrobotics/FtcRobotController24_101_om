@@ -39,6 +39,9 @@ public class ClawAutoSpec extends LinearOpMode{
     PositionSolver positionSolver;
     PositionTracker pt;
     Vector3 startPosition;
+    Vector3 firstsample;
+    Vector3 secondsample;
+    Vector3 thirdsample;
     Pinpoint odo;
     Intake2 intake;
     //  DASHBOARD VARIABLES (static public)
@@ -130,9 +133,9 @@ public class ClawAutoSpec extends LinearOpMode{
         if (bucketSide)
             BucketAuto(autoTasks);
         else {
-            SpecAuto(autoTasks);
+//            SpecAuto(autoTasks);
 //          SpecAuto_old(autoTasks);
-//            testAuto2(autoTasks);
+            testAuto2(autoTasks);
         }
 
         while (opModeIsActive()) {
@@ -226,23 +229,26 @@ public class ClawAutoSpec extends LinearOpMode{
         Vector3 afterfirstredbar = new Vector3(36, -40, -90);
         Vector3 specimenpickup = new Vector3(45, -60.5, 90);
 
-        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultNoAlwaysRunSettings));
+//        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
+//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultNoAlwaysRunSettings));
         autoTasks.addStep(()-> intake.tasks.autoSamplePickupTask.restart());
         autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.isDone());
-        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
-        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.isDone());
-        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.restart());
-        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.isDone());
+//        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
+//        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.isDone());
+//        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.restart());
+//        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.isDone());
     }
 
     private void grabAndDepositSample (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two) {
-        // Grab Sample.
-//      positionSolver.addMoveToTaskEx(pos_one, autoTasks);
-        Vector3 thirdsample = new Vector3(-55.3, -24.58, 180);
-//        autoTasks.addDelay(200);
-        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
-//        autoTasks.addDelay(200);
+        if(Objects.equals(pos_one,firstsample)) {
+            positionSolver.addMoveToTaskEx(pos_one, autoTasks);
+        } else {
+            positionSolver.addMoveToTaskExNoWait(pos_one, autoTasks);
+        }
+        autoTasks.addStep(()-> intake.getHardware().dropperServo.stop());
+        autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().minLiftPosition, 1));
+        autoTasks.addStep(intake::isLiftInTolerance);
+
         if (Objects.equals(pos_one, thirdsample)) {
             autoTasks.addStep(() -> intake.tasks.autoSamplePickupTaskHack.restart());
             autoTasks.addStep(() -> intake.tasks.autoSamplePickupTaskHack.isDone());
@@ -250,30 +256,24 @@ public class ClawAutoSpec extends LinearOpMode{
             autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.restart());
             autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.isDone());
         }
-//        autoTasks.addDelay(100);
-
-        // Deposit Sample in High-Basket.
-//        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
-//        autoTasks.addDelay(200);
         positionSolver.addMoveToTaskExNoWait(pos_two, autoTasks);
         autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
         autoTasks.addStep( () -> intake.tasks.autoBucketLiftTask.isDone());
 
         autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.restart());
         autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.isDone());
-//        autoTasks.addDelay(100);
     }
 
     private void BucketAuto(TimedTask autoTasks) {
         Vector3 bucketsidestart = new Vector3(-14 - 3.0 / 8.0, -62, -90);
         Vector3 beforespecimenhang = new Vector3(-10, -39, -90);
         Vector3 specimenhang = new Vector3(-10, -32.75, -90); //specimen must be lifted before hang
-        Vector3 firstsample = new Vector3(-48.8, -38.5, 90);
+        firstsample = new Vector3(-48.8, -38.5, 90);
         //Vector3 Highbasketscore = new Vector3(-53.2, -53.7, 45);
         Vector3 Highbasketscore = new Vector3(-54.5, -53.5, 45);
-        Vector3 secondsample = new Vector3(-57.8, -38.5, 90);
+        secondsample = new Vector3(-57.8, -38.5, 90);
         Vector3 Highbasketscore2 = new Vector3(-48.9, -40.9, 40);
-        Vector3 thirdsample = new Vector3(-55.3, -24.58, 180);
+        thirdsample = new Vector3(-56, -24.75, 180);
         Vector3 Highbasketscore3 = new Vector3(-48.9, -40.9, 40);
         //Vector3 park = new Vector3(-48.9, -40.9, 40);
         Vector3 park = new Vector3(-35, -11, 0);
@@ -285,7 +285,6 @@ public class ClawAutoSpec extends LinearOpMode{
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
         autoTasks.addStep(() -> intake.tasks.setMotorsToRunConfig());
         autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1)); // h-slide in
-        // close specimen pincer
         autoTasks.addStep(() -> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
         positionSolver.addMoveToTaskExNoWait(beforespecimenhang, autoTasks);
         autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.restart()); // prepare for specimen hang
@@ -294,38 +293,18 @@ public class ClawAutoSpec extends LinearOpMode{
 //        autoTasks.addDelay(200);
         autoTasks.addStep( () -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
         autoTasks.addDelay(200);
+        //Todo: try PositionSolverSettings tighter than looseSettings will slow but may pickup more often
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(beforespecimenhang, autoTasks);
-//        positionSolver.addMoveToTaskEx(firstsample, autoTasks);
-
         // First Sample.
         grabAndDepositSample(autoTasks, firstsample, Highbasketscore);
-
         // Second Sample.
         grabAndDepositSample(autoTasks, secondsample, Highbasketscore);
-
         // Third Sample.
         grabAndDepositSample(autoTasks, thirdsample, Highbasketscore);
         positionSolver.addMoveToTaskEx(park, autoTasks);
         positionSolver.addMoveToTaskEx(park2, autoTasks);
-
-//        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
-//        autoTasks.addDelay(250);
-//        autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.restart());
-//        autoTasks.addStep( () -> intake.tasks.autoSamplePickupTask.isDone());
-//        autoTasks.addDelay(250);
-//        positionSolver.addMoveToTaskEx(Highbasketscore, autoTasks);
-//        autoTasks.addDelay(500);
-//        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
-//        autoTasks.addStep( () -> intake.tasks.autoBucketLiftTask.isDone());
-//        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.restart());
-//        autoTasks.addStep( () -> intake.tasks.autoBucketDropperTask.isDone());
-//        autoTasks.addStep(()->
-//        positionSolver.addMoveToTaskEx(secondsample, autoTasks);
-//        positionSolver.addMoveToTaskEx(Highbasketscore2, autoTasks);
-//        positionSolver.addMoveToTaskEx(thirdsample, autoTasks);
-//        positionSolver.addMoveToTaskEx(park, autoTasks);
-        //positionSolver.addMoveToTaskEx(park, autoTasks);
+        //Todo: add park stick task to touch submersible
     }
 
     private void SpecAuto(TimedTask autoTasks) {
