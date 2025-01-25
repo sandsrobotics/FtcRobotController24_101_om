@@ -60,6 +60,7 @@ public class IntakeHardware2 {
         ServoSettings rotationServoSettings = new ServoSettings(ServoSettings.Number.TWO_B, Servo.Direction.FORWARD);
         ServoSettings dropperServoSettings = new ServoSettings(ServoSettings.Number.ZERO, Servo.Direction.FORWARD);
         ServoSettings specimenServoSettings = new ServoSettings(ServoSettings.Number.TWO, Servo.Direction.FORWARD);
+        ServoSettings parkServoSettings = new ServoSettings(ServoSettings.Number.ONE, Servo.Direction.FORWARD);
 
         ServoSettings intakeWheelServoLeftSettings = new ServoSettings(ServoSettings.Number.THREE_B, Servo.Direction.FORWARD);
         ServoSettings intakeWheelServoRightSettings = new ServoSettings(ServoSettings.Number.ONE_B, Servo.Direction.REVERSE);

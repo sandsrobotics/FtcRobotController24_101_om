@@ -131,7 +131,7 @@ public class ClawAutoSpec extends LinearOpMode{
             BucketAuto(autoTasks);
         else {
             SpecAuto(autoTasks);
-//            SpecAuto_old(autoTasks);
+//          SpecAuto_old(autoTasks);
 //            testAuto2(autoTasks);
         }
 
@@ -269,12 +269,16 @@ public class ClawAutoSpec extends LinearOpMode{
         Vector3 beforespecimenhang = new Vector3(-10, -39, -90);
         Vector3 specimenhang = new Vector3(-10, -32.75, -90); //specimen must be lifted before hang
         Vector3 firstsample = new Vector3(-48.8, -38.5, 90);
-        Vector3 Highbasketscore = new Vector3(-53.2, -53.7, 45);
+        //Vector3 Highbasketscore = new Vector3(-53.2, -53.7, 45);
+        Vector3 Highbasketscore = new Vector3(-54.5, -53.5, 45);
         Vector3 secondsample = new Vector3(-57.8, -38.5, 90);
         Vector3 Highbasketscore2 = new Vector3(-48.9, -40.9, 40);
         Vector3 thirdsample = new Vector3(-55.3, -24.58, 180);
         Vector3 Highbasketscore3 = new Vector3(-48.9, -40.9, 40);
-        Vector3 park = new Vector3(-48.9, -40.9, 40);
+        //Vector3 park = new Vector3(-48.9, -40.9, 40);
+        Vector3 park = new Vector3(-35, -11, 0);
+        Vector3 park2 = new Vector3(-29, -11,0);
+        // 23.5 x -1.5, 23.5 x -1.5
 
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
         autoTasks.addStep(() -> odo.setPosition(bucketsidestart));
@@ -302,6 +306,8 @@ public class ClawAutoSpec extends LinearOpMode{
 
         // Third Sample.
         grabAndDepositSample(autoTasks, thirdsample, Highbasketscore);
+        positionSolver.addMoveToTaskEx(park, autoTasks);
+        positionSolver.addMoveToTaskEx(park2, autoTasks);
 
 //        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
 //        autoTasks.addDelay(250);
