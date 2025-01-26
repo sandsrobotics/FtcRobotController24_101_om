@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.parts.intake.FlipbotSettings;
+
 @TeleOp(name="14273.4 Arcade BLUE", group="14273")
 public class FlipTeleopDiveBlue extends FlipTeleopDive {
     @Override
     public void extraSettings() {
-        intake.isBlueGood = true;
-        intake.isYellowGood = true;
-        intake.isRedGood = false;
+        FlipbotSettings.isBlueGood = true;
+        FlipbotSettings.isYellowGood = true;
+        FlipbotSettings.isRedGood = false;
     }
 }

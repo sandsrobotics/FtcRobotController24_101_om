@@ -63,7 +63,19 @@ public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, 
     public void setPosition(Vector3 vector) {
         odo.setPosition(vector3ToPose2D(vector));
     }
-    public Vector3 getPosition() {return posToVector3(odo.getPosition());}
+
+    public Vector3 getPosition() {
+        odo.update();     // without an update, this just returns the last position read; if that is desired behavior, remove this line
+        return posToVector3(odo.getPosition());
+    }
+    public Vector3 getValidPosition() {
+        odo.update();
+        GoBildaPinpointDriver.DeviceStatus status = odo.getDeviceStatus();
+        if (status==GoBildaPinpointDriver.DeviceStatus.READY) {
+            return posToVector3(odo.getPosition());
+        }
+        return null;
+    }
 
     @Override
     public void onRun() {
@@ -78,7 +90,7 @@ public class Pinpoint extends LoopedPartImpl<PositionTracker, ObjectUtils.Null, 
              */
         Pose2D pos = odo.getPosition();
 
-        String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
+        String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.INCH), pos.getY(DistanceUnit.INCH), pos.getHeading(AngleUnit.DEGREES));
         parent.parent.opMode.telemetry.addData("Position", data);
 
             /*

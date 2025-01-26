@@ -137,7 +137,7 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
                 parent.tasks.startAutoHome();
             }
             if (buttonMgr.getState(2, Buttons.y, State.wasSingleTapped)) {
-                parent.isYellowGood = !parent.isYellowGood;
+                FlipbotSettings.isYellowGood = !FlipbotSettings.isYellowGood;
             }
         }
 

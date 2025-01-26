@@ -34,12 +34,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public double lastRearDistance = 323;  // in inches
     private double spinnerSliderPower = 0.0;    // what is this?
 
-    public boolean isRedGood = true;
-    public boolean isYellowGood = true;
-    public boolean isBlueGood = false;
     public boolean slideIsUnderControl = false;
     public boolean preventUserControl = false;
-    public boolean debugMode = false;
 
     // this is part of the resets lift to 0 each time it hits the limit switch
     private final EdgeConsumer homingLiftZero = new EdgeConsumer();
@@ -217,9 +213,9 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         return lastSample; // Nothing detected
     }
     public boolean isSampleGood(int sample) {
-        if (sample == 1 && isRedGood) return true;
-        if (sample == 2 && isYellowGood) return true;
-        if (sample == 3 && isBlueGood) return true;
+        if (sample == 1 && FlipbotSettings.isRedGood) return true;
+        if (sample == 2 && FlipbotSettings.isYellowGood) return true;
+        if (sample == 3 && FlipbotSettings.isBlueGood) return true;
         return false;
     }
     public boolean isSampleGood() {
@@ -227,7 +223,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public boolean debugDelay() {
-        if (!debugMode) return true;
+        if (!FlipbotSettings.autonomousDebugMode) return true;
+        parent.opMode.telemetry.addLine("***** Debug delay... Tap X or hold Y to continue *****");
         return (parent.buttonMgr.getState(1, ButtonMgr.Buttons.x, ButtonMgr.State.wasTapped) ||
                 parent.buttonMgr.getState(1, ButtonMgr.Buttons.y, ButtonMgr.State.isPressed));
     }

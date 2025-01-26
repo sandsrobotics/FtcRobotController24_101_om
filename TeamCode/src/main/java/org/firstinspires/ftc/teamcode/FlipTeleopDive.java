@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.parts.drive.DriveTeleop;
 import org.firstinspires.ftc.teamcode.parts.drive.hardware.DriveHardware;
 import org.firstinspires.ftc.teamcode.parts.drive.settings.DriveSettings;
 import org.firstinspires.ftc.teamcode.parts.drive.settings.DriveTeleopSettings;
+import org.firstinspires.ftc.teamcode.parts.intake.FlipbotSettings;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 import org.firstinspires.ftc.teamcode.parts.intake.IntakeTeleop;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
@@ -34,7 +35,7 @@ public class FlipTeleopDive extends LinearOpMode {
     PositionSolver positionSolver;
     PositionTracker pt;
     Pinpoint odo;
-    Vector3 fieldStartPos = new Vector3(-14.375,-62,90);
+    Vector3 fieldStartPos = new Vector3(-14.375,-62,90);  //for teleOp, this shouldn't be relevant
     boolean testModeReverse = false;
 
     public void initTeleop(){
@@ -43,6 +44,7 @@ public class FlipTeleopDive extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        FlipbotSettings.setTeleOp();
         DecimalFormat df = new DecimalFormat("#0.0");
         long start;
         FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -54,15 +56,15 @@ public class FlipTeleopDive extends LinearOpMode {
         initTeleop();
 
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
-               100, new Vector3(2,2,2), fieldStartPos);
-
+//               100, new Vector3(2,2,2), fieldStartPos);
+                100, new Vector3(2,2,2), FlipbotSettings.getRobotPosition());
         pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));
       XRelativeSolver solver = new XRelativeSolver(drive);
 
 //       EncoderTracker et = new EncoderTracker(pt);
 //       pt.positionSourceId = EncoderTracker.class;
 
-        odo = new Pinpoint(pt, true, "pinpoint",
+        odo = new Pinpoint(pt, false, "pinpoint",
                 -56.0, 52.0, 13.26291192f,
                 GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
         pt.positionSourceId = Pinpoint.class;
@@ -72,7 +74,15 @@ public class FlipTeleopDive extends LinearOpMode {
         new IntakeTeleop(intake);
 
         robot.init();
-        odo.setPosition(fieldStartPos);
+//        odo.setPosition(fieldStartPos);
+
+//        long timer = System.currentTimeMillis() + 2500;
+//        while (odo.getValidPosition() == null && System.currentTimeMillis() <= timer) {
+//            telemetry.addLine("Waiting for Pinpoint...");
+//            telemetry.update();
+//            //todo: What to do if it doesn't initialize?
+//        }
+//        odo.setPosition(FlipbotSettings.getRobotPosition());
 
         extraSettings();
 
@@ -88,17 +98,24 @@ public class FlipTeleopDive extends LinearOpMode {
                 drive.lkUpdateConfig(DriveSettings.makeDefault(), DriveHardware.makeDefault(robot.opMode.hardwareMap));
                 testModeReverse = false;
             }
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.dpad_up, ButtonMgr.State.wasTapped)) {
+                odo.setPosition(fieldStartPos);
+            }
             telemetry.addData("Drive motors", testModeReverse ? "Test Reverse (AndyMark Chassis)" : "Normal - Competition");
+            Vector3 position = odo.getPosition();
+            FlipbotSettings.storeRobotPosition(position);
+            telemetry.addData("Position", position);
             dashboard.sendTelemetryPacket(packet);
             telemetry.update();
         }
 
-        odo.setPosition(fieldStartPos);
+        //odo.setPosition(fieldStartPos);
         robot.start();
 
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
             robot.run();
+            FlipbotSettings.storeRobotPosition(pt.getCurrentPosition());
             telemetry.addData("position", pt.getCurrentPosition());
             telemetry.addData("tile position", fieldToTile(pt.getCurrentPosition()));
             telemetry.addData("relative position", pt.getRelativePosition());
@@ -113,9 +130,9 @@ public class FlipTeleopDive extends LinearOpMode {
     }
 
     public void extraSettings() {
-        intake.isBlueGood = false;
-        intake.isYellowGood = true;
-        intake.isRedGood = true;
+        FlipbotSettings.isBlueGood = false;
+        FlipbotSettings.isYellowGood = true;
+        FlipbotSettings.isRedGood = true;
     }
 
     public void moveRobot(Vector3 target){

@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
 import org.firstinspires.ftc.teamcode.lib.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
+import org.firstinspires.ftc.teamcode.parts.intake.FlipbotSettings;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolverSettings;
@@ -68,6 +69,7 @@ public class FlipAuto2025 extends LinearOpMode{
 
     @Override
     public void runOpMode() {
+        FlipbotSettings.setAuto();
         long start;
         initAuto();
         FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -97,6 +99,9 @@ public class FlipAuto2025 extends LinearOpMode{
         while (!isStarted()) {
             robot.buttonMgr.runLoop();
             // example configuration capability during init
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.dpad_down, ButtonMgr.State.wasTapped)) {
+                FlipbotSettings.autonomousDebugMode = !FlipbotSettings.autonomousDebugMode;   //todo: disable this before competition!
+            }
             if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.right_bumper, ButtonMgr.State.wasTapped)) {
                 startDelay += 1000;
             }
@@ -118,6 +123,7 @@ public class FlipAuto2025 extends LinearOpMode{
             }
             if(startDelay > maxDelay) startDelay = maxDelay;
 
+            telemetry.addData("DEBUG?:", FlipbotSettings.autonomousDebugMode ? "***** YES *****" : "No, normal");
             telemetry.addData("PARK POSITION:", parkPosition == 0 ? "Normal mid wall" : parkPosition == 1 ? "Park MID" : parkPosition == 2 ? "Park CORNER" : "Park BOARD");
             telemetry.addData("START DELAY:", startDelay / 1000);
             telemetry.update();
@@ -143,6 +149,7 @@ public class FlipAuto2025 extends LinearOpMode{
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
             robot.run();
+            FlipbotSettings.storeRobotPosition(pt.getCurrentPosition());
             dashboardTelemetry.addData("position", pt.getCurrentPosition());
             telemetry.addData("position", pt.getCurrentPosition());
             telemetry.addData("tile position", fieldToTile(pt.getCurrentPosition()));
