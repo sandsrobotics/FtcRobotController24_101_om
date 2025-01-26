@@ -28,8 +28,8 @@ public class ServoSSR implements Servo {
     // setters
 
     /**
-     * Sets an offset value for the servo that will be subtracted with setting a position with setPosition()
-     * @param offset the offset to subtracted
+     * Sets an offset value for the servo that will be added when setting a position with setPosition()
+     * @param offset the offset to added
      * @return this for method chaining
      */
     public ServoSSR setOffset(double offset) {
@@ -130,7 +130,7 @@ public class ServoSSR implements Servo {
 
     /**
      * Gets the stored offset value
-     * @return the offset that is subtracted when setting position
+     * @return the offset that is added when setting position
      */
     public double getOffset() {
         return offset;
@@ -138,10 +138,10 @@ public class ServoSSR implements Servo {
 
     /**
      * Gets the servo position last set, accounting for the offset
-     * @return the servo position + offset
+     * @return the servo position - offset
      */
     public double getPositionWithOffset() {
-        return getPosition() + offset;
+        return clamp(getPosition() - offset);
     }
 
     /**
@@ -304,7 +304,7 @@ public class ServoSSR implements Servo {
 
         /* 2. Don't update the timer if enabled and the position is already set the same */
         if (enabled && isSetPosition(position)) {
-            servo.setPosition(position - offset);          // this probably isn't needed, but added while debugging undesirable behavior
+            servo.setPosition(clamp(position + offset));          // this probably isn't needed, but added while debugging undesirable behavior
             return;                                        // has already been set (but not necessarily done moving), no need to increment timer
         }
 
@@ -314,7 +314,7 @@ public class ServoSSR implements Servo {
 
         /* 4. Calculate the timer and set the position */
         timer = calcSweepTimerValue(position);
-        servo.setPosition(position - offset);
+        servo.setPosition(clamp(position + offset));
 
         /* 5. Update tracking variables */
         enabled = true;                                    // setting a position re-enables, so update the trackers
@@ -329,7 +329,7 @@ public class ServoSSR implements Servo {
      */
     public void setPower(double power) {
         //setPosition(0.5 + Math.signum(power) * Math.abs(power) / 2.0);   // why overcomplicate it?
-        setPosition(0.5 * power + 0.5);
+        setPosition(clamp(0.5 * power + 0.5));
     }
 
     /**
@@ -389,6 +389,10 @@ public class ServoSSR implements Servo {
     private double calcSweepChange(double newPosition) {
         return Math.abs(getPositionWithOffset()-newPosition);
     }
+
+    private double clamp(double pos) {
+        return Math.max(0, Math.min(pos, 1));
+    }
 }
 
 /*
@@ -406,7 +410,7 @@ For convenience, the new settings can be chained:
 All of the ordinary Servo methods and properties are available with the following changes and additions:
 
 setPosition() - sets the position with offset and calculates the expected movement time
-setOffset(offset) - set an offset that will be subtracted from positions (for tuning a replacement servo or one of a pair acting together)
+setOffset(offset) - set an offset that will be added to positions (for tuning a replacement servo or one of a pair acting together)
 setSweepTime(sweepTime) - set the time expected for the servo to move its entire range
 setWakeTime(wakeTime) - set the time expected for the servo to move back to its position after being disabled
 setFullPwmRange() - sets the controller to use pwm range of 500-2500 μs vs. the default of 600-2400 μs
@@ -415,7 +419,7 @@ stop() - disables the servo pwm signal and its position will be unknown/unpredic
 disable() - disables the servo pwm signal and assumes it will stay near its last position (e.g., docked or parked)
 enable() - enables the servo pwm signal (not usually necessary to do manually)
 getOffset() - returns the offset value
-getPositionWithOffset() - returns the position set (adding the offset, so back to the original position vs. the offset position)
+getPositionWithOffset() - returns the position set (subtracting the offset, so back to the original position vs. the offset position)
 isDone() - is the servo done moving? (servo is enabled, timer is complete)
 isTimerDone() - is the servo timer done? (does not account for the possibility that the servo has been disabled)
 timeRemaining() - returns the time remaining before the servo is expected to have finished moving
