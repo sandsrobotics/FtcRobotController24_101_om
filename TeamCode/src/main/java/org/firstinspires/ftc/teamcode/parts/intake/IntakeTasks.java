@@ -91,8 +91,8 @@ public class IntakeTasks {
         autonomousSampleTask.addStep(prepareToTransferTask::restart);
         autonomousSampleTask.addStep(prepareToTransferTask::isDone);
         // todo: comment the following two lines!? ****************
-        autonomousSampleTask.addDelay(250);
-        autonomousSampleTask.addStep(transferTask::isDone);
+//        autonomousSampleTask.addDelay(250);
+//        autonomousSampleTask.addStep(transferTask::isDone);
         /* todo: This needs more testing, improvement */
 
         /* == Task: prepareToIntakeTask == */
