@@ -215,7 +215,7 @@ public class IntakeTasks {
         depositTask.addStep(() -> intake.isLiftInTolerance() && intake.getHardware().chute.isDone());
         depositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteDeposit));
         depositTask.addStep(() -> intake.getHardware().chute.isDone());
-        depositTask.addDelay(100); // 200
+        depositTask.addDelay(200); // 200
         depositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteParked));
         depositTask.addStep(() -> intake.getHardware().chute.isDone());
         depositTask.addStep(dockTask::restart);

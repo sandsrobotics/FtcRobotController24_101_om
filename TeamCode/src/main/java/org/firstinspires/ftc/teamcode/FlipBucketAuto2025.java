@@ -81,8 +81,8 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         intake = new Intake(robot);
 
 //        Vector3 fieldStartPos = new Vector3(0,0,-90);
-        Vector3 fieldStartPos = new Vector3(14 + 3.0/8.0, -62, -90);
-
+//        Vector3 fieldStartPos = new Vector3(14 + 3.0/8.0, -62, -90);
+        Vector3 fieldStartPos = new Vector3(-14.375, -62, 90);
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
                 100, new Vector3(2,2,2), fieldStartPos);
         pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));
@@ -160,7 +160,7 @@ public class FlipBucketAuto2025 extends LinearOpMode{
     private void testBucketAuto(TimedTask autoTasks) {
 
         // New settings
-        Vector3 posBucketSideStart = new Vector3(-14.375, -62, -90);
+        Vector3 posBucketSideStart = new Vector3(-14.375, -62, 90);
         Vector3 posBucketScore = new Vector3(-53.5, -53.5, 45);
         Vector3 posSample1 = new Vector3(-36, -39, 135);
         Vector3 posSample2 = new Vector3(-46.5, -39, 135);
