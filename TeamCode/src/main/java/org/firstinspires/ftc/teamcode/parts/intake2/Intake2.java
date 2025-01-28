@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.parts.intake2;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveControl;
@@ -31,6 +34,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     protected PositionTracker pt;
     boolean startSpecRange = false;
     public boolean isTeleop;
+    public int lastSample = -1;
 
     //***** Constructors *****
     public Intake2(Robot parent, String modeName) {
@@ -218,7 +222,21 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         getHardware().intakeWheelServoRight.setPosition(0.5);
     }
 
+    public int identifySampleColor() {
+        float[] hsvValues = new float[3];
+        NormalizedRGBA colorPlural = getHardware().colorSensor.getNormalizedColors();
+        Color.colorToHSV(colorPlural.toColor(), hsvValues);
+        int hue = (int) hsvValues[0];
+        lastSample = 0;
+        if (hue > 20 && hue < 60) lastSample = 1; // Red = 1
+        if (hue > 65 && hue < 160) lastSample = 2; // Yellow = 2
+        if (hue > 190) lastSample = 3; // Blue = 3
+        parent.opMode.telemetry.addData("Hue", hue);
+        return lastSample; // Nothing detected
+    }
+
     public void initializeServos() {
+//        parent.opMode.sleep(500);
         getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp -.05); // default straight up position
         getHardware().dropperServo.setPosition(.714);
         getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition +.05);
@@ -250,6 +268,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             setLiftPosition(20,0.125);
             //tasks.setMotorsToRunConfig();
         });
+        initializeServos();
     }
 
     public void stopAllIntakeTasks() {
@@ -281,6 +300,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         strafePower = control.strafePower;
         homingBucketZero.accept(getHardware().bucketLiftZeroSwitch.getState());
         currentBucketLiftPos = getHardware().bucketLiftMotor.getCurrentPosition();
+        parent.opMode.telemetry.addData("Specimen Color", getColor());
         parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
         parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
         parent.opMode.telemetry.addData("bucketLiftMotor postion", getHardware().bucketLiftMotor.getCurrentPosition());
@@ -303,5 +323,18 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public static final class ControllerNames {
         public static final String distanceController = "distance controller";
         public static final String specController = "specimen controller";
+    }
+
+    public String getColor() {
+        switch (identifySampleColor()) {
+            case 1:
+                return "Red";
+            case 2:
+                return "Yellow";
+            case 3:
+                return "Blue";
+            default:
+                return "None";
+        }
     }
 }

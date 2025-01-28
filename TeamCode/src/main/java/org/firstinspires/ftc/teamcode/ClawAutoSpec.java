@@ -220,9 +220,8 @@ public class ClawAutoSpec extends LinearOpMode{
         autoTasks.addStep( () -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
         autoTasks.addDelay(200);
         //Todo: try PositionSolverSettings tighter than looseSettings will slow but may pickup more often
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(beforespecimenhang, autoTasks);
-
         // First Sample.
         grabAndDepositSample(autoTasks, firstsample, Highbasketscore);
         // Second Sample.
@@ -233,7 +232,7 @@ public class ClawAutoSpec extends LinearOpMode{
         positionSolver.addMoveToTaskEx(park, autoTasks);
         positionSolver.addMoveToTaskEx(park2, autoTasks);
 
-        intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked);
+        autoTasks.addStep(() ->intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked));
         //Todo: add park stick task to touch submersible
     }
 
