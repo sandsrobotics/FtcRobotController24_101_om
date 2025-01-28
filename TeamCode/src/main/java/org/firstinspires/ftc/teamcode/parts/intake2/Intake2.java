@@ -268,7 +268,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             setLiftPosition(20,0.125);
             //tasks.setMotorsToRunConfig();
         });
-        initializeServos();
+
     }
 
     public void stopAllIntakeTasks() {
@@ -277,6 +277,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
     @Override
     public void onBeanLoad() {
+        initializeServos();
     }
 
     @Override
