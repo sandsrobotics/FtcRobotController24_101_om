@@ -68,7 +68,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         getHardware().robotHangMotor.setPower(0);
     }
 
-    private void initializeServos() {
+    public void initializeServos() {
+        //private void initializeServos() {
         // apply settings
         getHardware().spinner.setSweepTime(getSettings().spinnerSweepTime);
         getHardware().flipper.setSweepTime(getSettings().flipperSweepTime).setOffset(getSettings().flipperOffset);
