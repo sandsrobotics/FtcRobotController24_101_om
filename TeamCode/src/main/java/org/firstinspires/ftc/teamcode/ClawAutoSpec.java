@@ -229,10 +229,9 @@ public class ClawAutoSpec extends LinearOpMode{
         // Third Sample.
         grabAndDepositSample(autoTasks, thirdsample, Highbasketscore);
 
+        autoTasks.addStep(() ->intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked));
         positionSolver.addMoveToTaskEx(park, autoTasks);
         positionSolver.addMoveToTaskEx(park2, autoTasks);
-
-        autoTasks.addStep(() ->intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked));
         //Todo: add park stick task to touch submersible
     }
 

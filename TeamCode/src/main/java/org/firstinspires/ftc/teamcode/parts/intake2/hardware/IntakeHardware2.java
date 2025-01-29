@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.parts.intake2.hardware;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -28,6 +27,7 @@ public class IntakeHardware2 {
     public final ServoSSR dropperServo;
     public final ServoSSR specimenServo;
     public final ServoSSR parkServo;
+    public final ServoSSR backLight;
     public final Rev2mDistanceSensor rangeSensor;
     //public final RevColorSensorV3 specColorSensor;
     public final NormalizedColorSensor colorSensor;
@@ -36,7 +36,7 @@ public class IntakeHardware2 {
                            Servo sliderServoRight, ServoSSR tiltServo, ServoSSR rotationServo,
                            Servo intakeWheelServoLeft, Servo intakeWheelServoRight, DigitalChannel liftZeroSwitch,
                            DigitalChannel bucketLiftZeroSwitch, ServoSSR dropperServo, ServoSSR specimenServo,
-                           ServoSSR parkServo, Rev2mDistanceSensor rangeSensor, NormalizedColorSensor colorSensor){
+                           ServoSSR parkServo, ServoSSR backLight, Rev2mDistanceSensor rangeSensor, NormalizedColorSensor colorSensor){
                            //Rev2mDistanceSensor specDistance) {
         this.bucketLiftMotor = bucketLiftMotor;
         this.robotLiftMotor = robotLiftMotor;
@@ -51,6 +51,7 @@ public class IntakeHardware2 {
         this.dropperServo = dropperServo;
         this.specimenServo = specimenServo;
         this.parkServo = parkServo;
+        this.backLight = backLight;
         this.rangeSensor = rangeSensor;
         this.colorSensor = colorSensor;
         //this.specDistance = specDistance;
@@ -66,9 +67,11 @@ public class IntakeHardware2 {
         ServoSettings dropperServoSettings = new ServoSettings(ServoSettings.Number.ZERO, Servo.Direction.FORWARD);
         ServoSettings specimenServoSettings = new ServoSettings(ServoSettings.Number.TWO, Servo.Direction.FORWARD);
         ServoSettings parkServoSettings = new ServoSettings(ServoSettings.Number.ONE, Servo.Direction.FORWARD);
+        ServoSettings backLight = new ServoSettings(ServoSettings.Number.FIVE, Servo.Direction.FORWARD);
 
         ServoSettings intakeWheelServoLeftSettings = new ServoSettings(ServoSettings.Number.THREE_B, Servo.Direction.FORWARD);
         ServoSettings intakeWheelServoRightSettings = new ServoSettings(ServoSettings.Number.ONE_B, Servo.Direction.REVERSE);
+
 
         Rev2mDistanceSensor rangeSensor = hardwareMap.get(Rev2mDistanceSensor.class, "range_sensor");
         NormalizedColorSensor colorSensor = hardwareMap.get(NormalizedColorSensor.class, "color_sensor");
@@ -93,6 +96,7 @@ public class IntakeHardware2 {
                 dropperServoSettings.makeServoSSR(hardwareMap),
                 specimenServoSettings.makeServoSSR(hardwareMap),
                 parkServoSettings.makeServoSSR(hardwareMap),
+                backLight.makeServoSSR(hardwareMap),
                 rangeSensor,
                 colorSensor
                 //specDistance

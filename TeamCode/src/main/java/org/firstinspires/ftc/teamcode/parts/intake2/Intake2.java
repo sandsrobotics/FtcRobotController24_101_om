@@ -252,6 +252,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     @Override
     public void onInit() {
+        getHardware().backLight.setPosition(0.279);
         currentIntakeHeightPos = getSettings().intakeArmStraightUp;
         initializeServos();
         stopIntakeSpin();
@@ -268,6 +269,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             setLiftPosition(20,0.125);
             //tasks.setMotorsToRunConfig();
         });
+        getHardware().backLight.setPosition(0.5);
 
     }
 
@@ -301,7 +303,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         strafePower = control.strafePower;
         homingBucketZero.accept(getHardware().bucketLiftZeroSwitch.getState());
         currentBucketLiftPos = getHardware().bucketLiftMotor.getCurrentPosition();
-        parent.opMode.telemetry.addData("Specimen Color", getColor());
+        //parent.opMode.telemetry.addData("Specimen Color", getColor());
         parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
         parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
         parent.opMode.telemetry.addData("bucketLiftMotor postion", getHardware().bucketLiftMotor.getCurrentPosition());
