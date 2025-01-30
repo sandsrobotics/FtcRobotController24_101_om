@@ -255,8 +255,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition);
         getHardware().dropperServo.setPosition(.716);
         getHardware().rotationServo.setPosition(.5);
-//        parent.opMode.sleep(100);
-        while (!getHardware().dropperServo.isDone()) {};  // this is blocking!
+        parent.opMode.sleep(200);
+        //while (!getHardware().dropperServo.isDone()) {};  // this is blocking!
         getHardware().dropperServo.disable();
     }
 
@@ -266,6 +266,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         currentIntakeHeightPos = getSettings().intakeArmStraightUp;
         initializeServos();
         stopIntakeSpin();
+        parent.opMode.sleep(1200);
+        initializeServos();
+
         currentRotationPos = 0.0;
         setHorizontalSlidePosition(-1); // pull slide in on init
         drive = getBeanManager().getBestMatch(Drive.class, false);
