@@ -45,7 +45,7 @@ public class Intake2Tasks {
         autoHomeTask.addStep(() -> {
             intake.incrementIntakeUpDown(0);
             intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoOpenPosition);
-            intake.getHardware().dropperServo.stop();
+            intake.getHardware().dropperServo.stop();  // ######## change to disable?
         });
         autoHomeTask.addTimedStep(() -> {
             robot.opMode.telemetry.addData("homing", intake.getHardware().bucketLiftZeroSwitch.getState());
@@ -66,7 +66,7 @@ public class Intake2Tasks {
         autoBucketLiftTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoBucketLiftTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         //Todo: lift to a safe mid height then start the dropperServo Min below so it will be ready when the lift makes it to the top
-        autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.stop());
+        autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.stop());  // ######## change to disable?
         autoBucketLiftTask.addStep(()-> intake.setLiftPosition(intake.getSettings().maxLiftPosition,1));
         autoBucketLiftTask.addStep(intake::isLiftInTolerance);
         autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.enable());
@@ -83,7 +83,7 @@ public class Intake2Tasks {
 //        autoBucketDropperTask.addDelay(500); // leave bucket high to dump sample
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin));
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.isDone());
-        autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.stop());
+        autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.stop());  // ######## change to disable?
         if(intake.isTeleop) {
             autoBucketDropperTask.addStep(() -> intake.setLiftPosition(intake.getSettings().minLiftPosition, 1));
             autoBucketDropperTask.addStep(intake::isLiftInTolerance);
@@ -120,7 +120,7 @@ public class Intake2Tasks {
         autoIntakeDropTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoIntakeDropTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         autoIntakeDropTask.addStep(()-> setIntakeWheels(0.5));
-        autoIntakeDropTask.addStep(()-> intake.getHardware().dropperServo.stop());
+        autoIntakeDropTask.addStep(()-> intake.getHardware().dropperServo.stop()); // ######## change to disable?
 
     /* ***** autoSamplePickupTask ******/
         autoSamplePickupTask.autoStart = false;

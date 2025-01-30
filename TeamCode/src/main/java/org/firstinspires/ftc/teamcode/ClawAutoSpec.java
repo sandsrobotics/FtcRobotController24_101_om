@@ -9,8 +9,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
+import org.firstinspires.ftc.teamcode.parts.intake.FlipbotSettings;
 import org.firstinspires.ftc.teamcode.parts.intake2.Intake2;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolverSettings;
@@ -96,20 +98,28 @@ public class ClawAutoSpec extends LinearOpMode{
         while (!isStarted()) {
             robot.buttonMgr.runLoop();
 //            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.right_bumper))
-            if (new EdgeSupplier(() -> robot.opMode.gamepad1.right_bumper).isRisingEdge()) {
-                startDelay += 1000;
-            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.left_bumper).isRisingEdge()) {
-                startDelay -= 1000;
-                if (startDelay < 0) startDelay = 0;
-            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.a).isRisingEdge()) {
-                parkPosition = 1;
-            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.b).isRisingEdge()) {
-                parkPosition = 2;
-            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.x).isRisingEdge()) {
-                parkPosition = 3;
-            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.y).isRisingEdge()) {
-                parkPosition = 0;
+//            if (new EdgeSupplier(() -> robot.opMode.gamepad1.right_bumper).isRisingEdge()) {
+//                startDelay += 1000;
+//            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.left_bumper).isRisingEdge()) {
+//                startDelay -= 1000;
+//                if (startDelay < 0) startDelay = 0;
+//            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.a).isRisingEdge()) {
+//                parkPosition = 1;
+//            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.b).isRisingEdge()) {
+//                parkPosition = 2;
+//            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.x).isRisingEdge()) {
+//                parkPosition = 3;
+//            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.y).isRisingEdge()) {
+//                parkPosition = 0;
+//            }
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.x, ButtonMgr.State.wasTapped) ||
+                    robot.buttonMgr.getState(2, ButtonMgr.Buttons.x, ButtonMgr.State.wasTapped)) {
+                intake.initializeServos();
             }
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.dpad_down, ButtonMgr.State.wasTapped)) {
+                FlipbotSettings.autonomousDebugMode = !FlipbotSettings.autonomousDebugMode;   //todo: disable this before competition!
+            }
+            telemetry.addData("DEBUG?:", FlipbotSettings.autonomousDebugMode ? "***** YES *****" : "No, normal");
 
             if(startDelay > maxDelay) startDelay = maxDelay;
 
@@ -166,6 +176,7 @@ public class ClawAutoSpec extends LinearOpMode{
     }
 
     private void grabAndDepositSample (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two) {
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         if(Objects.equals(pos_one,firstsample)) {
             positionSolver.addMoveToTaskEx(pos_one, autoTasks);
         } else {
@@ -182,6 +193,7 @@ public class ClawAutoSpec extends LinearOpMode{
             autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.restart());
             autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.isDone());
         }
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         positionSolver.addMoveToTaskExNoWait(pos_two, autoTasks);
         autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
         autoTasks.addStep( () -> intake.tasks.autoBucketLiftTask.isDone());
@@ -212,15 +224,18 @@ public class ClawAutoSpec extends LinearOpMode{
         autoTasks.addStep(() -> intake.tasks.setMotorsToRunConfig());
         autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1)); // h-slide in
         autoTasks.addStep(() -> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         positionSolver.addMoveToTaskExNoWait(beforespecimenhang, autoTasks);
         autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.restart()); // prepare for specimen hang
         autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.isDone());
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         positionSolver.addMoveToTaskEx(specimenhang, autoTasks);
 //        autoTasks.addDelay(200);
         autoTasks.addStep( () -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
         autoTasks.addDelay(200);
         //Todo: try PositionSolverSettings tighter than looseSettings will slow but may pickup more often
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         positionSolver.addMoveToTaskEx(beforespecimenhang, autoTasks);
         // First Sample.
         grabAndDepositSample(autoTasks, firstsample, Highbasketscore);
@@ -230,7 +245,9 @@ public class ClawAutoSpec extends LinearOpMode{
         grabAndDepositSample(autoTasks, thirdsample, Highbasketscore);
 
         autoTasks.addStep(() ->intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked));
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         positionSolver.addMoveToTaskEx(park, autoTasks);
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         positionSolver.addMoveToTaskEx(park2, autoTasks);
         //Todo: add park stick task to touch submersible
     }
@@ -281,74 +298,98 @@ public class ClawAutoSpec extends LinearOpMode{
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.slowSettings));
         // close pincer on initial specimen
         autoTasks.addStep(() -> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         // raise for specimen hang
         autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.restart()); // prepare for specimen hang
         autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.isDone()); // prepare for specimen hang
         autoTasks.addDelay(200);
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
         autoTasks.addDelay(200);
         // clip specimen on bar
         autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
         autoTasks.addDelay(200);
         autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.loseSettings));
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
         autoTasks.addDelay(200);
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         positionSolver.addMoveToTaskEx(afterfirstredbar, autoTasks);
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         positionSolver.addMoveToTaskEx(rightbeforesample, autoTasks);
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         positionSolver.addMoveToTaskEx(atfirstsample, autoTasks);
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         positionSolver.addMoveToTaskEx(observationzone1, autoTasks);
+        autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
         positionSolver.addMoveToTaskEx(observationzoneprepickup, autoTasks);
         {
             // Second Specimen Hang
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(observationzonepickup, autoTasks);
             autoTasks.addDelay(200);
             // close pincer on initial specimen
             autoTasks.addStep(() -> intake.tasks.startAutoSpecimenPickup()); // grab specimen
             autoTasks.addDelay(250);
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(midwayspecimen2hang, autoTasks);
             autoTasks.addDelay(250);
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(rightbeforespecimenbar2, autoTasks);
             autoTasks.addStep(() -> intake.setSpecimenPositions(2)); // prepare for specimen hang
             autoTasks.addDelay(200);
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(specimenbar2, autoTasks);
             autoTasks.addDelay(200);
             autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
             autoTasks.addDelay(200);
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(rightbeforespecimenbar2, autoTasks);
         }
         {
             //Moving Third Sample.
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(afterfirstredbar2, autoTasks);
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(beforesecondsample, autoTasks);
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(atsecondsample, autoTasks);
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(observationzone2, autoTasks);
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(observationzoneprepickup2, autoTasks);
             autoTasks.addDelay(200);
 
 
             // Third Specimen Hang.
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(observationzonepickup, autoTasks);
             autoTasks.addDelay(200);
             autoTasks.addStep(() -> intake.tasks.startAutoSpecimenPickup()); // grab specimen
             autoTasks.addDelay(250);
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(midwayspecimen3hang, autoTasks);
             autoTasks.addDelay(250);
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(rightbeforespecimenbar3, autoTasks);
             autoTasks.addStep(() -> intake.setSpecimenPositions(2)); // prepare for specimen hang
             autoTasks.addDelay(200);
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(specimenbar3, autoTasks);
             autoTasks.addDelay(200);
             autoTasks.addStep(() -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
             autoTasks.addDelay(200);
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(rightbeforespecimenbar3, autoTasks);
         }
         {
             // Park.
+            autoTasks.addStep(() -> intake.debugDelay());  // LK DEBUG DELAY
             positionSolver.addMoveToTaskEx(parkingposition, autoTasks);
         }
     }

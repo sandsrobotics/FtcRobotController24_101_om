@@ -6,8 +6,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
 import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveControl;
+import org.firstinspires.ftc.teamcode.parts.intake.FlipbotSettings;
 import org.firstinspires.ftc.teamcode.parts.intake2.hardware.IntakeHardware2;
 import org.firstinspires.ftc.teamcode.parts.intake2.settings.IntakeSettings2;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
@@ -237,17 +239,25 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     public void initializeServos() {
 //        parent.opMode.sleep(500);
-        getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp -.05); // default straight up position
-        getHardware().dropperServo.setPosition(.714);
-        getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition +.05);
-        getHardware().rotationServo.setPosition(.5 +.05);
-        parent.opMode.sleep(100);
+//        getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp -.05); // default straight up position
+//        getHardware().dropperServo.setPosition(.714);
+//        getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition +.05);
+//        getHardware().rotationServo.setPosition(.5 +.05);
+//        parent.opMode.sleep(100);
+
+        // stop them all first?  This resets their timers to full sweep
+//        getHardware().tiltServo.stop();
+//        getHardware().specimenServo.stop();
+//        getHardware().dropperServo.stop();
+//        getHardware().rotationServo.stop();
+        //
         getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp);
         getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition);
         getHardware().dropperServo.setPosition(.716);
         getHardware().rotationServo.setPosition(.5);
-        parent.opMode.sleep(100);
-        getHardware().dropperServo.stop();
+//        parent.opMode.sleep(100);
+        while (!getHardware().dropperServo.isDone()) {};  // this is blocking!
+        getHardware().dropperServo.disable();
     }
 
     @Override
@@ -279,7 +289,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
     @Override
     public void onBeanLoad() {
-        initializeServos();
+//        initializeServos();
     }
 
     @Override
@@ -313,7 +323,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public void onStart() {
         drive.addController(ControllerNames.distanceController, this::strafeRobot);
         drive.addController(ControllerNames.specController, this::doSpecRange);
-        getHardware().dropperServo.stop();
+        getHardware().dropperServo.stop();  // ######## change to disable?
         tasks.startAutoHome();
     }
 
@@ -339,5 +349,12 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             default:
                 return "None";
         }
+    }
+
+    public boolean debugDelay() {
+        if (!FlipbotSettings.autonomousDebugMode) return true;
+        parent.opMode.telemetry.addLine("***** Debug delay... Tap X or hold Y to continue *****");
+        return (parent.buttonMgr.getState(1, ButtonMgr.Buttons.x, ButtonMgr.State.wasTapped) ||
+                parent.buttonMgr.getState(1, ButtonMgr.Buttons.y, ButtonMgr.State.isPressed));
     }
 }
