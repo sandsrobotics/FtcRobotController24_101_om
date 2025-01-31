@@ -16,12 +16,13 @@ public class IntakeTeleopSettings2 {
     public final Supplier<Boolean> autoHomeSupplier;
     public final Supplier<Integer> specimenServoSupplier;
     public final Supplier<Integer> robotLiftToZeroSupplier;
+    public final Supplier<Integer> robotEStopSupplier;
 
     public IntakeTeleopSettings2(Supplier<Double> sweepSpeedSupplier, Supplier<Integer> sweepLiftSupplier,
                                  Supplier<Integer> sweepSlideSupplier, Supplier<Integer> bucketLiftSupplier,
                                  Supplier<Integer> robotLiftSupplier,Supplier<Integer> rotationServoSupplier,
                                  Supplier<Float> strafeSpeedSupplier, Supplier<Boolean> autoHomeSupplier,
-                                 Supplier<Integer> specimenServoSupplier, Supplier<Integer> robotLiftToZeroSupplier) {
+                                 Supplier<Integer> specimenServoSupplier, Supplier<Integer> robotLiftToZeroSupplier, Supplier<Integer> robotEStopSupplier) {
         this.sweepSpeedSupplier = sweepSpeedSupplier;
         this.sweepLiftSupplier = sweepLiftSupplier;
         this.sweepSlideSupplier = sweepSlideSupplier;
@@ -32,6 +33,7 @@ public class IntakeTeleopSettings2 {
         this.autoHomeSupplier = autoHomeSupplier;
         this.specimenServoSupplier = specimenServoSupplier;
         this.robotLiftToZeroSupplier = robotLiftToZeroSupplier;
+        this.robotEStopSupplier = robotEStopSupplier;
     }
 
     public static IntakeTeleopSettings2 makeDefault(Robot robot) {
@@ -48,7 +50,8 @@ public class IntakeTeleopSettings2 {
                 () -> gamepad2.left_stick_x, // strafeSpeedSupplier
                 new EdgeSupplier(() -> gamepad.back).getRisingEdgeSupplier(), // autoHomeSupplier
                 () -> gamepad2.dpad_left ? 1 : gamepad2.dpad_up ? 2 : gamepad2.dpad_right ? -1 : 0, // specimenServoSupplier
-                () -> gamepad2.right_bumper ? 1 : 0 // robotLiftToZeroSupplier
+                () -> gamepad2.right_bumper ? 1 : 0, // robotLiftToZeroSupplier
+                () -> gamepad.start ? 1 : 0 // robotEStopSupplier
         );
     }
 }

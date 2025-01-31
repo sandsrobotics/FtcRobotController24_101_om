@@ -45,7 +45,7 @@ public class Intake2Tasks {
         autoHomeTask.addStep(() -> {
             intake.incrementIntakeUpDown(0);
             intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoOpenPosition);
-            intake.getHardware().dropperServo.stop();
+            intake.getHardware().dropperServo.disable();
         });
         autoHomeTask.addTimedStep(() -> {
             robot.opMode.telemetry.addData("homing", intake.getHardware().bucketLiftZeroSwitch.getState());
@@ -66,24 +66,25 @@ public class Intake2Tasks {
         autoBucketLiftTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoBucketLiftTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         //Todo: lift to a safe mid height then start the dropperServo Min below so it will be ready when the lift makes it to the top
-        autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.stop());
+        autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.disable());
         autoBucketLiftTask.addStep(()-> intake.setLiftPosition(intake.getSettings().maxLiftPosition,1));
-        autoBucketLiftTask.addStep(intake::isLiftInTolerance);
+        autoBucketLiftTask.addStep(() -> intake.getHardware().bucketLiftMotor.getCurrentPosition() > 1100);
         autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.enable());
         autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin));
+        autoBucketLiftTask.addStep(() -> intake.getHardware().bucketLiftMotor.getCurrentPosition() > 2600);
 //        autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.isDone()); //if greater than 500 set servo straight
 
     /* ***** autoBucketDropperTask ******/
         autoBucketDropperTask.autoStart = false;
         autoBucketDropperTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
-        autoBucketDropperTask.addStep(()-> intake.getHardware().tiltServo.isDone() );
+        autoBucketDropperTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.enable());
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMax));
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.isDone());
-//        autoBucketDropperTask.addDelay(500); // leave bucket high to dump sample
+        autoBucketDropperTask.addDelay(220); // leave bucket high to dump sample
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin));
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.isDone());
-        autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.stop());
+        autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.disable());
         if(intake.isTeleop) {
             autoBucketDropperTask.addStep(() -> intake.setLiftPosition(intake.getSettings().minLiftPosition, 1));
             autoBucketDropperTask.addStep(intake::isLiftInTolerance);
@@ -120,23 +121,28 @@ public class Intake2Tasks {
         autoIntakeDropTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoIntakeDropTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         autoIntakeDropTask.addStep(()-> setIntakeWheels(0.5));
-        autoIntakeDropTask.addStep(()-> intake.getHardware().dropperServo.stop());
+        autoIntakeDropTask.addStep(()-> intake.getHardware().dropperServo.disable());
 
     /* ***** autoSamplePickupTask ******/
         autoSamplePickupTask.autoStart = false;
         autoSamplePickupTask.addStep(()-> setIntakeWheels(1.0)); //forward
         autoSamplePickupTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmAtSpecimen));
         autoSamplePickupTask.addStep(()-> intake.getHardware().tiltServo.isDone());
-        autoSamplePickupTask.addStep(()-> intake.getHardware().rotationServo.setPosition(0.60));  // was .7
-        autoSamplePickupTask.addStep(()-> intake.getHardware().rotationServo.isDone());
-        autoSamplePickupTask.addStep(()-> intake.getHardware().rotationServo.setPosition(0.40));  // was .4
-        autoSamplePickupTask.addStep(()-> intake.getHardware().rotationServo.isDone());
-        autoSamplePickupTask.addStep(()-> intake.getHardware().rotationServo.setPosition(0.50));
-        autoSamplePickupTask.addStep(()-> intake.getHardware().rotationServo.isDone());
+
+        autoSamplePickupTask.addStep(() -> intake.getHardware().rotationServo.setPosition(0.60));  // was .7
+        autoSamplePickupTask.addStep(() -> intake.getHardware().rotationServo.isDone() || intake.readSampleDistance() < 0.7);
+
+        autoSamplePickupTask.addStep(() -> intake.getHardware().rotationServo.setPosition(0.40));  // was .4
+        autoSamplePickupTask.addStep(() -> intake.getHardware().rotationServo.isDone() || intake.readSampleDistance() < 0.7);
+
+        autoSamplePickupTask.addStep(() -> intake.getHardware().rotationServo.setPosition(0.50));
+        autoSamplePickupTask.addStep(() -> intake.getHardware().rotationServo.isDone());
+
 //        autoSamplePickupTask.addStep(() -> intake.drive.moveRobot(intake.pt.getCurrentPosition().addZ(0.5)));
 //        autoSamplePickupTask.addDelay(100);
 //        autoSamplePickupTask.addStep(() -> intake.drive.moveRobot(intake.pt.getCurrentPosition().addZ(-0.5)));
 //        autoSamplePickupTask.addDelay(100);
+
         autoSamplePickupTask.addStep(()-> setIntakeWheels(0.5));
         autoSamplePickupTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoSamplePickupTask.addStep(()-> intake.getHardware().tiltServo.isDone());

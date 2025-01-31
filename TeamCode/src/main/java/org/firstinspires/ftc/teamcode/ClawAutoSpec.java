@@ -36,6 +36,7 @@ public class ClawAutoSpec extends LinearOpMode{
     public Vector3 customStartPos;
     public boolean shutdownps;
     public boolean bucketSide = false;
+    public boolean bucketSample = false;
     PositionSolver positionSolver;
     PositionTracker pt;
     Vector3 startPosition;
@@ -166,12 +167,12 @@ public class ClawAutoSpec extends LinearOpMode{
     }
 
     private void grabAndDepositSample (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two) {
-        if(Objects.equals(pos_one,firstsample)) {
+        if(Objects.equals(pos_one,firstsample) && !bucketSample) {
             positionSolver.addMoveToTaskEx(pos_one, autoTasks);
         } else {
             positionSolver.addMoveToTaskExNoWait(pos_one, autoTasks);
         }
-        autoTasks.addStep(()-> intake.getHardware().dropperServo.stop());
+        autoTasks.addStep(()-> intake.getHardware().dropperServo.disable());
         autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().minLiftPosition, 1));
         autoTasks.addStep(intake::isLiftInTolerance);
 
@@ -192,36 +193,50 @@ public class ClawAutoSpec extends LinearOpMode{
 
     private void BucketAuto(TimedTask autoTasks) {
         Vector3 bucketsidestart = new Vector3(-14 - 3.0 / 8.0, -62, -90);
+
+        Vector3 bucketsamplestart = new Vector3(-37.5, -62, 90);
+
         Vector3 beforespecimenhang = new Vector3(-10, -39, -90);
         Vector3 specimenhang = new Vector3(-10, -32.75, -90); //specimen must be lifted before hang
-        firstsample = new Vector3(-48.8, -38.5, 90);
+        firstsample = new Vector3(-47.8, -38.5, 90);
         //Vector3 Highbasketscore = new Vector3(-53.2, -53.7, 45);
         Vector3 Highbasketscore = new Vector3(-54.5, -53.5, 45);
-        secondsample = new Vector3(-57.8, -38.5, 90);
+        secondsample = new Vector3(-57.4, -38.5, 90);
         Vector3 Highbasketscore2 = new Vector3(-48.9, -40.9, 40);
-        thirdsample = new Vector3(-56, -24.75, 180);
+        thirdsample = new Vector3(-56, -25.25, 180);
         Vector3 Highbasketscore3 = new Vector3(-48.9, -40.9, 40);
         //Vector3 park = new Vector3(-48.9, -40.9, 40);
-        Vector3 park = new Vector3(-35, -11, 0);
+        Vector3 park = new Vector3(-47, -11, 0);
         Vector3 park2 = new Vector3(-29, -11,0);
         // 23.5 x -1.5, 23.5 x -1.5
 
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
-        autoTasks.addStep(() -> odo.setPosition(bucketsidestart));
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
         autoTasks.addStep(() -> intake.tasks.setMotorsToRunConfig());
         autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1)); // h-slide in
-        autoTasks.addStep(() -> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
-        positionSolver.addMoveToTaskExNoWait(beforespecimenhang, autoTasks);
-        autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.restart()); // prepare for specimen hang
-        autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.isDone());
-        positionSolver.addMoveToTaskEx(specimenhang, autoTasks);
-//        autoTasks.addDelay(200);
-        autoTasks.addStep( () -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
-        autoTasks.addDelay(200);
-        //Todo: try PositionSolverSettings tighter than looseSettings will slow but may pickup more often
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-        positionSolver.addMoveToTaskEx(beforespecimenhang, autoTasks);
+
+        if (!bucketSample) { //Spec side of bucket
+            autoTasks.addStep(() -> odo.setPosition(bucketsidestart));
+            autoTasks.addStep(() -> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
+            positionSolver.addMoveToTaskExNoWait(beforespecimenhang, autoTasks);
+            autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.restart()); // prepare for specimen hang
+            autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.isDone());
+            positionSolver.addMoveToTaskEx(specimenhang, autoTasks);
+    //        autoTasks.addDelay(200);
+            autoTasks.addStep( () -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
+            autoTasks.addDelay(200);
+            //Todo: try PositionSolverSettings tighter than looseSettings will slow but may pickup more often
+            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+            positionSolver.addMoveToTaskEx(beforespecimenhang, autoTasks);
+        } else {
+            autoTasks.addStep(() -> odo.setPosition(bucketsamplestart));
+            positionSolver.addMoveToTaskExNoWait(Highbasketscore, autoTasks);
+            autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
+            autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.isDone());
+
+            autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.restart());
+            autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.isDone());
+        }
         // First Sample.
         grabAndDepositSample(autoTasks, firstsample, Highbasketscore);
         // Second Sample.
@@ -229,9 +244,11 @@ public class ClawAutoSpec extends LinearOpMode{
         // Third Sample.
         grabAndDepositSample(autoTasks, thirdsample, Highbasketscore);
 
-        autoTasks.addStep(() ->intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked));
+        autoTasks.addStep(() -> intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
         positionSolver.addMoveToTaskEx(park, autoTasks);
         positionSolver.addMoveToTaskEx(park2, autoTasks);
+        autoTasks.addStep(() -> intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked));
         //Todo: add park stick task to touch submersible
     }
 

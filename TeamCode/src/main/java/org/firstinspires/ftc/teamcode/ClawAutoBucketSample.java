@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 //@Disabled
-@Autonomous(name="27050 Bucket Specimen", group="27050")
-public class ClawAutoBucket extends ClawAutoSpec {
+@Autonomous(name="27050 Bucket Sample", group="27050")
+public class ClawAutoBucketSample extends ClawAutoSpec {
     @Override
     public void initAuto(){
         transformFunc = (v) -> v;
         bucketSide = true;
-        bucketSample = false;
+        bucketSample = true;
     }
 }
