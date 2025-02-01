@@ -42,8 +42,8 @@ public class IntakeTeleop2 extends LoopedPartImpl<Intake2, IntakeTeleopSettings2
                 (int) settings.rotationServoSupplier.get(),
                 (float) settings.strafeSpeedSupplier.get(),
                 (int) settings.specimenServoSupplier.get(),
-                (int) settings.robotLiftToZeroSupplier.get(),
-                (int) settings.robotEStopSupplier.get()
+                (boolean) settings.robotEStopSupplier.get(),
+                (boolean) settings.rangeingSupplier.get()
         ), true);
     }
 

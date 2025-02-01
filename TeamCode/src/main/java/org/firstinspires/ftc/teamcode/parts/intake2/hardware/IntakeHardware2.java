@@ -29,7 +29,6 @@ public class IntakeHardware2 {
     public final ServoSSR parkServo;
     public final ServoSSR backLight;
     public final Rev2mDistanceSensor rangeSensor;
-    //public final RevColorSensorV3 specColorSensor;
     public final NormalizedColorSensor colorSensor;
 
     public IntakeHardware2(DcMotorEx bucketLiftMotor, DcMotorEx robotLiftMotor, ServoSSR sliderServoLeft,
@@ -37,7 +36,6 @@ public class IntakeHardware2 {
                            ServoSSR intakeWheelServoLeft, ServoSSR intakeWheelServoRight, DigitalChannel liftZeroSwitch,
                            DigitalChannel bucketLiftZeroSwitch, ServoSSR dropperServo, ServoSSR specimenServo,
                            ServoSSR parkServo, ServoSSR backLight, Rev2mDistanceSensor rangeSensor, NormalizedColorSensor colorSensor){
-                           //Rev2mDistanceSensor specDistance) {
         this.bucketLiftMotor = bucketLiftMotor;
         this.robotLiftMotor = robotLiftMotor;
         this.sliderServoLeft = sliderServoLeft;
@@ -54,7 +52,6 @@ public class IntakeHardware2 {
         this.backLight = backLight;
         this.rangeSensor = rangeSensor;
         this.colorSensor = colorSensor;
-        //this.specDistance = specDistance;
     }
 
     public static IntakeHardware2 makeDefault(HardwareMap hardwareMap) {
@@ -68,19 +65,14 @@ public class IntakeHardware2 {
         ServoSettings specimenServoSettings = new ServoSettings(ServoSettings.Number.TWO, Servo.Direction.FORWARD);
         ServoSettings parkServoSettings = new ServoSettings(ServoSettings.Number.ONE, Servo.Direction.FORWARD);
         ServoSettings backLight = new ServoSettings(ServoSettings.Number.FIVE, Servo.Direction.FORWARD);
-
         ServoSettings intakeWheelServoLeftSettings = new ServoSettings(ServoSettings.Number.THREE_B, Servo.Direction.FORWARD);
         ServoSettings intakeWheelServoRightSettings = new ServoSettings(ServoSettings.Number.ONE_B, Servo.Direction.REVERSE);
-
-
         Rev2mDistanceSensor rangeSensor = hardwareMap.get(Rev2mDistanceSensor.class, "range_sensor");
         NormalizedColorSensor colorSensor = hardwareMap.get(NormalizedColorSensor.class, "color_sensor");
-
         DigitalChannel bucketLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital1");
         bucketLiftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
         DigitalChannel robotLiftZeroSwitch = hardwareMap.get(DigitalChannel.class, "digital0");
         robotLiftZeroSwitch.setMode(DigitalChannel.Mode.INPUT);
-        //Rev2mDistanceSensor specDistance = hardwareMap.get(Rev2mDistanceSensor.class, "sensor_distance");
 
         return new IntakeHardware2(
                 bucketLiftMotorSettings.makeExMotor(hardwareMap),
@@ -99,7 +91,6 @@ public class IntakeHardware2 {
                 backLight.makeServoSSR(hardwareMap),
                 rangeSensor,
                 colorSensor
-                //specDistance
         );
     }
 }

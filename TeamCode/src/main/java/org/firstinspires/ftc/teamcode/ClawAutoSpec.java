@@ -80,8 +80,6 @@ public class ClawAutoSpec extends LinearOpMode{
         Drive drive = new Drive(robot);
         new BulkRead(robot);
         intake = new Intake2(robot, "Autonomous");
-
-//        Vector3 fieldStartPos = new Vector3(0,0,-90);
         Vector3 fieldStartPos = new Vector3(14 + 3.0 / 8.0, -62, -90);
 
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
@@ -150,107 +148,7 @@ public class ClawAutoSpec extends LinearOpMode{
         }
         robot.stop();
     }
-
-    private void testAuto2(TimedTask autoTasks) {
-        Vector3 specimenbar = new Vector3(11.75, -32.75, -90);
-        Vector3 afterfirstredbar = new Vector3(36, -40, -90);
-        Vector3 specimenpickup = new Vector3(45, -60.5, 90);
-
-//        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
-//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultNoAlwaysRunSettings));
-        autoTasks.addStep(()-> intake.tasks.autoSamplePickupTask.restart());
-        autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.isDone());
-//        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
-//        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.isDone());
-//        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.restart());
-//        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.isDone());
-    }
-
-    private void grabAndDepositSample (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two) {
-        if(Objects.equals(pos_one,firstsample) && !bucketSample) {
-            positionSolver.addMoveToTaskEx(pos_one, autoTasks);
-        } else {
-            positionSolver.addMoveToTaskExNoWait(pos_one, autoTasks);
-        }
-        autoTasks.addStep(()-> intake.getHardware().dropperServo.disable());
-        autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().minLiftPosition, 1));
-        autoTasks.addStep(intake::isLiftInTolerance);
-
-        if (Objects.equals(pos_one, thirdsample)) {
-            autoTasks.addStep(() -> intake.tasks.autoSamplePickupTaskHack.restart());
-            autoTasks.addStep(() -> intake.tasks.autoSamplePickupTaskHack.isDone());
-        } else {
-            autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.restart());
-            autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.isDone());
-        }
-        positionSolver.addMoveToTaskExNoWait(pos_two, autoTasks);
-        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
-        autoTasks.addStep( () -> intake.tasks.autoBucketLiftTask.isDone());
-
-        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.restart());
-        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.isDone());
-    }
-
-    private void BucketAuto(TimedTask autoTasks) {
-        Vector3 bucketsidestart = new Vector3(-14 - 3.0 / 8.0, -62, -90);
-
-        Vector3 bucketsamplestart = new Vector3(-37.5, -62, 90);
-
-        Vector3 beforespecimenhang = new Vector3(-10, -39, -90);
-        Vector3 specimenhang = new Vector3(-10, -32.75, -90); //specimen must be lifted before hang
-        firstsample = new Vector3(-47.8, -38.5, 90);
-        //Vector3 Highbasketscore = new Vector3(-53.2, -53.7, 45);
-        Vector3 Highbasketscore = new Vector3(-54.5, -53.5, 45);
-        secondsample = new Vector3(-57.4, -38.5, 90);
-        Vector3 Highbasketscore2 = new Vector3(-48.9, -40.9, 40);
-        thirdsample = new Vector3(-56, -25.25, 180);
-        Vector3 Highbasketscore3 = new Vector3(-48.9, -40.9, 40);
-        //Vector3 park = new Vector3(-48.9, -40.9, 40);
-        Vector3 park = new Vector3(-47, -11, 0);
-        Vector3 park2 = new Vector3(-29, -11,0);
-        // 23.5 x -1.5, 23.5 x -1.5
-
-        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
-        autoTasks.addStep(() -> intake.tasks.setMotorsToRunConfig());
-        autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1)); // h-slide in
-
-        if (!bucketSample) { //Spec side of bucket
-            autoTasks.addStep(() -> odo.setPosition(bucketsidestart));
-            autoTasks.addStep(() -> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
-            positionSolver.addMoveToTaskExNoWait(beforespecimenhang, autoTasks);
-            autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.restart()); // prepare for specimen hang
-            autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.isDone());
-            positionSolver.addMoveToTaskEx(specimenhang, autoTasks);
-    //        autoTasks.addDelay(200);
-            autoTasks.addStep( () -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar
-            autoTasks.addDelay(200);
-            //Todo: try PositionSolverSettings tighter than looseSettings will slow but may pickup more often
-            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-            positionSolver.addMoveToTaskEx(beforespecimenhang, autoTasks);
-        } else {
-            autoTasks.addStep(() -> odo.setPosition(bucketsamplestart));
-            positionSolver.addMoveToTaskExNoWait(Highbasketscore, autoTasks);
-            autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
-            autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.isDone());
-
-            autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.restart());
-            autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.isDone());
-        }
-        // First Sample.
-        grabAndDepositSample(autoTasks, firstsample, Highbasketscore);
-        // Second Sample.
-        grabAndDepositSample(autoTasks, secondsample, Highbasketscore);
-        // Third Sample.
-        grabAndDepositSample(autoTasks, thirdsample, Highbasketscore);
-
-        autoTasks.addStep(() -> intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked));
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
-        positionSolver.addMoveToTaskEx(park, autoTasks);
-        positionSolver.addMoveToTaskEx(park2, autoTasks);
-        autoTasks.addStep(() -> intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked));
-        //Todo: add park stick task to touch submersible
-    }
+    public void BucketAuto(TimedTask autoTasks) {}
 
     private void SpecAuto(TimedTask autoTasks) {
         Vector3 humansidestart = new Vector3(14 + 3.0/8.0, -62, -90);
@@ -345,7 +243,6 @@ public class ClawAutoSpec extends LinearOpMode{
             positionSolver.addMoveToTaskEx(observationzoneprepickup2, autoTasks);
             autoTasks.addDelay(200);
 
-
             // Third Specimen Hang.
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
             positionSolver.addMoveToTaskEx(observationzonepickup, autoTasks);
@@ -365,8 +262,24 @@ public class ClawAutoSpec extends LinearOpMode{
             positionSolver.addMoveToTaskEx(rightbeforespecimenbar3, autoTasks);
         }
         {
-            // Park.
+            // Park
             positionSolver.addMoveToTaskEx(parkingposition, autoTasks);
         }
+    }
+
+    /****************************************************************************/
+    private void testAuto2(TimedTask autoTasks) {
+        Vector3 specimenbar = new Vector3(11.75, -32.75, -90);
+        Vector3 afterfirstredbar = new Vector3(36, -40, -90);
+        Vector3 specimenpickup = new Vector3(45, -60.5, 90);
+
+//        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
+//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultNoAlwaysRunSettings));
+        autoTasks.addStep(()-> intake.tasks.autoSamplePickupTask.restart());
+        autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.isDone());
+//        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
+//        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.isDone());
+//        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.restart());
+//        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.isDone());
     }
 }

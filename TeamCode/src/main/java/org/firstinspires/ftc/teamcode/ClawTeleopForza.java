@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveTeleop;
 import org.firstinspires.ftc.teamcode.parts.drive.settings.DriveTeleopSettings;
 
-@TeleOp(name="27050 Teleop Forza", group="27050")
+@TeleOp(name="27050 Forza", group="27050")
 public class ClawTeleopForza extends ClawTeleop {
     @Override
     public void initTeleop(){

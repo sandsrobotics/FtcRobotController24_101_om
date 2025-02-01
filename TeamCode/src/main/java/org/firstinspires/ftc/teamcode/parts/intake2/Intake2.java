@@ -35,13 +35,13 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     private float strafePower = 0;
     public Intake2Tasks tasks;
     protected PositionTracker pt;
-    boolean startSpecRange = false;
+    boolean rangeEnabled = false;
     public boolean isTeleop;
     public int lastSample = -1;
 
     //***** Constructors *****
     public Intake2(Robot parent, String modeName) {
-        super(parent, "Slider", () -> new IntakeControl2(0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+        super(parent, "Slider", () -> new IntakeControl2(0.5, 0, 0, 0, 0, 0, 0, 0,false, false));
         this.isTeleop = modeName.equalsIgnoreCase("Teleop");
 
         setConfig(
@@ -92,16 +92,18 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public double getSpecRange(){
-        //double range = getHardware().specDistance.getDistanceCm();
-        return (4);}
+        return (getHardware().rangeSensor.getDistance(DistanceUnit.CM));
+    }
 
     // 2m distance sensor
     public void doSpecRange(DriveControl control) {
-        double inOutPower = 0.01;
-        if(startSpecRange) {
-            if (getSpecRange() < 3) {
+        double inOutPower = .1;
+        if(rangeEnabled) {
+            double range = getSpecRange();
+            parent.opMode.telemetry.addData("range", range);
+            if (range < 10) {
                 control.power = control.power.addY(inOutPower); // (away from sub)
-            } else if (getSpecRange() > 5) {
+            } else if (range > 14) {
                 control.power = control.power.addY(-inOutPower); // (toward sub)
             }
         }
@@ -208,10 +210,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public void eStop() {
-        //preventUserControl = false;
-
         stopAllIntakeTasks();
-
+        getHardware().backLight.stop();
         getHardware().dropperServo.stop();
         getHardware().parkServo.stop();
         getHardware().rotationServo.stop(); 
@@ -221,7 +221,6 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         getHardware().specimenServo.stop();
         getHardware().intakeWheelServoRight.stop();
         getHardware().intakeWheelServoLeft.stop();
-
         getHardware().bucketLiftMotor.setPower(0);
         getHardware().robotLiftMotor.setPower(0);
     }
@@ -261,12 +260,6 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public void initializeServos() {
-//        parent.opMode.sleep(500);
-//        getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp -.05); // default straight up position
-//        getHardware().dropperServo.setPosition(.714);
-//        getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition +.05);
-//        getHardware().rotationServo.setPosition(.5 +.05);
-//        parent.opMode.sleep(100);
         getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp);
         getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition);
         getHardware().dropperServo.setPosition(.716);
@@ -329,19 +322,22 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             }
         }
 
-        if (control.robotEStop == 1) {
+        rangeEnabled = control.rangeEnabled;
+
+        if (control.robotEStop) {
             eStop();
         }
 
         strafePower = control.strafePower;
         homingBucketZero.accept(getHardware().bucketLiftZeroSwitch.getState());
         currentBucketLiftPos = getHardware().bucketLiftMotor.getCurrentPosition();
-        //parent.opMode.telemetry.addData("Specimen Color", getColor());
-        parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
-        parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
-        parent.opMode.telemetry.addData("bucketLiftMotor postion", getHardware().bucketLiftMotor.getCurrentPosition());
-        parent.opMode.telemetry.addData("sample distance", readSampleDistance());
-        parent.opMode.telemetry.addData("color", identifySampleColor());
+//        parent.opMode.telemetry.addData("Sub Range",getSpecRange());
+//        parent.opMode.telemetry.addData("Specimen Color", getColor());
+//        parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
+//        parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
+//        parent.opMode.telemetry.addData("bucketLiftMotor postion", getHardware().bucketLiftMotor.getCurrentPosition());
+//        parent.opMode.telemetry.addData("sample distance", readSampleDistance());
+//        parent.opMode.telemetry.addData("color", identifySampleColor());
     }
 
     @Override
