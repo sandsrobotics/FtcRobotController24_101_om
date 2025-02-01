@@ -32,14 +32,17 @@ public class  IntakeSettings {
     public final int pinchSweepTime              = 1500;   // spec is 1250
     public final double pinchOffset              = 0.0;
 
-    public final double parkDown                 = 0.208;
-    public final double parkUp                   = 0.756;
+    public final double parkDown                 = 0.708;
+    public final double parkUp                   = 0.210;
     public final int parkSweepTime               = 400;
     public final double parkOffset               = 0.0;
 
     public final int positionSlideMin            = 10;
     public final int positionSlideMax            = 1200; // Physical limit = 1500; 1100 might be necessary if too long
     public final int positionSlideSpecimen       = 40;
+    public final int positionSlideAutoSamplePickup = 900;
+    public final int positionSlideAutoSampleRetract = 400;
+    public final int positionSlideAutoSampleDeposit = 1100;
     public final int positionSlideStartIntake    = 450;   //todo: finalize number
     public final int positionSlidePitMin         = 250;    //todo: finalize number
     public final int toleranceSlide              = 20;
