@@ -10,6 +10,8 @@ public class IntakeTasks {
     public final Group intakeTasksGroup;
     public final TimedTask autonomousSampleTask;
     public final TimedTask autoHomeTask;
+    public final TimedTask autoHomeTaskLift;
+    public final TimedTask autoHomeTaskSlide;
     public final TimedTask prepareToIntakeTask;
     public final TimedTask dockTask;
     public final TimedTask transferTask;
@@ -35,6 +37,8 @@ public class IntakeTasks {
         intakeTasksGroup = new Group("intake", intake.getTaskManager());
         autonomousSampleTask = new TimedTask(TaskNames.autonomousSample, intakeTasksGroup);
         autoHomeTask = new TimedTask(TaskNames.autoHome, intakeTasksGroup);
+        autoHomeTaskLift = new TimedTask("autoHomeLift", intakeTasksGroup);
+        autoHomeTaskSlide = new TimedTask("autoHomeSlide", intakeTasksGroup);
         prepareToIntakeTask = new TimedTask(TaskNames.prepareToIntake, intakeTasksGroup);
         dockTask = new TimedTask(TaskNames.safe, intakeTasksGroup);
         transferTask = new TimedTask(TaskNames.transfer, intakeTasksGroup);
@@ -261,21 +265,31 @@ public class IntakeTasks {
 
         /* == Task: autoHomeTask == */
         autoHomeTask.autoStart = false;
-        autoHomeTask.addStep(() -> this.setSlideToHomeConfig(1));
-        autoHomeTask.addTimedStep(
+        autoHomeTask.addStep(autoHomeTaskLift::restart);
+        autoHomeTask.addStep(autoHomeTaskSlide::restart);
+        autoHomeTask.addStep(autoHomeTaskSlide::isDone);
+        autoHomeTask.addStep(autoHomeTaskLift::isDone);
+
+        //homes lift
+        autoHomeTaskLift.autoStart = false;
+        autoHomeTaskLift.addStep(() -> this.setSlideToHomeConfig(1));
+        autoHomeTaskLift.addTimedStep(
                 () -> robot.opMode.telemetry.addData("homing", intake.getHardware().liftZeroSwitch.getState()),
                 () -> intake.getHardware().liftZeroSwitch.getState(), 10000);
-        autoHomeTask.addStep(() -> {
+        autoHomeTaskLift.addStep(() -> {
             intake.getHardware().liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             intake.getHardware().liftMotor.setTargetPosition(20);
             intake.liftTargetPosition = 20;
             setMotorsToRunConfig(1);
         });
-        autoHomeTask.addStep(() -> this.setSlideToHomeConfig(2));
-        autoHomeTask.addTimedStep(
+
+        //homes slides
+        autoHomeTaskSlide.autoStart = false;
+        autoHomeTaskSlide.addStep(() -> this.setSlideToHomeConfig(2));
+        autoHomeTaskSlide.addTimedStep(
                 () -> robot.opMode.telemetry.addData("homingH", intake.getHardware().slideZeroSwitch.getState()),
                 () -> intake.getHardware().slideZeroSwitch.getState(), 10000);
-        autoHomeTask.addStep(() -> {
+        autoHomeTaskSlide.addStep(() -> {
             intake.getHardware().slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             intake.getHardware().slideMotor.setTargetPosition(20);
             intake.slideTargetPosition = 20;

@@ -17,8 +17,8 @@ public class FlipbotSettings {
 
    public static void setTeleOp () { modeTeleOp = true; }
    public static void setAuto () { modeTeleOp = false; }
-   public boolean isTeleOp() { return modeTeleOp; }
-   public boolean isAuto() { return !modeTeleOp; }
+   public static boolean isTeleOp() { return modeTeleOp; }
+   public static boolean isAuto() { return !modeTeleOp; }
 
    public static void storeRobotPosition(Vector3 currentPosition) {
       if (currentPosition.X == 0 && currentPosition.Y == 0 && currentPosition.Z == 0) return;

@@ -152,6 +152,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         getHardware().flipper.stop();
         getHardware().chute.stop();
         getHardware().pinch.stop();
+        //stop the hang motor
+        getHardware().robotHangMotor.setPower(0);
     }
 
     public void stopAllIntakeTasks() {
@@ -246,12 +248,12 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         // this is part of the resets lift to 0 each time it hits the limit switch
         homingLiftZero.setOnRise(() -> {
             getHardware().liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            setLiftPosition(10,0.125);
+            setLiftPosition(20,0.5);
         });
         //homing hslide slide setup
         homingSlideZero.setOnRise(() -> {
             getHardware().slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            setSlidePosition(10,0.125);
+            setSlidePosition(20,0.5);
         });
     }
 
@@ -273,7 +275,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public void onStart() {
         drive = getBeanManager().getBestMatch(Drive.class, false);
         drive.addController(Intake.ControllerNames.distanceController, this::strafeRobot);
-        tasks.startAutoHome();
+        if (FlipbotSettings.isTeleOp())  tasks.startAutoHome();
     }
 
     @Override
