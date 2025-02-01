@@ -148,7 +148,7 @@ public class ClawAutoSpec extends LinearOpMode{
         }
         robot.stop();
     }
-    public void BucketAuto(TimedTask autoTasks) {}
+    public void BucketAuto(TimedTask autoTasks) {} // this method is in Claw Auto Bucket
 
     private void SpecAuto(TimedTask autoTasks) {
         Vector3 humansidestart = new Vector3(14 + 3.0/8.0, -62, -90);

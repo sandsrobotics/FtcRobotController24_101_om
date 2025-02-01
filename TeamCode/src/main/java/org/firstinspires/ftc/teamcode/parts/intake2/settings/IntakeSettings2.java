@@ -31,7 +31,7 @@ public class IntakeSettings2 {
     public final int specimenHangPosition = 1392;
     public final int specimenServoOpenHeight = 920;
     public final double parkServoPosition = 0.9;
-    public final double parkServoPositionParked = 0.24;
+    public final double parkServoPositionParked = 0.29; // was .24
 
     public IntakeSettings2() {
     }
