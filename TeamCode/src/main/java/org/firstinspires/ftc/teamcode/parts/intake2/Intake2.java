@@ -95,16 +95,22 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         return (getHardware().rangeSensor.getDistance(DistanceUnit.CM));
     }
 
+    double ensureRange(double value, double min, double max) {
+        return Math.min(Math.max(value, min), max);
+    }
+
     // 2m distance sensor
     public void doSpecRange(DriveControl control) {
-        double inOutPower = .1;
+        double powerMultiplier = .01;
         if(rangeEnabled) {
             double range = getSpecRange();
+            if (range > 14) powerMultiplier = .02;
+            double power = ensureRange(range * powerMultiplier,0,.25);
             parent.opMode.telemetry.addData("range", range);
-            if (range < 10) {
-                control.power = control.power.addY(inOutPower); // (away from sub)
+            if (range < 9) {
+                control.power = control.power.addY(power); // (away from sub)
             } else if (range > 14) {
-                control.power = control.power.addY(-inOutPower); // (toward sub)
+                control.power = control.power.addY(-power); // (toward sub)
             }
         }
     }
