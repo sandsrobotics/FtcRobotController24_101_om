@@ -14,6 +14,7 @@ public class ServoSSR implements Servo {
     private boolean eStopped = true;        // tracks whether the servo is stopped in such a way that the position is unpredictable
     private boolean unknown = true;         // tracks whether the servo position is unknown (due to eStop or external shenanigans)
     private int sweepTime = 1500;           // the time (in ms) it takes the servo to move its entire range (account for loading when setting!)
+    private int sweepTimeDec = 1500;        // the time (in ms) it takes the servo to move its entire range (account for loading when setting!)
     private int wakeTime = 200;             // a short interval for the servo to move from disabled/parked to last position
     private double scale = 1.0;             // scale is potentially useful when replacing a servo with a different range (e.g., 270° vs 300°)
     private long timer = 0;                 // a clock time to track whether a move should be complete
@@ -46,10 +47,27 @@ public class ServoSSR implements Servo {
      */
     public ServoSSR setSweepTime(int sweepTime) {
         this.sweepTime = (int)clamp(sweepTime, 0, 5000);
+        this.sweepTimeDec = (int)clamp(sweepTime, 0, 5000);
         return this;
     }
     public ServoSSR setSweepTime(long sweepTime) {
         return setSweepTime((int)sweepTime);
+    }
+
+    /**
+     * Sets the servo sweep time (full time to traverse from minimum to maximum position; e.g., -150° to 150°).
+     * The value supplied should account for how the servo is loaded.
+     * @param sweepTimeTo1 the time in ms, going "forward" from 0 to 1, limited to 0–5000.
+     * @param sweepTimeTo0 the time in ms, going "reverse" from 1 to 0, limited to 0–5000.
+     * @return this for method chaining
+     */
+    public ServoSSR setSweepTime(int sweepTimeTo1, int sweepTimeTo0) {
+        this.sweepTime = (int)clamp(sweepTimeTo1, 0, 5000);
+        this.sweepTimeDec = (int)clamp(sweepTimeTo0, 0, 5000);
+        return this;
+    }
+    public ServoSSR setSweepTime(long sweepTimeTo1, long sweepTimeTo0) {
+        return setSweepTime((int)sweepTimeTo1, (int)sweepTimeTo0);
     }
 
     /**
@@ -119,7 +137,7 @@ public class ServoSSR implements Servo {
         return this;
     }
     public ServoSSR resetTime() {
-        return resetTime(sweepTime);
+        return resetTime(Math.max(sweepTime, sweepTimeDec));
     }
 
     // enabling and disabling pwm
@@ -418,20 +436,24 @@ public class ServoSSR implements Servo {
     // internal methods
 
     private long calcSweepTimerValue(double newPosition) {
-        if (unknown) {  // allow full sweep time because position is unknown
-            return System.currentTimeMillis() + sweepTime;
+        /* if the position is unknown, allow the maximum full sweep time */
+        if (unknown) {
+            return System.currentTimeMillis() + Math.max(sweepTime, sweepTimeDec);
         }
-        if (isDone()) {  // enabled, timer not reset, timer complete = should be at last requested position
-            return System.currentTimeMillis() + (long)(calcSweepChange(newPosition) * sweepTime);
+        /* select sweep time based on the direction of movement (towards 1 or towards 0) */
+        int sweepTimeByDir = newPosition > getPosition() ? sweepTime : sweepTimeDec;
+        /* enabled, timer not reset, timer complete = should be at last requested position */
+        if (isDone()) {
+            return System.currentTimeMillis() + (long)(calcSweepChange(newPosition) * sweepTimeByDir);
         }
-        // if the previous move was not complete, assume the worst case scenario for the next move
-        // (i.e., the rest of the time remaining from the previous move plus the new move time,
-        // but never more than the full sweep time)
-        // possible future to do: calculate the predicted position based on time and last position
-        return Math.min(System.currentTimeMillis() + sweepTime,      // need to cap this at full sweep time
-                Math.max(timer, System.currentTimeMillis())          // remaining time, not less than current time (accounts for timer reset to 0)
-                + (long)(calcSweepChange(newPosition) * sweepTime)   // normally calculated time for movement
-                + (enabled ? 0 : wakeTime));                         // add waketime if disabled (and expected to be near last position)
+        /* if the previous move was not complete, assume the worst case scenario for the next move
+           (i.e., the rest of the time remaining from the previous move plus the new move time,
+           but never more than the full sweep time)
+           possible future to do: calculate the predicted position based on time and last position */
+        return Math.min(System.currentTimeMillis() + sweepTimeByDir,      // need to cap this at full sweep time
+                Math.max(timer, System.currentTimeMillis())               // remaining time, not less than current time (accounts for timer reset to 0)
+                + (long)(calcSweepChange(newPosition) * sweepTimeByDir)   // normally calculated time for movement
+                + (enabled ? 0 : wakeTime));                              // add waketime if disabled (and expected to be near last position)
     }
 
     private double calcSweepChange(double newPosition) {
@@ -473,6 +495,7 @@ setPosition() - sets the position with offset and calculates the expected moveme
 setOffset(offset) - set an offset that will be added to positions (for tuning a replacement servo or one of a pair acting together)
 setScale(scale) - set a scale multiplier for positions
 setSweepTime(sweepTime) - set the time expected for the servo to move its entire range
+setSweepTime(sweepTimeTo1, sweepTimeTo0) - set the bi-directional time expected for the servo to move its entire range
 setWakeTime(wakeTime) - set the time expected for the servo to move back to its position after being disabled
 setFullPwmRange() - sets the controller to use pwm range of 500-2500 μs vs. the default of 600-2400 μs
 setPwmRange(low, high) - sets the controller to use an arbitrary pwm range
