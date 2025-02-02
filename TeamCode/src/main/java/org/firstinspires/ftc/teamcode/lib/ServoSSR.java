@@ -26,6 +26,8 @@ public class ServoSSR implements Servo {
     // Future improvement possibility 1: For servos with feedback (e.g., Axon Max+),
     //     add the ability to associate and configure an analog channel to read actual position and verify movement.
     // Future improvement possibility 2: Estimate servo position based on timer
+    // Future improvement possibility 3: (Difficult!) Provide a way to calculate and curve fit an nth order polynomial to describe the speed
+    //     of a loaded servo, both directions, to accurately predict the transit time and position.
 
     // setters
 
@@ -120,6 +122,17 @@ public class ServoSSR implements Servo {
             highC = temp;
         }
         ((ServoImplEx)servo).setPwmRange(new PwmControl.PwmRange(lowC, highC));
+        return this;
+    }
+
+    /**
+     * Sets the logical direction in which this servo operates.
+     * <P>The purpose of this instead of the regular .setDirection method is that it allows method chaining.
+     * @param direction the direction to set for this servo
+     * @return this for method chaining
+     */
+    public ServoSSR setDirectionSSR(Direction direction) {
+        servo.setDirection(direction);
         return this;
     }
 
@@ -287,6 +300,18 @@ public class ServoSSR implements Servo {
     public boolean isStopped() {
         isEnabled();      // added to check for external unpredictable disables that should be treated the same
         return eStopped;
+    }
+
+    /**
+     * Determine if the servo is in an unknown position.
+     * This could be caused by .stop() or external manipulation of the pwm state.
+     * If stopped or pwm disabled externally, the servo may have moved while unpowered.
+     * If pwm was enabled externally, the servo will have a position set, but there is no way to know whether it has reached that position.
+     * @return TRUE if the servo position is unknown
+     */
+    public boolean isUnknown() {
+        isEnabled();      // check for external unpredictable enables/disables that should be treated as unknown; pwm may be enabled or not
+        return unknown;
     }
 
     /**
@@ -513,7 +538,9 @@ isSetPosition(comparePosition) - is the servo set to this position? (may still b
 isEnabled() - is the servo enabled?
 isDisabled() - is the servo disabled?
 isStopped() - is the servo stopped?
+isUnknown() - is the servo position unknown (due to .stop or pwm changes outside of this class)?
 getServo() - get the servo object for whatever reason
+setDirectionSSR(direction) - Set the direction; like .setDirection but can be chained with other methods
 setPower(power) - sets the "power" like a CRservo, -1 to 1.
 getPower() - returns the "power", -1 to 1.
 setBlinkinPattern(pattern) - sets using pattern as int or RevBlinkinLedDriver.BlinkinPattern; must use setFullPwmRange()
