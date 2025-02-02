@@ -191,9 +191,7 @@ public class FlipBucketAuto2025 extends LinearOpMode{
 
         {
             // Deposit Pre-loaded Sample in High-basket
-            autoTasks.addStep(() -> intake.debugDelay());
-            autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftMax, 1));  //positionLiftReady
-              autoTasks.addStep(() -> intake.debugDelay());
+            autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftMax, 1));
             positionSolver.addMoveToTaskEx(p_2, autoTasks);
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
             positionSolver.addMoveToTaskEx(p_3, autoTasks);
@@ -202,11 +200,9 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         }
 
         // First Sample.
-//        grabAndDepositSample(autoTasks, p_pre_5, p_5, p_3);
         grabAndDepositSample(autoTasks, p_pre_5, new_p5, p_3);
 
         // Second Sample.
-//        grabAndDepositSample(autoTasks, p_pre_6, p_6, p_3);
         grabAndDepositSample(autoTasks, p_pre_6, new_p6, p_3);
 
         // Third Sample.
@@ -235,8 +231,9 @@ public class FlipBucketAuto2025 extends LinearOpMode{
 
     private void parkForAutoAscent (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two) {
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-        positionSolver.addMoveToTaskExNoWait(pos_one, autoTasks);
+        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
         autoTasks.addStep(() -> intake.getHardware().park.setPosition(intake.getSettings().parkUp));  // lk moved up
-        positionSolver.addMoveToTaskExNoWait(pos_two, autoTasks);
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
+        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
     }
 }

@@ -384,9 +384,10 @@ public class FlipAuto2025 extends LinearOpMode{
               autoTasks.addStep(() -> intake.debugDelay());
             positionSolver.addMoveToTaskEx(p_8, autoTasks);
               autoTasks.addStep(() -> intake.debugDelay());
-            positionSolver.addMoveToTaskEx(p_9, autoTasks);
 
+            // If Moving Third-Sample, move to p_9.
             // If Skipping Third-Sample, Move to p_new_9.
+            //   positionSolver.addMoveToTaskEx(p_9, autoTasks);
             positionSolver.addMoveToTaskEx(p_new_9, autoTasks);
 
             // Third Sample to ObservationZone.
@@ -405,7 +406,7 @@ public class FlipAuto2025 extends LinearOpMode{
         specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_17, p_18);
 
         // Fourth Specimen PickupAndHang
-        specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_19, p_20);
+//        specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_19, p_20);
 
         // Fifth Specimen PickupAndHang
 //        specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_21, p_22);
@@ -414,7 +415,7 @@ public class FlipAuto2025 extends LinearOpMode{
             // Park.
               autoTasks.addStep(() -> intake.debugDelay());
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-            positionSolver.addMoveToTaskEx(p_00, autoTasks);
+            positionSolver.addMoveToTaskEx(p_12, autoTasks);
         }
     }
 
@@ -422,16 +423,15 @@ public class FlipAuto2025 extends LinearOpMode{
                                         Vector3 pos_four, Vector3 prePosition, Vector3 position) {
         // Specimen Pickup and Hang.
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
-        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
+//        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
           autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
           autoTasks.addStep(() -> intake.debugDelay());
-//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
           autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_three, autoTasks);
           autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
-//        autoTasks.addDelay(250);
         autoTasks.addStep(() -> intake.tasks.getSpecimenTask.isDone());
           autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
@@ -442,14 +442,14 @@ public class FlipAuto2025 extends LinearOpMode{
         positionSolver.addMoveToTaskEx(prePosition, autoTasks);
           autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.isDone());
+          autoTasks.addStep(() -> intake.debugDelay());
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
+        positionSolver.addMoveToTaskEx(position, autoTasks);
 //        autoTasks.addDelay(200);
           autoTasks.addStep(() -> intake.debugDelay());
-//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
-        positionSolver.addMoveToTaskEx(position, autoTasks);
-        autoTasks.addDelay(200);
-          autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
-        autoTasks.addDelay(200);
+        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.isDone());
+//        autoTasks.addDelay(200);
           autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(prePosition, autoTasks);
     }
@@ -564,7 +564,7 @@ public class FlipAuto2025 extends LinearOpMode{
             // Park.
             autoTasks.addStep(() -> intake.debugDelay());
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-            positionSolver.addMoveToTaskEx(p_00, autoTasks);
+            positionSolver.addMoveToTaskEx(p_12, autoTasks);
         }
     }
  }
