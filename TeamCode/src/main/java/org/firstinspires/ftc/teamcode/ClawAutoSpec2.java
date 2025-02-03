@@ -9,25 +9,26 @@ import om.self.task.other.TimedTask;
 //@Disabled
 @Autonomous(name="27050 Specimen Humanside 2", group="27050")
 public class ClawAutoSpec2 extends ClawAutoSpec {
+    Vector3 observationzonepickup = new Vector3(45.5, -61, 90); // to stop wall hit
     @Override
     public void initAuto() {
         transformFunc = (v) -> v;
         bucketSample = false;
+        fieldStartPos = observationzonepickup;
     }
 
 @Override
 public void SpecAuto(TimedTask autoTasks) {
         Vector3 humansidestart = new Vector3(14 + 3.0 / 8.0, -62, -90);
         Vector3 rightbeforespecimenbar = new Vector3(11.75, -39, -90);
-        Vector3 observationzonepickup = new Vector3(47, -61.5, 90); // to stop wall hit
-        Vector3 observationzoneclear = new Vector3(47, -52, 90); // to stop wall hit
-
+        Vector3 observationzoneclear = new Vector3(45.5, -56, 90); // to stop wall hit
 
         autoTasks.addStep(() -> odo.setPosition(observationzonepickup));
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceNoAlwaysRunSettings));
-        positionSolver.addMoveToTaskEx(observationzoneclear, autoTasks);
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
         autoTasks.addStep(() -> intake.tasks.autoSpecimenPickupTask.restart()); // pickup specimen and raise
         autoTasks.addStep(() -> intake.tasks.autoSpecimenPickupTask.isDone());
+        positionSolver.addMoveToTaskEx(observationzoneclear, autoTasks);
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceNoAlwaysRunSettings));
         positionSolver.addMoveToTaskExNoWait(rightbeforespecimenbar, autoTasks);
         autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.restart()); // raise high for specimen hang
         autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.isDone());

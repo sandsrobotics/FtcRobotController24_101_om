@@ -9,16 +9,17 @@ import om.self.task.other.TimedTask;
 //@Disabled
 @Autonomous(name="27050 Bucket Specimen", group="27050")
 public class ClawAutoBucket extends ClawAutoSpec {
+    Vector3 bucketsidestart = new Vector3(-14 - 3.0 / 8.0, -62, -90);
     @Override
     public void initAuto(){
         transformFunc = (v) -> v;
         bucketSide = true;
         bucketSample = false;
+        fieldStartPos =bucketsidestart;
     }
 
     @Override
     public void BucketAuto(TimedTask autoTasks) {
-        Vector3 bucketsidestart = new Vector3(-14 - 3.0 / 8.0, -62, -90);
         Vector3 bucketsamplestart = new Vector3(-37.5, -62, 90);
         Vector3 beforespecimenhang = new Vector3(-10, -39, -90);
         Vector3 specimenhang = new Vector3(-10, -32.75, -90); //specimen must be lifted before hang

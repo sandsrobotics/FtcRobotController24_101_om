@@ -53,9 +53,12 @@ public class ClawAutoSpec extends LinearOpMode{
     /**************************/
     public int startDelay;
     private int parkPosition;
+    Vector3 fieldStartPos;
 
     public void initAuto(){
         transformFunc = (v) -> v;
+        fieldStartPos = new Vector3(14 + 3.0 / 8.0, -62, -90);
+        //Vector3 humansidestart = new Vector3(14 + 3.0/8.0, -62, -90);
     }
 
     private Vector3 tileToInchAuto(Vector3 tiles){
@@ -80,7 +83,6 @@ public class ClawAutoSpec extends LinearOpMode{
         Drive drive = new Drive(robot);
         new BulkRead(robot);
         intake = new Intake2(robot, "Autonomous");
-        Vector3 fieldStartPos = new Vector3(14 + 3.0 / 8.0, -62, -90);
 
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
                 100, new Vector3(2, 2, 2), fieldStartPos);
