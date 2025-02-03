@@ -423,11 +423,11 @@ public class FlipAuto2025 extends LinearOpMode{
                                         Vector3 pos_four, Vector3 prePosition, Vector3 position) {
         // Specimen Pickup and Hang.
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
-        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
+//        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
           autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
           autoTasks.addStep(() -> intake.debugDelay());
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
+//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
           autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_three, autoTasks);
           autoTasks.addStep(() -> intake.debugDelay());
@@ -443,7 +443,7 @@ public class FlipAuto2025 extends LinearOpMode{
           autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.isDone());
           autoTasks.addStep(() -> intake.debugDelay());
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
+//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
         positionSolver.addMoveToTaskEx(position, autoTasks);
 //        autoTasks.addDelay(200);
           autoTasks.addStep(() -> intake.debugDelay());
