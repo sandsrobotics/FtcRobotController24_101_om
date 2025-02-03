@@ -3,6 +3,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import android.graphics.Color;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -15,11 +16,13 @@ import org.firstinspires.ftc.teamcode.parts.intake2.settings.IntakeSettings2;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
+import om.self.ezftc.utils.Vector3;
 import om.self.supplier.consumer.EdgeConsumer;
 import om.self.task.core.Group;
 
 import static java.lang.Math.abs;
 
+@Config
 public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHardware2, IntakeControl2> {
     public int bucketLiftTargetPosition;
     double motorPower = 0;
@@ -35,7 +38,10 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     private float strafePower = 0;
     public Intake2Tasks tasks;
     protected PositionTracker pt;
-    boolean rangeEnabled = false;
+    public boolean rangeEnabled = false;
+    public boolean rangeisDone = false;
+    static public double rangePower = 0.2;
+    static public double powerMultiplier = .015;
     public boolean isTeleop;
     public int lastSample = -1;
 
@@ -100,17 +106,24 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     // 2m distance sensor
+    //Todo: Ranging code
     public void doSpecRange(DriveControl control) {
-        double powerMultiplier = .01;
+//        Vector3 zero = new Vector3(0,0,0);
         if(rangeEnabled) {
             double range = getSpecRange();
-            if (range > 14) powerMultiplier = .02;
-            double power = ensureRange(range * powerMultiplier,0,.25);
+//            if (range > 21) powerMultiplier = .02;
+//            double power = ensureRange(range * powerMultiplier,0,.20);
             parent.opMode.telemetry.addData("range", range);
-            if (range < 9) {
-                control.power = control.power.addY(power); // (away from sub)
-            } else if (range > 14) {
-                control.power = control.power.addY(-power); // (toward sub)
+            if (range < 14) {
+                drive.stopRobot();
+                rangeisDone = true;
+                rangeEnabled = false;
+//            } else if (range < 10) {
+//                control.power = control.power.addY(powerMultiplier); // (away from sub)
+//                rangeisDone = false;
+            } else if (range > 15) {
+                control.power = control.power.addY(-rangePower); // (toward sub)
+                rangeisDone = false;
             }
         }
     }
@@ -328,7 +341,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             }
         }
 
-        rangeEnabled = control.rangeEnabled;
+        if (!rangeEnabled) rangeEnabled = control.rangeEnabled;
 
         if (control.robotEStop) {
             eStop();
@@ -337,7 +350,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         strafePower = control.strafePower;
         homingBucketZero.accept(getHardware().bucketLiftZeroSwitch.getState());
         currentBucketLiftPos = getHardware().bucketLiftMotor.getCurrentPosition();
-//        parent.opMode.telemetry.addData("Sub Range",getSpecRange());
+        parent.opMode.telemetry.addData("Sub Range",getSpecRange());
 //        parent.opMode.telemetry.addData("Specimen Color", getColor());
 //        parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
 //        parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
