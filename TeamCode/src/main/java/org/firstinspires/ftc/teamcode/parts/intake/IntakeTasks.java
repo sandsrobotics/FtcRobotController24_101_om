@@ -4,12 +4,17 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import om.self.ezftc.core.Robot;
 import om.self.task.core.Group;
+import om.self.task.core.TaskEx;
 import om.self.task.other.TimedTask;
 
 public class IntakeTasks {
     public final Group intakeTasksGroup;
     public final TimedTask autonomousSampleTask;
+    public final TimedTask specAutoIntakePickupTask;
+    public final TimedTask specAutoIntakeDepositTask;
     public final TimedTask autoHomeTask;
+    public final TimedTask autoHomeTaskLift;
+    public final TimedTask autoHomeTaskSlide;
     public final TimedTask prepareToIntakeTask;
     public final TimedTask dockTask;
     public final TimedTask transferTask;
@@ -34,7 +39,11 @@ public class IntakeTasks {
         this.robot = robot;
         intakeTasksGroup = new Group("intake", intake.getTaskManager());
         autonomousSampleTask = new TimedTask(TaskNames.autonomousSample, intakeTasksGroup);
+        specAutoIntakePickupTask = new TimedTask(TaskNames.specAutoIntakePickup, intakeTasksGroup);
+        specAutoIntakeDepositTask = new TimedTask(TaskNames.specAutoIntakeDeposit, intakeTasksGroup);
         autoHomeTask = new TimedTask(TaskNames.autoHome, intakeTasksGroup);
+        autoHomeTaskLift = new TimedTask("autoHomeLift", intakeTasksGroup);
+        autoHomeTaskSlide = new TimedTask("autoHomeSlide", intakeTasksGroup);
         prepareToIntakeTask = new TimedTask(TaskNames.prepareToIntake, intakeTasksGroup);
         dockTask = new TimedTask(TaskNames.safe, intakeTasksGroup);
         transferTask = new TimedTask(TaskNames.transfer, intakeTasksGroup);
@@ -91,9 +100,33 @@ public class IntakeTasks {
         autonomousSampleTask.addStep(prepareToTransferTask::restart);
         autonomousSampleTask.addStep(prepareToTransferTask::isDone);
         // todo: comment the following two lines!? ****************
-        autonomousSampleTask.addDelay(250);
-        autonomousSampleTask.addStep(transferTask::isDone);
+//        autonomousSampleTask.addDelay(250);
+//        autonomousSampleTask.addStep(transferTask::isDone);
         /* todo: This needs more testing, improvement */
+
+        specAutoIntakePickupTask.autoStart = false;
+        specAutoIntakePickupTask.addStep(() -> {
+            intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor);
+            intake.getHardware().spinner.setPosition(intake.getSettings().spinnerIn);
+        });
+        specAutoIntakePickupTask.addStep(() -> intake.getHardware().flipper.isDone());
+        specAutoIntakePickupTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideAutoSamplePickup, 1));
+        specAutoIntakePickupTask.addTimedStep(() -> {}, () -> intake.isSamplePresent() || intake.isSlideInTolerance(), 500);
+        specAutoIntakePickupTask.addTimedStep(() -> {}, intake::isSamplePresent, 250);
+        specAutoIntakePickupTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideAutoSampleRetract, 1));
+
+        specAutoIntakeDepositTask.autoStart = false;
+        specAutoIntakeDepositTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideAutoSampleDeposit, 1));
+        specAutoIntakeDepositTask.addTimedStep(() -> {}, intake::isSlideInTolerance, 500);
+        specAutoIntakeDepositTask.addStep(() -> {
+            intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor);
+            intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOut);
+        });
+        specAutoIntakeDepositTask.addStep(() -> intake.getHardware().flipper.isDone());
+//        specAutoIntakeDepositTask.addDelay(400);
+        specAutoIntakeDepositTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleEmpty, 500);
+        specAutoIntakeDepositTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideAutoSampleRetract, 1));
+        specAutoIntakeDepositTask.addStep(() -> intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff));
 
         /* == Task: prepareToIntakeTask == */
         prepareToIntakeTask.autoStart = false;
@@ -261,21 +294,31 @@ public class IntakeTasks {
 
         /* == Task: autoHomeTask == */
         autoHomeTask.autoStart = false;
-        autoHomeTask.addStep(() -> this.setSlideToHomeConfig(1));
-        autoHomeTask.addTimedStep(
+        autoHomeTask.addStep(autoHomeTaskLift::restart);
+        autoHomeTask.addStep(autoHomeTaskSlide::restart);
+        autoHomeTask.addStep(autoHomeTaskSlide::isDone);
+        autoHomeTask.addStep(autoHomeTaskLift::isDone);
+
+        //homes lift
+        autoHomeTaskLift.autoStart = false;
+        autoHomeTaskLift.addStep(() -> this.setSlideToHomeConfig(1));
+        autoHomeTaskLift.addTimedStep(
                 () -> robot.opMode.telemetry.addData("homing", intake.getHardware().liftZeroSwitch.getState()),
                 () -> intake.getHardware().liftZeroSwitch.getState(), 10000);
-        autoHomeTask.addStep(() -> {
+        autoHomeTaskLift.addStep(() -> {
             intake.getHardware().liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             intake.getHardware().liftMotor.setTargetPosition(20);
             intake.liftTargetPosition = 20;
             setMotorsToRunConfig(1);
         });
-        autoHomeTask.addStep(() -> this.setSlideToHomeConfig(2));
-        autoHomeTask.addTimedStep(
+
+        //homes slides
+        autoHomeTaskSlide.autoStart = false;
+        autoHomeTaskSlide.addStep(() -> this.setSlideToHomeConfig(2));
+        autoHomeTaskSlide.addTimedStep(
                 () -> robot.opMode.telemetry.addData("homingH", intake.getHardware().slideZeroSwitch.getState()),
                 () -> intake.getHardware().slideZeroSwitch.getState(), 10000);
-        autoHomeTask.addStep(() -> {
+        autoHomeTaskSlide.addStep(() -> {
             intake.getHardware().slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             intake.getHardware().slideMotor.setTargetPosition(20);
             intake.slideTargetPosition = 20;
@@ -309,6 +352,8 @@ public class IntakeTasks {
     /***********************************************************************************/
     public static final class TaskNames {
         public final static String autonomousSample = "autonomous sample";
+        public final static String specAutoIntakePickup = "specimen Auto Intake Pickup";
+        public final static String specAutoIntakeDeposit = "specimen Auto Intake Deposit";
         public final static String autoHome = "auto home";
         public final static String prepareToIntake = "prepare to intake";
         public final static String safe = "safe";

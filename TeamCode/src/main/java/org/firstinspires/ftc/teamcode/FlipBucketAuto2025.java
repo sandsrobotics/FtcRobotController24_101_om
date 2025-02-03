@@ -82,7 +82,7 @@ public class FlipBucketAuto2025 extends LinearOpMode{
 
 //        Vector3 fieldStartPos = new Vector3(0,0,-90);
 //        Vector3 fieldStartPos = new Vector3(14 + 3.0/8.0, -62, -90);
-        Vector3 fieldStartPos = new Vector3(-14.375, -62, 90);
+        Vector3 fieldStartPos = new Vector3(-14.375 - 23.5, -62, 90);
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
                 100, new Vector3(2,2,2), fieldStartPos);
         pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));
@@ -169,16 +169,18 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         Vector3 posPrePark = new Vector3(-39, -11, 180);
 
         // TODO: Rename the positions to be  more descriptive.
-        Vector3 p_1 = new Vector3(-14.375, -62, 90);
-        Vector3 p_2 = new Vector3(-14.375, -48, 90);
+        Vector3 p_1 = new Vector3(-14.375 - 23.5, -62, 90);
+        Vector3 p_2 = new Vector3(-14.375 - 23.5, -52, 90);
         Vector3 p_pre_3 = new Vector3(-53.5, -53.5, 90);
         Vector3 p_3 = new Vector3(-53.5, -53.5, 45);
         Vector3 p_4 = new Vector3(-38, -48, 90);
         Vector3 p_pre_5 = new Vector3(-36, -39, 45);
         Vector3 p_5 = new Vector3(-36, -39, 135);
+        Vector3 new_p5 = new Vector3(-56.5, -42.5, 66);
         Vector3 p_pre_6 = new Vector3(-46.5, -39, 45);
         Vector3 p_6 = new Vector3(-46.5, -39, 135);
-        Vector3 p_7 = new Vector3(-59, -42, 119);
+        Vector3 new_p6 = new Vector3(-51,-42.5,115);
+        Vector3 p_7 = new Vector3(-58, -42, 119); //X:-59
         Vector3 p_8 = new Vector3(-39, -11, 0);
         Vector3 p_9 = new Vector3(-23.5, -11, 0);
 
@@ -189,24 +191,19 @@ public class FlipBucketAuto2025 extends LinearOpMode{
 
         {
             // Deposit Pre-loaded Sample in High-basket
-              autoTasks.addStep(() -> intake.debugDelay());
+            autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftMax, 1));
             positionSolver.addMoveToTaskEx(p_2, autoTasks);
-            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
-              autoTasks.addStep(() -> intake.debugDelay());
-              //autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftReady, 1));
+            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
             positionSolver.addMoveToTaskEx(p_3, autoTasks);
-            autoTasks.addDelay(100);
             autoTasks.addStep(() -> intake.tasks.depositTask.restart());
-            autoTasks.addDelay(100);
             autoTasks.addStep(() -> intake.tasks.depositTask.isDone());
-            autoTasks.addDelay(100);
         }
 
         // First Sample.
-        grabAndDepositSample(autoTasks, p_pre_5, p_5, p_3);
+        grabAndDepositSample(autoTasks, p_pre_5, new_p5, p_3);
 
         // Second Sample.
-        grabAndDepositSample(autoTasks, p_pre_6, p_6, p_3);
+        grabAndDepositSample(autoTasks, p_pre_6, new_p6, p_3);
 
         // Third Sample.
         grabAndDepositSample(autoTasks, p_6, p_7, p_3);
@@ -216,48 +213,27 @@ public class FlipBucketAuto2025 extends LinearOpMode{
     }
 
     private void grabAndDepositSample (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three) {
+
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
+
         // Grab Sample.
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-          autoTasks.addStep(() -> intake.debugDelay());
-          //autoTasks.addStep(() -> intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor));  //flipperSafe?
-        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
-//        autoTasks.addDelay(100);
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
-          autoTasks.addStep(() -> intake.debugDelay());
+        autoTasks.addStep(() -> intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor));
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
-        autoTasks.addDelay(100);
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
-//        autoTasks.addDelay(100);
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());
-        autoTasks.addDelay(100);
 
         // Deposit Sample in High-Basket.
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-          autoTasks.addStep(() -> intake.debugDelay());
-        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
-          //autoTasks.addStep(() -> intake.tasks.transferTask.isDone());
-          //autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftReady, 1));
-//        autoTasks.addDelay(100);
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
-          autoTasks.addStep(() -> intake.debugDelay());
-        positionSolver.addMoveToTaskEx(pos_three, autoTasks);
-        autoTasks.addDelay(100);
+        positionSolver.addMoveToTaskExNoWait(pos_three, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.transferTask.isDone());
         autoTasks.addStep(() -> intake.tasks.depositTask.restart());
-//        autoTasks.addDelay(200);
         autoTasks.addStep(() -> intake.tasks.depositTask.isDone());
-        autoTasks.addDelay(100);
     }
 
     private void parkForAutoAscent (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two) {
-        // Grab Sample.
-          autoTasks.addStep(() -> intake.debugDelay());
-          //autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(pos_one, autoTasks);
         autoTasks.addStep(() -> intake.getHardware().park.setPosition(intake.getSettings().parkUp));  // lk moved up
-        autoTasks.addDelay(200);
-          autoTasks.addStep(() -> intake.debugDelay());
-          //autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
-        autoTasks.addDelay(200);
     }
 }

@@ -20,6 +20,7 @@ public class  IntakeSettings {
     public final double chuteParked              = 0.689;
     public final double chuteReady               = 0.535;
     public final double chuteDeposit             = 0.327;
+    public final double chuteInspect             = 0.407;
     public final int chuteSweepTime              = 1500;   // spec is 1250
     public final double chuteOffset              = 0.0;
 
@@ -31,14 +32,17 @@ public class  IntakeSettings {
     public final int pinchSweepTime              = 1500;   // spec is 1250
     public final double pinchOffset              = 0.0;
 
-    public final double parkDown                 = 0.208;
-    public final double parkUp                   = 0.756;
+    public final double parkDown                 = 0.708;
+    public final double parkUp                   = 0.210;
     public final int parkSweepTime               = 400;
     public final double parkOffset               = 0.0;
 
     public final int positionSlideMin            = 10;
     public final int positionSlideMax            = 1200; // Physical limit = 1500; 1100 might be necessary if too long
     public final int positionSlideSpecimen       = 40;
+    public final int positionSlideAutoSamplePickup = 900;
+    public final int positionSlideAutoSampleRetract = 400;
+    public final int positionSlideAutoSampleDeposit = 1100;
     public final int positionSlideStartIntake    = 450;   //todo: finalize number
     public final int positionSlidePitMin         = 250;    //todo: finalize number
     public final int toleranceSlide              = 20;
@@ -53,12 +57,14 @@ public class  IntakeSettings {
     public final int positionLiftHangReady       = 1440;  //2500;   //todo: get number
     public final int positionLiftHangRelease     = 980; //1000;  //2000;   //todo: get number
     public final int positionLiftTransfer        = 10;
+    public final int positionLiftPreDump         = 2450;
     public final int toleranceLift               = 20;
 
     public final int positionHangMin             = 20;
     public final int positionHangMax             = 13500; //4350;
-    public final int positionHangReady           = 9000; //todo: get number
-    public final int positionHangFinal           = 745; //todo: get number
+    public final int positionHangReady           = 10050; //9000; //todo: get number
+    public final int positionHangFinal           = 2550; //745; //todo: get number
+    public final int positionHangClear           = 12700;
     public final int toleranceHang               = 20;
 
     public final double distSampleGood           = 1.5;
