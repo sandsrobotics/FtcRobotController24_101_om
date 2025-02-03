@@ -355,7 +355,7 @@ public class FlipAuto2025 extends LinearOpMode{
             autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
             positionSolver.addMoveToTaskEx(p_2, autoTasks);
               autoTasks.addStep(() -> intake.debugDelay());
-            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
+//            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
             positionSolver.addMoveToTaskEx(p_3, autoTasks);
               autoTasks.addStep(() -> intake.debugDelay());
             autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
