@@ -15,9 +15,6 @@ public class ClawAutoSpec2 extends ClawAutoSpec {
         bucketSample = false;
     }
 
-    @Override
-//
-
 @Override
 public void SpecAuto(TimedTask autoTasks) {
         Vector3 humansidestart = new Vector3(14 + 3.0 / 8.0, -62, -90);
