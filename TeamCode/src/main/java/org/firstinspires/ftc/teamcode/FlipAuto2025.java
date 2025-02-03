@@ -332,12 +332,12 @@ public class FlipAuto2025 extends LinearOpMode{
         Vector3 p_10 = new Vector3(61, -11.75, 90); // Z:180
         Vector3 p_11 = new Vector3(61, -52.5, 90); // Z: 180
         Vector3 p_12 = new Vector3(47, -58.5, 90);
-        Vector3 p_13 = new Vector3(47, -61.5, 90);
+        Vector3 p_13 = new Vector3(47, -61.0, 90); // Y:61.5
         Vector3 p_14 = new Vector3(24, -47, 0);
-        Vector3 p_15 = new Vector3(8.75, -37.75, -90);
-        Vector3 p_16 = new Vector3(8.75, -32.75, -90);
-        Vector3 p_17 = new Vector3(5.75, -37.75, -90);
-        Vector3 p_18 = new Vector3(5.75, -32.75, -90);
+        Vector3 p_15 = new Vector3(8.75, -37.75 + 1, -90); // Y:37.75
+        Vector3 p_16 = new Vector3(8.75, -32.75 + 1, -90); // Y:32.75
+        Vector3 p_17 = new Vector3(5.75, -37.75 + 1, -90); // Y:37.75
+        Vector3 p_18 = new Vector3(5.75, -32.75 + 1, -90); // Y:32.75
         Vector3 p_19 = new Vector3(2.75, -37.75, -90);
         Vector3 p_20 = new Vector3(2.75, -32.75, -90);
         Vector3 p_21 = new Vector3(-0.25, -37.75, -90);
@@ -423,7 +423,7 @@ public class FlipAuto2025 extends LinearOpMode{
                                         Vector3 pos_four, Vector3 prePosition, Vector3 position) {
         // Specimen Pickup and Hang.
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
-//        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
+        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
           autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
           autoTasks.addStep(() -> intake.debugDelay());
