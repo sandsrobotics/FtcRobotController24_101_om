@@ -95,29 +95,29 @@ public class ClawAutoSpec extends LinearOpMode{
         robot.init();
 
         while (!isStarted()) {
-            robot.buttonMgr.runLoop();
-//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.right_bumper))
-            if (new EdgeSupplier(() -> robot.opMode.gamepad1.right_bumper).isRisingEdge()) {
-                startDelay += 1000;
-            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.left_bumper).isRisingEdge()) {
-                startDelay -= 1000;
-                if (startDelay < 0) startDelay = 0;
-            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.a).isRisingEdge()) {
-                parkPosition = 1;
-            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.b).isRisingEdge()) {
-                parkPosition = 2;
-            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.x).isRisingEdge()) {
-                parkPosition = 3;
-            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.y).isRisingEdge()) {
-                parkPosition = 0;
-            }
-
-            if(startDelay > maxDelay) startDelay = maxDelay;
-
-            telemetry.addData("PARK POSITION:", parkPosition == 0 ? "Park based off tags" : parkPosition == 1 ? "Park MID" : parkPosition == 2 ? "Park CORNER" : "Park BOARD");
-            telemetry.addData("START DELAY:", startDelay / 1000);
-            dashboardTelemetry.update();
-            telemetry.update();
+//            robot.buttonMgr.runLoop();
+////            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.right_bumper))
+//            if (new EdgeSupplier(() -> robot.opMode.gamepad1.right_bumper).isRisingEdge()) {
+//                startDelay += 1000;
+//            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.left_bumper).isRisingEdge()) {
+//                startDelay -= 1000;
+//                if (startDelay < 0) startDelay = 0;
+//            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.a).isRisingEdge()) {
+//                parkPosition = 1;
+//            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.b).isRisingEdge()) {
+//                parkPosition = 2;
+//            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.x).isRisingEdge()) {
+//                parkPosition = 3;
+//            } else if (new EdgeSupplier(() -> robot.opMode.gamepad1.y).isRisingEdge()) {
+//                parkPosition = 0;
+//            }
+//
+//            if(startDelay > maxDelay) startDelay = maxDelay;
+//
+//            telemetry.addData("PARK POSITION:", parkPosition == 0 ? "Park based off tags" : parkPosition == 1 ? "Park MID" : parkPosition == 2 ? "Park CORNER" : "Park BOARD");
+//            telemetry.addData("START DELAY:", startDelay / 1000);
+//            dashboardTelemetry.update();
+//            telemetry.update();
             sleep(50);
         }
         odo.setPosition(fieldStartPos);
@@ -200,13 +200,13 @@ public class ClawAutoSpec extends LinearOpMode{
 //        autoTasks.addStep(() -> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
 //        positionSolver.addMoveToTaskExNoWait(rightbeforespecimenbar, autoTasks);
 //        // raise for specimen hang
-//        autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.restart()); // prepare for specimen hang
-//        autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.isDone()); // prepare for specimen hang
+//        autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart()); // prepare for specimen hang
+//        autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.isDone()); // prepare for specimen hang
 //        autoTasks.addDelay(200);
 //        positionSolver.addMoveToTaskEx(specimenbar, autoTasks);
 //        autoTasks.addDelay(200);
 //        // clip specimen on bar
-//        autoTasks.addStep(() -> intake.tasks.autoSpecimenPickupTask.restart());
+//        autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
 ////        autoTasks.addDelay(200);
 //        autoTasks.addStep(()->positionSolver.setSettings(PositionSolverSettings.loseSettings));
 //        positionSolver.addMoveToTaskEx(rightbeforespecimenbar, autoTasks);
@@ -249,7 +249,7 @@ public class ClawAutoSpec extends LinearOpMode{
 //            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
 //            positionSolver.addMoveToTaskEx(observationzonepickup, autoTasks);
 //            autoTasks.addDelay(200);
-//            autoTasks.addStep(() -> intake.tasks.autoSpecimenPickupTask.restart());
+//            autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
 ////            autoTasks.addDelay(250);
 //            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
 //            positionSolver.addMoveToTaskEx(midwayspecimen3hang, autoTasks);

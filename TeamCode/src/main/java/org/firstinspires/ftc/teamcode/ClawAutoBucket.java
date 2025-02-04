@@ -40,8 +40,8 @@ public class ClawAutoBucket extends ClawAutoSpec {
             autoTasks.addStep(() -> odo.setPosition(bucketsidestart));
             autoTasks.addStep(() -> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
             positionSolver.addMoveToTaskExNoWait(beforespecimenhang, autoTasks);
-            autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.restart()); // prepare for specimen hang
-            autoTasks.addStep(() -> intake.tasks.autoSpecimenSetTask.isDone());
+            autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart()); // prepare for specimen hang
+            autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.isDone());
             positionSolver.addMoveToTaskEx(specimenhang, autoTasks);
             //        autoTasks.addDelay(200);
             autoTasks.addStep( () -> intake.tasks.startAutoSpecimenHang()); // clip specimen on bar

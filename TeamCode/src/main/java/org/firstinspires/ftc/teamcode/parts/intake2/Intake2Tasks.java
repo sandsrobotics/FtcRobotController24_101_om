@@ -13,12 +13,12 @@ public class Intake2Tasks {
     private final Robot robot;
     public final TimedTask autoBucketLiftTask;
     public final TimedTask autoBucketDropperTask;
-    public final TimedTask autoSpecimenPickupTask;
-    public final TimedTask autoSpecimenHangTask;
+    public final TimedTask getSpecimenTask;
+    public final TimedTask hangSpecimenTask;
     public final TimedTask autoIntakeDropTask;
     public final TimedTask autoSamplePickupTask;
     public final TimedTask autoRotateServoSafe;
-    public final TimedTask autoSpecimenSetTask;
+    public final TimedTask prepareToHangSpecimenTask;
     public final TimedTask autoSamplePickupTaskHack;
 
     public Intake2Tasks(Intake2 intake, Robot robot) {
@@ -28,12 +28,12 @@ public class Intake2Tasks {
         autoHomeTask = new TimedTask(TaskNames.autoHome, movementTask);
         autoBucketLiftTask = new TimedTask(TaskNames.autoBucketLift, movementTask);
         autoBucketDropperTask = new TimedTask(TaskNames.autoBucketDropper, movementTask);
-        autoSpecimenPickupTask = new TimedTask(TaskNames.autoSpecimenPickup, movementTask);
-        autoSpecimenHangTask = new TimedTask(TaskNames.autoSpecimenHang, movementTask);
+        getSpecimenTask = new TimedTask(TaskNames.autoSpecimenPickup, movementTask);
+        hangSpecimenTask = new TimedTask(TaskNames.autoSpecimenHang, movementTask);
         autoSamplePickupTask = new TimedTask(TaskNames.autoSamplePickupTask, movementTask);
         autoIntakeDropTask = new TimedTask(TaskNames.autoIntakeDrop, movementTask);
         autoRotateServoSafe = new TimedTask(TaskNames.autoRotateServoSafe, movementTask);
-        autoSpecimenSetTask = new TimedTask(TaskNames.autoSpecimenSet, movementTask);
+        prepareToHangSpecimenTask = new TimedTask(TaskNames.autoSpecimenSet, movementTask);
         autoSamplePickupTaskHack = new TimedTask(TaskNames.autoSamplePickupTaskHack, movementTask);
     }
 
@@ -56,10 +56,10 @@ public class Intake2Tasks {
             intake.bucketLiftTargetPosition = 20;
             setMotorsToRunConfig();
         });
-    /* ***** autoSpecimenHang ******/
-        autoSpecimenSetTask.autoStart = false;
-        autoSpecimenSetTask.addStep(()-> intake.setLiftPosition(intake.getSettings().specimenHangPosition,1));
-        autoSpecimenSetTask.addStep(intake::isLiftInTolerance);
+    /* ***** prepareToHangSpecimenTask ******/
+        prepareToHangSpecimenTask.autoStart = false;
+        prepareToHangSpecimenTask.addStep(()-> intake.setLiftPosition(intake.getSettings().specimenHangPosition,1));
+        prepareToHangSpecimenTask.addStep(intake::isLiftInTolerance);
 
     /* ***** autoBucketLiftTask ******/
         autoBucketLiftTask.autoStart = false;
@@ -89,27 +89,27 @@ public class Intake2Tasks {
             autoBucketDropperTask.addStep(intake::isLiftInTolerance);
         }
 
-    /* ***** autoSpecimenPickupTask ******/
-        autoSpecimenPickupTask.autoStart = false;
-        autoSpecimenPickupTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmStraightUp));
-        autoSpecimenPickupTask.addStep(()-> intake.getHardware().tiltServo.isDone());
-        autoSpecimenPickupTask.addStep(()-> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
-        autoSpecimenPickupTask.addStep(()-> intake.getHardware().specimenServo.isDone());
-        autoSpecimenPickupTask.addStep(()-> intake.setLiftPosition(intake.getSettings().specimenSafeHeight,1));
-        autoSpecimenPickupTask.addStep(intake::isLiftInTolerance);
+    /* ***** getSpecimenTask ******/
+        getSpecimenTask.autoStart = false;
+        getSpecimenTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmStraightUp));
+        getSpecimenTask.addStep(()-> intake.getHardware().tiltServo.isDone());
+        getSpecimenTask.addStep(()-> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
+        getSpecimenTask.addStep(()-> intake.getHardware().specimenServo.isDone());
+        getSpecimenTask.addStep(()-> intake.setLiftPosition(intake.getSettings().specimenSafeHeight,1));
+        getSpecimenTask.addStep(intake::isLiftInTolerance);
 
-    /* ***** autoSpecimenHangTask ******/
-        autoSpecimenHangTask.autoStart = false;
+    /* ***** hangSpecimenTask ******/
+        hangSpecimenTask.autoStart = false;
 //      Todo: For safety
-//        autoSpecimenHangTask.addStep(()-> intake.getHardware().dropperServo.disable());
-//        autoSpecimenPickupTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmStraightUp));
-//        autoSpecimenHangTask.addStep(()-> intake.getHardware().tiltServo.isDone());
-        autoSpecimenHangTask.addStep(()-> intake.setLiftPosition(intake.getSettings().specimenServoOpenHeight,1));
-        autoSpecimenHangTask.addStep(intake::isLiftInTolerance);
-        autoSpecimenHangTask.addStep(()-> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoOpenPosition));
-        autoSpecimenHangTask.addStep(()-> intake.getHardware().specimenServo.isDone());
-        autoSpecimenHangTask.addStep(()-> intake.setLiftPosition(intake.getSettings().minLiftPosition,1));
-        autoSpecimenHangTask.addStep(intake::isLiftInTolerance);
+//        hangSpecimenTask.addStep(()-> intake.getHardware().dropperServo.disable());
+//        getSpecimenTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmStraightUp));
+//        hangSpecimenTask.addStep(()-> intake.getHardware().tiltServo.isDone());
+        hangSpecimenTask.addStep(()-> intake.setLiftPosition(intake.getSettings().specimenServoOpenHeight,1));
+        hangSpecimenTask.addStep(intake::isLiftInTolerance);
+        hangSpecimenTask.addStep(()-> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoOpenPosition));
+        hangSpecimenTask.addStep(()-> intake.getHardware().specimenServo.isDone());
+        hangSpecimenTask.addStep(()-> intake.setLiftPosition(intake.getSettings().minLiftPosition,1));
+        hangSpecimenTask.addStep(intake::isLiftInTolerance);
 
     /* ***** autoIntakeDropTask ******/
         autoIntakeDropTask.autoStart = false;
@@ -171,13 +171,15 @@ public class Intake2Tasks {
         autoBucketDropperTask.restart();
     }
     public void startAutoSpecimenPickup() {
-        autoSpecimenPickupTask.restart();
+        getSpecimenTask.restart();
     }
-    public void startAutoSpecimenHang() {autoSpecimenHangTask.restart(); }
+    public void startAutoSpecimenHang() {
+        hangSpecimenTask.restart(); }
     public void startAutoIntakeDropTask() {
         autoIntakeDropTask.restart();
     }
-    public void startAutoSpecimenSet() {autoSpecimenSetTask.restart();}
+    public void startAutoSpecimenSet() {
+        prepareToHangSpecimenTask.restart();}
     public void startAutoSamplePickup() {
         autoSamplePickupTask.restart();
     }

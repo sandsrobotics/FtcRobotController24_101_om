@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.parts.intake2.settings.IntakeSettings2;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
-import om.self.ezftc.utils.Vector3;
 import om.self.supplier.consumer.EdgeConsumer;
 import om.self.task.core.Group;
 
@@ -108,19 +107,13 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     // 2m distance sensor
     //Todo: Ranging code
     public void doSpecRange(DriveControl control) {
-//        Vector3 zero = new Vector3(0,0,0);
         if(rangeEnabled) {
             double range = getSpecRange();
-//            if (range > 21) powerMultiplier = .02;
-//            double power = ensureRange(range * powerMultiplier,0,.20);
             parent.opMode.telemetry.addData("range", range);
             if (range < 14) {
                 drive.stopRobot();
                 rangeisDone = true;
                 rangeEnabled = false;
-//            } else if (range < 10) {
-//                control.power = control.power.addY(powerMultiplier); // (away from sub)
-//                rangeisDone = false;
             } else if (range > 15) {
                 control.power = control.power.addY(-rangePower); // (toward sub)
                 rangeisDone = false;
@@ -177,14 +170,14 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         switch (position) {
             case 1: // Open position
                 stopAllIntakeTasks();
-                tasks.autoSpecimenPickupTask.restart();
+                tasks.getSpecimenTask.restart();
                 break;
             case 2: // Close position
                 setLiftPosition(getSettings().specimenHangPosition,1);
                 break;
             case -1: // Open position
                 stopAllIntakeTasks();
-                tasks.autoSpecimenHangTask.restart();
+                tasks.hangSpecimenTask.restart();
                 break;
 
         }
