@@ -88,20 +88,20 @@ public class DriveTeleopSettings {
 
     public static DriveTeleopSettings makeForza1(Robot robot){
         Gamepad gamepad = robot.opMode.gamepad1;
-//        Gamepad gamepad2 = robot.opMode.gamepad2;
-//        double driver2mult = 0.125;
+        Gamepad gamepad2 = robot.opMode.gamepad2;
+        double driver2mult = 0.125;
 
         return new DriveTeleopSettings(
                 () -> new Vector3(    // power supplier
-                        gamepad.left_stick_x,
-                        gamepad.right_trigger - gamepad.left_trigger,
-                        gamepad.right_stick_x
-//                        gamepad.left_stick_x + driver2mult * gamepad2.left_stick_x,
+//                        gamepad.left_stick_x,
 //                        gamepad.right_trigger - gamepad.left_trigger,
-//                        gamepad.right_stick_x + driver2mult * gamepad2.right_stick_x
-//                        FlipbotSettings.getControlGovernor().X * gamepad.left_stick_x + driver2mult * gamepad2.left_stick_x,
-//                        FlipbotSettings.getControlGovernor().Y * (gamepad.right_trigger - gamepad.left_trigger),
-//                        FlipbotSettings.getControlGovernor().Z * gamepad.right_stick_x + driver2mult * gamepad2.right_stick_x
+//                        gamepad.right_stick_x
+////                        gamepad.left_stick_x + driver2mult * gamepad2.left_stick_x,
+////                        gamepad.right_trigger - gamepad.left_trigger,
+////                        gamepad.right_stick_x + driver2mult * gamepad2.right_stick_x
+                        FlipbotSettings.getControlGovernor().X * gamepad.left_stick_x + driver2mult * gamepad2.left_stick_x,
+                        FlipbotSettings.getControlGovernor().Y * (gamepad.right_trigger - gamepad.left_trigger),
+                        FlipbotSettings.getControlGovernor().Z * gamepad.right_stick_x + driver2mult * gamepad2.right_stick_x
                 ),
                 () -> gamepad.left_bumper,     //stop supplier
                 new LatchedModifier().toSupplier(() -> gamepad.right_stick_button), // mid mode supplier

@@ -23,6 +23,7 @@ import static java.lang.Math.abs;
 public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardware, IntakeControl> {
 
     public IntakeTasks tasks;
+    public LedTasks leds;
     protected Drive drive;
 
     public int slideTargetPosition;
@@ -244,6 +245,18 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         if (hue > 20 && hue < 60) lastSample = 1; // Red = 1
         if (hue > 65 && hue < 160) lastSample = 2; // Yellow = 2
         if (hue > 160) lastSample = 3; // Blue = 3
+        switch (lastSample) {
+            case 1:
+                leds.isRed.restart();
+                break;
+            case 2:
+                leds.isYellow.restart();
+                break;
+            case 3:
+                leds.isBlue.restart();
+                break;
+            default:
+        }
         return lastSample; // Nothing detected
     }
     public boolean isSampleGood(int sample) {
@@ -269,23 +282,23 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         }
     }
 
-//    public void applyControlGovernor() {
-//        //very prototype-y
-//        // Sets maximum Driver 1 inputs proportionally based on extension of slides
-//        //=1-maxGov*(MAX(eMin,MIN(E14,eMax))-eMin)/(eMax-eMin)
-//        int slidePMin = getSettings().positionSlideStartIntake;
-//        int slidePMax = getSettings().positionSlideMax;
-//        double slideMaxReduction = 0.75;
-//        double slideGov = 1 - slideMaxReduction*(clamp(currentSlidePos, slidePMin, slidePMax)-slidePMin)/(slidePMax-slidePMin);
-//        int liftPMin = getSettings().positionSlideStartIntake;
-//        int liftPMax = getSettings().positionLiftHangRelease;
-//        double liftMaxReduction = 0.67;
-//        double liftGov = 1 - liftMaxReduction*(clamp(currentBucketPos, liftPMin, liftPMax)-liftPMin)/(liftPMax-liftPMin);
-//        FlipbotSettings.setControlGovernor(Math.min(slideGov,liftGov));
-//    }
-//    private static int clamp(int val, int min, int max) {
-//        return Math.max(min, Math.min(val, max));
-//    }
+    public void applyControlGovernor() {
+        //very prototype-y
+        // Sets maximum Driver 1 inputs proportionally based on extension of slides
+        //=1-maxGov*(MAX(eMin,MIN(E14,eMax))-eMin)/(eMax-eMin)
+        int slidePMin = getSettings().positionSlideStartIntake;
+        int slidePMax = getSettings().positionSlideMax;
+        double slideMaxReduction = 0.75;
+        double slideGov = 1 - slideMaxReduction*(clamp(currentSlidePos, slidePMin, slidePMax)-slidePMin)/(slidePMax-slidePMin);
+        int liftPMin = getSettings().positionSlideStartIntake;
+        int liftPMax = getSettings().positionLiftHangRelease;
+        double liftMaxReduction = 0.67;
+        double liftGov = 1 - liftMaxReduction*(clamp(currentBucketPos, liftPMin, liftPMax)-liftPMin)/(liftPMax-liftPMin);
+        FlipbotSettings.setControlGovernor(Math.min(slideGov,liftGov));
+    }
+    private static int clamp(int val, int min, int max) {
+        return Math.max(min, Math.min(val, max));
+    }
 
     @Override
     public void onInit() {
@@ -293,6 +306,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         initializeServos();
         tasks = new IntakeTasks(this, parent);
         tasks.constructAllIntakeTasks();
+        leds = new LedTasks(this, parent);
+        leds.constructAllLedTasks();
 
         // this is part of the resets lift to 0 each time it hits the limit switch
         homingLiftZero.setOnRise(() -> {
@@ -315,7 +330,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         spinnerSliderPower = 0.0; // control.strafePower;
         currentSlidePos = getHardware().slideMotor.getCurrentPosition();
         currentBucketPos = getHardware().liftMotor.getCurrentPosition();
-//        applyControlGovernor();
+        applyControlGovernor();
 
         homingLiftZero.accept(getHardware().liftZeroSwitch.getState());
         homingSlideZero.accept(getHardware().slideZeroSwitch.getState());
