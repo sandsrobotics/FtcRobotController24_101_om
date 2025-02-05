@@ -141,13 +141,13 @@ public class FlipAuto2025 extends LinearOpMode{
         //positionSolver.setNewTarget(pt.getCurrentPosition(), true);
 
         // Here is where we schedule the tasks for the autonomous run (testAuto function below run loop)
-//        testAuto(autoTasks);
+        // testAuto(autoTasks);
 
-        //testNewAuto needs Testing!
+        // testNewAuto - Successfully Tested!
          testNewAuto(autoTasks);
 
         //testNewAutoWithIntake needs Testing!
-//        testNewAutoWithIntake(autoTasks);
+        // testNewAutoWithIntake(autoTasks);
 
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
@@ -314,9 +314,15 @@ public class FlipAuto2025 extends LinearOpMode{
         }
 }
 
+    // testNewAuto - Successfully completed the below steps in 30-seconds.
+    //     Hang Pre-loaded Specimen.
+    //     Move Sample-1 to Observation Zone.
+    //     Move Sample-2 to Observation Zone.
+    //     Pickup and Hang Specimen-2.
+    //     Pickup and Hang Specimen-3.
+    //     Park!
     private void testNewAuto(TimedTask autoTasks) {
-
-        // Positions to travel in Auto
+        // Positions to travel in SpecAuto
         Vector3 p_1 = new Vector3(14.375, -62, -90);
         Vector3 p_2 = new Vector3(11.75, -37.75, -90);
         Vector3 p_3 = new Vector3(11.75, -32.75, -90);
@@ -328,9 +334,6 @@ public class FlipAuto2025 extends LinearOpMode{
         Vector3 p_8 = new Vector3(54.5, -11.75, 90); // Z:180
         Vector3 p_9 = new Vector3(54.5, -52.5, 90); // Z:180
         Vector3 p_new_9 = new Vector3(59.5, -52.5, 90); // Z:180
-        Vector3 p_pre_10 = new Vector3(54.5, -11.75, 90); // Same as p_8.
-        Vector3 p_10 = new Vector3(61, -11.75, 90); // Z:180
-        Vector3 p_11 = new Vector3(61, -52.5, 90); // Z: 180
         Vector3 p_12 = new Vector3(47, -58.5, 90);
         Vector3 p_13 = new Vector3(47, -61.0, 90); // Y:61.5
         Vector3 p_14 = new Vector3(24, -47, 0);
@@ -338,119 +341,57 @@ public class FlipAuto2025 extends LinearOpMode{
         Vector3 p_16 = new Vector3(8.75, -32.75 + 1, -90); // Y:32.75
         Vector3 p_17 = new Vector3(5.75, -37.75 + 1, -90); // Y:37.75
         Vector3 p_18 = new Vector3(5.75, -32.75 + 1, -90); // Y:32.75
-        Vector3 p_19 = new Vector3(2.75, -37.75, -90);
-        Vector3 p_20 = new Vector3(2.75, -32.75, -90);
-        Vector3 p_21 = new Vector3(-0.25, -37.75, -90);
-        Vector3 p_22 = new Vector3(-0.25, -32.75, -90);
-        Vector3 p_00 = new Vector3(54, -54, -90);
 
         // Reset and Get Ready.
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
         autoTasks.addStep(() -> odo.setPosition(p_1));
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
 
-        {
-            // Pre-Loaded Specimen.
-              autoTasks.addStep(() -> intake.debugDelay());
-            autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
-            positionSolver.addMoveToTaskEx(p_2, autoTasks);
-              autoTasks.addStep(() -> intake.debugDelay());
-//            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
-            positionSolver.addMoveToTaskEx(p_3, autoTasks);
-              autoTasks.addStep(() -> intake.debugDelay());
-            autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
-            autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.isDone());
-              autoTasks.addStep(() -> intake.debugDelay());
-            positionSolver.addMoveToTaskEx(p_2, autoTasks);
-        }
+        // Hang Pre-Loaded Specimen.
+        autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
+        positionSolver.addMoveToTaskEx(p_2, autoTasks);
+        positionSolver.addMoveToTaskEx(p_3, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
+        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.isDone());
+        positionSolver.addMoveToTaskEx(p_2, autoTasks);
 
-        {
-            // Move Samples to ObservationZone.
-            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
+        // Move First Sample to ObservationZone.
+        positionSolver.addMoveToTaskEx(p_4, autoTasks);
+        positionSolver.addMoveToTaskEx(p_5, autoTasks);
+        positionSolver.addMoveToTaskEx(p_6, autoTasks);
+        positionSolver.addMoveToTaskEx(p_7, autoTasks);
 
-            // First Sample to ObservationZone.
-              autoTasks.addStep(() -> intake.debugDelay());
-            positionSolver.addMoveToTaskEx(p_4, autoTasks);
-              autoTasks.addStep(() -> intake.debugDelay());
-            positionSolver.addMoveToTaskEx(p_5, autoTasks);
-              autoTasks.addStep(() -> intake.debugDelay());
-            positionSolver.addMoveToTaskEx(p_6, autoTasks);
-              autoTasks.addStep(() -> intake.debugDelay());
-            positionSolver.addMoveToTaskEx(p_7, autoTasks);
-
-            // Second Sample to ObservationZone.
-              autoTasks.addStep(() -> intake.debugDelay());
-            positionSolver.addMoveToTaskEx(p_pre_8, autoTasks);
-              autoTasks.addStep(() -> intake.debugDelay());
-            positionSolver.addMoveToTaskEx(p_8, autoTasks);
-              autoTasks.addStep(() -> intake.debugDelay());
-
-            // If Moving Third-Sample, move to p_9.
-            // If Skipping Third-Sample, Move to p_new_9.
-            //   positionSolver.addMoveToTaskEx(p_9, autoTasks);
-            positionSolver.addMoveToTaskEx(p_new_9, autoTasks);
-
-            // Third Sample to ObservationZone.
-//              autoTasks.addStep(() -> intake.debugDelay());
-//            positionSolver.addMoveToTaskEx(p_pre_10, autoTasks);
-//              autoTasks.addStep(() -> intake.debugDelay());
-//            positionSolver.addMoveToTaskEx(p_10, autoTasks);
-//              autoTasks.addStep(() -> intake.debugDelay());
-//            positionSolver.addMoveToTaskEx(p_11, autoTasks);
-        }
+        // Move Second Sample to ObservationZone.
+        positionSolver.addMoveToTaskEx(p_pre_8, autoTasks);
+        positionSolver.addMoveToTaskEx(p_8, autoTasks);
+        positionSolver.addMoveToTaskEx(p_new_9, autoTasks);
 
         // Second Specimen PickupAndHang
-        specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_15, p_16);
+        specimenPickupAndHang(autoTasks, p_12, p_13, p_14, p_15, p_16);
 
         // Third Specimen PickupAndHang
-        specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_17, p_18);
+        specimenPickupAndHang(autoTasks, p_12, p_13, p_14, p_17, p_18);
 
-        // Fourth Specimen PickupAndHang
-//        specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_19, p_20);
-
-        // Fifth Specimen PickupAndHang
-//        specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_21, p_22);
-
-        {
-            // Park.
-              autoTasks.addStep(() -> intake.debugDelay());
-            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-            positionSolver.addMoveToTaskEx(p_12, autoTasks);
-        }
+        // Park.
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+        positionSolver.addMoveToTaskEx(p_12, autoTasks);
     }
 
-    private void specimenPickupAndHang (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three,
+    private void specimenPickupAndHang (TimedTask autoTasks, Vector3 pos_two, Vector3 pos_three,
                                         Vector3 pos_four, Vector3 prePosition, Vector3 position) {
         // Specimen Pickup and Hang.
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
-//        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
-          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
-          autoTasks.addStep(() -> intake.debugDelay());
-//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
-          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(pos_three, autoTasks);
-          autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
         autoTasks.addStep(() -> intake.tasks.getSpecimenTask.isDone());
-          autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
-          autoTasks.addStep(() -> intake.debugDelay());
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
         positionSolver.addMoveToTaskEx(pos_four, autoTasks);
-          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(prePosition, autoTasks);
-          autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.isDone());
-          autoTasks.addStep(() -> intake.debugDelay());
-//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
         positionSolver.addMoveToTaskEx(position, autoTasks);
-//        autoTasks.addDelay(200);
-          autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
         autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.isDone());
-//        autoTasks.addDelay(200);
-          autoTasks.addStep(() -> intake.debugDelay());
         positionSolver.addMoveToTaskEx(prePosition, autoTasks);
     }
 
@@ -549,16 +490,16 @@ public class FlipAuto2025 extends LinearOpMode{
         }
 
         // Second Specimen PickupAndHang
-        specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_15, p_16);
+        specimenPickupAndHang(autoTasks, p_12, p_13, p_14, p_15, p_16);
 
         // Third Specimen PickupAndHang
-        specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_17, p_18);
+        specimenPickupAndHang(autoTasks, p_12, p_13, p_14, p_17, p_18);
 
         // Fourth Specimen PickupAndHang
-//        specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_19, p_20);
+//        specimenPickupAndHang(autoTasks, p_12, p_13, p_14, p_19, p_20);
 
         // Fifth Specimen PickupAndHang
-//        specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_21, p_22);
+//        specimenPickupAndHang(autoTasks, p_12, p_13, p_14, p_21, p_22);
 
         {
             // Park.
