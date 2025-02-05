@@ -343,7 +343,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         strafePower = control.strafePower;
         homingBucketZero.accept(getHardware().bucketLiftZeroSwitch.getState());
         currentBucketLiftPos = getHardware().bucketLiftMotor.getCurrentPosition();
-        parent.opMode.telemetry.addData("Sub Range",getSpecRange());
+//        parent.opMode.telemetry.addData("Sub Range",getSpecRange());
 //        parent.opMode.telemetry.addData("Specimen Color", getColor());
 //        parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
 //        parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);
