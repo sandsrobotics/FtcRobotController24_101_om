@@ -125,6 +125,7 @@ public class FlipTeleopDive extends LinearOpMode {
             telemetry.addData("relative position", pt.getRelativePosition());
             telemetry.addData("Slide Position", intake.getSlidePosition());
             telemetry.addData("Lift Position", intake.getLiftPosition());
+//            telemetry.addData("Speed Governor", FlipbotSettings.getControlGovernor());
             telemetry.addData("time", System.currentTimeMillis() - start);
 //            telemetry.addData("Rear Distance (inches)", intake.readRearDistance());  // this costs loop time, so remove when done
             dashboard.sendTelemetryPacket(packet);

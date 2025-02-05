@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.parts.drive.settings;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.parts.intake.FlipbotSettings;
+
 import java.util.function.Supplier;
 
 import om.self.ezftc.core.Robot;
@@ -97,6 +99,9 @@ public class DriveTeleopSettings {
 //                        gamepad.left_stick_x + driver2mult * gamepad2.left_stick_x,
 //                        gamepad.right_trigger - gamepad.left_trigger,
 //                        gamepad.right_stick_x + driver2mult * gamepad2.right_stick_x
+//                        FlipbotSettings.getControlGovernor().X * gamepad.left_stick_x + driver2mult * gamepad2.left_stick_x,
+//                        FlipbotSettings.getControlGovernor().Y * (gamepad.right_trigger - gamepad.left_trigger),
+//                        FlipbotSettings.getControlGovernor().Z * gamepad.right_stick_x + driver2mult * gamepad2.right_stick_x
                 ),
                 () -> gamepad.left_bumper,     //stop supplier
                 new LatchedModifier().toSupplier(() -> gamepad.right_stick_button), // mid mode supplier
