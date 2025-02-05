@@ -24,15 +24,14 @@ public class IntakeHardware {
     public final ServoSSR pinch;
     public final ServoSSR park;
     public final NormalizedColorSensor colorSensor;
-//    public final Rev2mDistanceSensor distanceSensor;
+    public final Rev2mDistanceSensor distanceSensor;
 
     public final DigitalChannel liftZeroSwitch;
     public final DigitalChannel slideZeroSwitch;
 
     public IntakeHardware(DcMotorEx liftMotor, DcMotorEx slideMotor, DcMotorEx robotHangMotor, DigitalChannel liftZeroSwitch, DigitalChannel slideZeroSwitch,
                           ServoSSR spinner, ServoSSR flipper, ServoSSR chute, ServoSSR pinch, ServoSSR park,
-                          NormalizedColorSensor colorSensor) {
-                        //}, Rev2mDistanceSensor distanceSensor) {
+                          NormalizedColorSensor colorSensor, Rev2mDistanceSensor distanceSensor) {
         this.liftMotor = liftMotor;
         this.slideMotor = slideMotor;
         this.robotHangMotor = robotHangMotor;
@@ -44,7 +43,7 @@ public class IntakeHardware {
         this.pinch = pinch;
         this.park = park;
         this.colorSensor = colorSensor;
-//        this.distanceSensor = distanceSensor;
+        this.distanceSensor = distanceSensor;
 
         DcMotorEx[] motors = {this.liftMotor, this.robotHangMotor};  //this.slideMotor is plenty fast
         for(DcMotorEx motor : motors){
@@ -74,8 +73,8 @@ public class IntakeHardware {
                 new ServoSSR(hardwareMap.get(Servo.class, "servo4")),
                 new ServoSSR(hardwareMap.get(Servo.class, "servo1")),
                 new ServoSSR(hardwareMap.get(Servo.class, "servo0B")),
-                hardwareMap.get(NormalizedColorSensor.class, "color")//,
-//                hardwareMap.get(Rev2mDistanceSensor.class, "distance")
+                hardwareMap.get(NormalizedColorSensor.class, "color"),
+                hardwareMap.get(Rev2mDistanceSensor.class, "distance")
         );
     }
 }

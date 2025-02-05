@@ -88,18 +88,18 @@ public class DriveTeleopSettings {
         Gamepad gamepad = robot.opMode.gamepad1;
 
         return new DriveTeleopSettings(
-                () -> new Vector3(
+                () -> new Vector3(    // power supplier
                         gamepad.left_stick_x,
 //                        gamepad.left_trigger - gamepad.right_trigger,
                         gamepad.right_trigger - gamepad.left_trigger,
                         gamepad.right_stick_x
                 ),
-                () -> gamepad.x,
-                new LatchedModifier().toSupplier(() -> gamepad.x),
-                1.0,
-                //new LatchedModifier().toSupplier(() -> gamepad.b),
-                () -> false,
-                0.5
+                () -> gamepad.left_bumper,     //stop supplier
+                new LatchedModifier().toSupplier(() -> gamepad.right_stick_button), // mid mode supplier
+                0.5,
+                new LatchedModifier().toSupplier(() -> gamepad.left_stick_button), // slow mode supplier
+//                () -> false,
+                0.25
         );
     }
 

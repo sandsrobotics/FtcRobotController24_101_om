@@ -32,7 +32,12 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public int lastSample = -1;
     public double lastSampleDistance = 10;  // in cm
     public double lastRearDistance = 323;  // in inches
-    private double spinnerSliderPower = 0.0;    // what is this?
+    private double spinnerSliderPower = 0.0;// what is this?
+    public double rangingPower = 0.25; //todo: finalize
+    public boolean rangeIsDone = false;
+    public boolean ranging = false;
+
+
 
     public boolean slideIsUnderControl = false;
     public boolean preventUserControl = false;
@@ -113,6 +118,32 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         getHardware().robotHangMotor.setTargetPosition(position);
         getHardware().robotHangMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         getHardware().robotHangMotor.setPower(power);
+    }
+
+    public double getRangeDistance(){
+        lastRearDistance = getHardware().distanceSensor.getDistance(DistanceUnit.INCH);
+        return lastRearDistance;
+    }
+    //ranging
+    public void doRanging(DriveControl control){
+        if (ranging) {
+            getRangeDistance();
+            double power = rangingPower;
+            parent.opMode.telemetry.addData ("ranging:", lastRearDistance);
+            //away from sub
+            if (lastRearDistance <= 5) {
+                drive.stopRobot();
+               // FlipbotSettings.isRangingEnabled = false;
+                rangeIsDone = true;
+                ranging = false;
+            }
+            //towards sub
+            if (lastRearDistance > 5){
+                control.power = control.power.addY(-power);
+                rangeIsDone = false;
+            }
+        }
+
     }
 
     public void stopSlide() { getHardware().slideMotor.setPower(0); }
@@ -274,7 +305,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     @Override
     public void onStart() {
         drive = getBeanManager().getBestMatch(Drive.class, false);
-        drive.addController(Intake.ControllerNames.distanceController, this::strafeRobot);
+//        drive.addController(Intake.ControllerNames.distanceController, this::strafeRobot);
+        drive.addController(ControllerNames.distanceController, this::doRanging);
         if (FlipbotSettings.isTeleOp())  tasks.startAutoHome();
     }
 
