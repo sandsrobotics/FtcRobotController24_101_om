@@ -89,7 +89,7 @@ public class DriveTeleopSettings {
     public static DriveTeleopSettings makeForza1(Robot robot){
         Gamepad gamepad = robot.opMode.gamepad1;
         Gamepad gamepad2 = robot.opMode.gamepad2;
-        double driver2mult = 0.125;
+        double driver2mult = 0.25;
 
         return new DriveTeleopSettings(
                 () -> new Vector3(    // power supplier
