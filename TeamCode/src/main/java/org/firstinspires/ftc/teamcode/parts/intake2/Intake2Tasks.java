@@ -80,7 +80,7 @@ public class Intake2Tasks {
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.enable());
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMax));
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.isDone());
-        autoBucketDropperTask.addDelay(300 ); // leave bucket high to dump sample
+        autoBucketDropperTask.addDelay(350 ); // leave bucket high to dump sample
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin));
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.isDone());
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.disable());

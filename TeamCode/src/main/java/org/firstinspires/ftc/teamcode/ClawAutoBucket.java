@@ -28,7 +28,7 @@ public class ClawAutoBucket extends ClawAutoSpec {
         secondsample = new Vector3(-58.2, -38.5, 90);
         thirdsample = new Vector3(-56, -25.25, 180);
         Vector3 park = new Vector3(-47, -11, 0);
-        Vector3 park2 = new Vector3(-23.5, -11,0); //x change tjk x was 27
+        Vector3 park2 = new Vector3(-25, -11,0); //x change x was 27 was 23.5
         // 23.5 x -1.5, 23.5 x -1.5
 
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
@@ -61,11 +61,13 @@ public class ClawAutoBucket extends ClawAutoSpec {
         grabAndDepositSample(autoTasks, secondsample, Highbasketscore);
         grabAndDepositSample(autoTasks, thirdsample, Highbasketscore);
 
+        autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().minLiftPosition, 1));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         autoTasks.addStep(() -> intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked));
         positionSolver.addMoveToTaskEx(park, autoTasks);
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSlowSettings));
         positionSolver.addMoveToTaskEx(park2, autoTasks);
-        autoTasks.addStep(() -> intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked));
+        autoTasks.addStep(() -> intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked -.02));
     }
 
     private void grabAndDepositSample (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two) {

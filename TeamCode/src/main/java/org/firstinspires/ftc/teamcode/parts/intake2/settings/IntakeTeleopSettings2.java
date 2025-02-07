@@ -47,12 +47,12 @@ public class IntakeTeleopSettings2 {
                 () -> gamepad.x ? -1 : gamepad.b ? 1 : 0, // horizontal SlideSupplier -1 = in
                 () -> gamepad2.y ? 1 : gamepad2.a ? -1 : 0, // bucketLiftSupplier
                 () -> gamepad2.left_bumper ? -1 : gamepad2.right_bumper ? 1 : 0, // robotLiftSupplier
-                () -> gamepad.dpad_left ? -1 : gamepad.dpad_right ? 1 : 0, // rotationServoSupplier
+                () -> gamepad2.x ? -1 : gamepad2.b ? 1 : 0, // rotationServoSupplier
                 () -> gamepad2.left_stick_x, // strafeSpeedSupplier
                 new EdgeSupplier(() -> gamepad.back).getRisingEdgeSupplier(), // autoHomeSupplier
                 () -> gamepad2.dpad_left ? 1 : gamepad2.dpad_up ? 2 : gamepad2.dpad_right ? -1 : 0, // specimenServoSupplier
                 () -> gamepad.right_stick_button || gamepad2.right_stick_button, // robotEStopSupplier
-                () -> gamepad2.b // range on off
+                () -> gamepad2.dpad_down // range on off
         );
     }
 }
