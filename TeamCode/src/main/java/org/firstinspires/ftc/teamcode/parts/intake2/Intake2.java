@@ -104,17 +104,17 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         return Math.min(Math.max(value, min), max);
     }
 
-    // 2m distance sensor
+     // 2m distance sensor
     //Todo: Ranging code
     public void doSpecRange(DriveControl control) {
         if(rangeEnabled) {
             double range = getSpecRange();
             parent.opMode.telemetry.addData("range", range);
-            if (range < 14) {
+            if (range < 12) {
                 drive.stopRobot();
                 rangeisDone = true;
                 rangeEnabled = false;
-            } else if (range > 15) {
+            } else if (range > 13) {
                 control.power = control.power.addY(-rangePower); // (toward sub)
                 rangeisDone = false;
             }

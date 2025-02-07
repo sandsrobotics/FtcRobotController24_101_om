@@ -166,12 +166,12 @@ public class ClawAutoSpec extends LinearOpMode{
         Vector3 p_pre_10 = new Vector3(54.5, -11.75, 90); // Same as p_8.
         Vector3 p_10 = new Vector3(61, -11.75, 90); // Z:180
         Vector3 p_11 = new Vector3(61, -52.5, 90); // Z: 180
-        Vector3 p_12 = new Vector3(45.5, -58.5, 90);
+        Vector3 p_12 = new Vector3(45.5, -56.5, 90); // Y:-58.5
         Vector3 p_13 = new Vector3(45.5, -61.5, 90); // Y:61.5
         Vector3 p_14 = new Vector3(24, -47, 0);
-        Vector3 p_15 = new Vector3(8.75, -37.75 + 1, -90); // Y:37.75
+        Vector3 p_15 = new Vector3(8.75, -39, -90); // Y:37.75
         Vector3 p_16 = new Vector3(8.75, -32.75 + 1, -90); // Y:32.75
-        Vector3 p_17 = new Vector3(5.75, -37.75 + 1, -90); // Y:37.75
+        Vector3 p_17 = new Vector3(5.75, -39, -90); // Y:37.75
         Vector3 p_18 = new Vector3(5.75, -32.75 + 1, -90); // Y:32.75
         Vector3 p_19 = new Vector3(2.75, -37.75, -90);
         Vector3 p_20 = new Vector3(2.75, -32.75, -90);
@@ -228,9 +228,12 @@ public class ClawAutoSpec extends LinearOpMode{
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
         positionSolver.addMoveToTaskEx(pos_four, autoTasks); //p_14 observationzoneclear
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceNoAlwaysRunSettings));
         positionSolver.addMoveToTaskEx(prePosition, autoTasks); // before bar p_15
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.isDone());
-        positionSolver.addMoveToTaskEx(position, autoTasks); // at bar p_16
+//        positionSolver.addMoveToTaskEx(position, autoTasks); // at bar p_16
+        autoTasks.addStep(() -> intake.rangeEnabled = true); // range to bar
+        autoTasks.addStep(() -> intake.rangeisDone);
         autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
         autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.isDone());
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
