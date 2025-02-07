@@ -129,12 +129,14 @@ public class Intake2Tasks {
         autoSamplePickupTask.addStep(()-> setIntakeWheels(1.0)); //forward
         autoSamplePickupTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmAtSpecimen));
         autoSamplePickupTask.addStep(()-> intake.getHardware().tiltServo.isDone());
-        autoSamplePickupTask.addStep(() -> intake.getHardware().rotationServo.setPosition(0.60));  // was .7
-        autoSamplePickupTask.addStep(() -> intake.getHardware().rotationServo.isDone() || intake.readSampleDistance() < 0.7);
-        autoSamplePickupTask.addStep(() -> intake.getHardware().rotationServo.setPosition(0.40));  // was .4
-        autoSamplePickupTask.addStep(() -> intake.getHardware().rotationServo.isDone() || intake.readSampleDistance() < 0.7);
-        autoSamplePickupTask.addStep(() -> intake.getHardware().rotationServo.setPosition(0.50));
-        autoSamplePickupTask.addStep(() -> intake.getHardware().rotationServo.isDone());
+        autoSamplePickupTask.addStep(()-> intake.getHardware().rotationServo.setPosition(0.60));  // was .7
+        autoSamplePickupTask.addStep(()-> intake.getHardware().rotationServo.isDone() || intake.readSampleDistance() < 0.7);
+        autoSamplePickupTask.addStep(()-> intake.getHardware().rotationServo.setPosition(0.40));  // was .4
+        autoSamplePickupTask.addStep(()-> intake.getHardware().rotationServo.isDone() || intake.readSampleDistance() < 0.7);
+        autoSamplePickupTask.addStep(()-> intake.getHardware().rotationServo.setPosition(0.50));
+        autoSamplePickupTask.addStep(()-> intake.getHardware().rotationServo.isDone());
+        autoSamplePickupTask.addTimedStep(()-> intake.strafePower = 0.6,()->intake.readSampleDistance() < 0.7,400);
+        autoSamplePickupTask.addTimedStep(()->intake.strafePower = -0.6,()->intake.readSampleDistance() < 0.7,400);
         autoSamplePickupTask.addStep(()-> setIntakeWheels(0.5));
         autoSamplePickupTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoSamplePickupTask.addStep(()-> intake.getHardware().tiltServo.isDone());
@@ -156,6 +158,8 @@ public class Intake2Tasks {
         //Todo: could optimize these delays in hack-task
         autoSamplePickupTaskHack.addDelay(200); // a bit of time to pickup sample //0.175
         autoSamplePickupTaskHack.addStep(()-> intake.getHardware().rotationServo.setPosition(0.483));
+        autoSamplePickupTaskHack.addTimedStep(()-> intake.strafePower = 0.6,()->intake.readSampleDistance() < 0.7,400);
+        autoSamplePickupTaskHack.addTimedStep(()-> intake.strafePower = -0.6,()->intake.readSampleDistance() < 0.7,400);
         autoSamplePickupTaskHack.addStep(()-> setIntakeWheels(0.5));
         autoSamplePickupTaskHack.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoSamplePickupTaskHack.addStep(()-> intake.getHardware().tiltServo.isDone());

@@ -34,7 +34,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     // Watch for bucket lift zero
     private final EdgeConsumer homingBucketZero = new EdgeConsumer();
     protected Drive drive;
-    private float strafePower = 0;
+    public double strafePower = 0;
     public Intake2Tasks tasks;
     protected PositionTracker pt;
     public boolean rangeEnabled = false;
@@ -284,6 +284,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public void onInit() {
         getHardware().backLight.setPosition(0.279);
         currentIntakeHeightPos = getSettings().intakeArmStraightUp;
+        setHorizontalSlidePosition(-1); // pull slide in on init
         initializeServos();
         stopIntakeSpin();
         parent.opMode.sleep(1200);
