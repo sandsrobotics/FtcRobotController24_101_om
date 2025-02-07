@@ -87,15 +87,15 @@ public class IntakeTasks {
 //        autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideMin, 1));
 //        autonomousSampleTask.addStep(() -> intake.isSlideInTolerance() || (intake.sampleDistance() < 1.5));
         // revised steps to bypass actions if sample is/was detected
-        autonomousSampleTask.addStep(() -> intake.isSamplePresent() || intake.isSlideInTolerance());
+        autonomousSampleTask.addTimedStep(() -> {}, () -> intake.isSamplePresent() || intake.isSlideInTolerance(), 1500);
         autonomousSampleTask.addStep(() -> {
             if (!intake.wasSamplePresent()) intake.setSlidePosition(intake.getSettings().autoSampleSlideDistance, 1);
         });
-        autonomousSampleTask.addStep(() -> intake.wasSamplePresent() || intake.isSamplePresent() || intake.isSlideInTolerance());
+        autonomousSampleTask.addTimedStep(() -> {}, () -> intake.wasSamplePresent() || intake.isSamplePresent() || intake.isSlideInTolerance(), 1500);
         autonomousSampleTask.addStep(() -> {
             if (!intake.wasSamplePresent()) intake.setSlidePosition(intake.getSettings().positionSlideMin, 1);
         });
-        autonomousSampleTask.addStep(() -> intake.wasSamplePresent() || intake.isSamplePresent() || intake.isSlideInTolerance());
+        autonomousSampleTask.addTimedStep(() -> {}, () -> intake.wasSamplePresent() || intake.isSamplePresent() || intake.isSlideInTolerance(), 1500);
         // end new stuff
         autonomousSampleTask.addStep(prepareToTransferTask::restart);
         autonomousSampleTask.addStep(prepareToTransferTask::isDone);
