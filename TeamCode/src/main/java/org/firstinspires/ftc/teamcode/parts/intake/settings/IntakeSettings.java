@@ -48,6 +48,7 @@ public class  IntakeSettings {
     public final int toleranceSlide              = 20;
     public final int positionSlideOvershoot      = -10;
     public final int autoSampleSlideDistance     = 750; //todo : finalize number
+    public final int autoSampleSlideMin          = positionSlideMin + 25;
 
     public final int positionLiftMin             = 10;
     public final int positionLiftMax             = 2800; // 3000;  //4200; //4350;

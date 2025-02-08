@@ -67,7 +67,8 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
 
         // *** DRIVER 2 CONTROLS ***
         // Driver 2 - slide control
-        parent.setUserSlidePower(-parent.parent.opMode.gamepad2.left_stick_y);
+//        parent.setUserSlidePower(-parent.parent.opMode.gamepad2.left_stick_y);
+        parent.setUserSlidePower(parent.parent.opMode.gamepad2.right_trigger-parent.parent.opMode.gamepad2.left_trigger);
         // Driver 2 - start button is a "shift" key; anything below is if start is not pushed
         if (!buttonMgr.getState(2, Buttons.start, State.isPressed)) {
             // Driver 2
