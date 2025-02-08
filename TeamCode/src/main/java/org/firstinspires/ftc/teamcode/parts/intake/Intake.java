@@ -74,7 +74,6 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public void initializeServos() {
-        //private void initializeServos() {
         // apply settings
         getHardware().spinner.setSweepTime(getSettings().spinnerSweepTime);
         getHardware().flipper.setSweepTime(getSettings().flipperSweepTime).setOffset(getSettings().flipperOffset);
@@ -97,8 +96,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         slideTargetPosition = position;
         stopSlide();   // ???
         getHardware().slideMotor.setTargetPosition(slideTargetPosition);
-        getHardware().slideMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         setSlidePower(power);
+        getHardware().slideMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         slideIsUnderControl = false;
     }
 
@@ -110,8 +109,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         liftTargetPosition = position;
         stopLift();   // ???
         getHardware().liftMotor.setTargetPosition(liftTargetPosition);
-        getHardware().liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         setLiftPower(power);
+        getHardware().liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
     public void setHangPosition(int position, double power) {
@@ -183,6 +182,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         getHardware().flipper.stop();
         getHardware().chute.stop();
         getHardware().pinch.stop();
+        getHardware().park.stop();
         //stop the hang motor
         getHardware().robotHangMotor.setPower(0);
     }
@@ -291,6 +291,12 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public void onInit() {
         setMotorsToRunConfig();
         initializeServos();
+        if (FlipbotSettings.firstRun) {
+            // the first time the servo controller comes online the positions set may be lost, so wait and try again
+            FlipbotSettings.firstRun = false;
+            parent.opMode.sleep(1500);
+            initializeServos();
+        }
         tasks = new IntakeTasks(this, parent);
         tasks.constructAllIntakeTasks();
 
