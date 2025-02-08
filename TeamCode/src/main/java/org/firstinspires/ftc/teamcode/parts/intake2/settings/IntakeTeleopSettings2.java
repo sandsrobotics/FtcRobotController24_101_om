@@ -17,13 +17,14 @@ public class IntakeTeleopSettings2 {
     public final Supplier<Integer> specimenServoSupplier;
     public final Supplier<Boolean> robotEStopSupplier;
     public final Supplier<Boolean> rangeingSupplier;
+    public final Supplier<Integer> autoSampleSupplier;
 
     public IntakeTeleopSettings2(Supplier<Double> sweepSpeedSupplier, Supplier<Integer> sweepLiftSupplier,
                                  Supplier<Integer> sweepSlideSupplier, Supplier<Integer> bucketLiftSupplier,
                                  Supplier<Integer> robotLiftSupplier,Supplier<Integer> rotationServoSupplier,
                                  Supplier<Float> strafeSpeedSupplier, Supplier<Boolean> autoHomeSupplier,
                                  Supplier<Integer> specimenServoSupplier, Supplier<Boolean> robotEStopSupplier,
-                                 Supplier<Boolean> rangeingSupplier) {
+                                 Supplier<Boolean> rangeingSupplier, Supplier<Integer> autoSampleSupplier) {
         this.sweepSpeedSupplier = sweepSpeedSupplier;
         this.sweepLiftSupplier = sweepLiftSupplier;
         this.sweepSlideSupplier = sweepSlideSupplier;
@@ -35,6 +36,7 @@ public class IntakeTeleopSettings2 {
         this.specimenServoSupplier = specimenServoSupplier;
         this.robotEStopSupplier = robotEStopSupplier;
         this.rangeingSupplier = rangeingSupplier;
+        this.autoSampleSupplier = autoSampleSupplier;
     }
 
     public static IntakeTeleopSettings2 makeDefault(Robot robot) {
@@ -52,7 +54,8 @@ public class IntakeTeleopSettings2 {
                 new EdgeSupplier(() -> gamepad.back).getRisingEdgeSupplier(), // autoHomeSupplier
                 () -> gamepad2.dpad_left ? 1 : gamepad2.dpad_up ? 2 : gamepad2.dpad_right ? -1 : 0, // specimenServoSupplier
                 () -> gamepad.right_stick_button || gamepad2.right_stick_button, // robotEStopSupplier
-                () -> gamepad2.dpad_down // range on off
+                () -> gamepad2.dpad_down, // range on off
+                () -> gamepad.dpad_up ? 1 : gamepad.dpad_down ? -1 : 0 //
         );
     }
 }

@@ -46,7 +46,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     //***** Constructors *****
     public Intake2(Robot parent, String modeName) {
-        super(parent, "Slider", () -> new IntakeControl2(0.5, 0, 0, 0, 0, 0, 0, 0,false, false));
+        super(parent, "Slider", () -> new IntakeControl2(0.5, 0, 0, 0, 0, 0, 0, 0,false, false,0));
         this.isTeleop = modeName.equalsIgnoreCase("Teleop");
 
         setConfig(
@@ -171,6 +171,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             case 1: // Open position
                 stopAllIntakeTasks();
                 tasks.getSpecimenTask.restart();
+                tasks.getSpecimenTask.restart();
                 break;
             case 2: // Close position
                 setLiftPosition(getSettings().specimenHangPosition,1);
@@ -258,6 +259,16 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         lastSampleDistance = ((DistanceSensor) getHardware().colorSensor).getDistance(DistanceUnit.CM);
         return lastSampleDistance;
     }
+
+    public void setAutoSample(int position) {
+        if(position == 1) {
+            // sampleTo bucket
+//            tasks.autoIntakeDropTask.restart();
+        } else if(position == -1) {
+            // sample out to floor
+        }
+
+    }
     public int identifySampleColor() {
         float[] hsvValues = new float[3];
         NormalizedRGBA colorPlural = getHardware().colorSensor.getNormalizedColors();
@@ -325,6 +336,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             setBucketLiftPosition(control.bucketLiftPosition);
             setSpecimenPositions(control.specimenServoPosition);
             setRobotLiftPosition(control.robotliftPosition);
+//            setAutoSample(control.autoSupplierPosition);
 
             // Check intake height and adjust rotation servo
             if (currentIntakeHeightPos >= 0.3) {

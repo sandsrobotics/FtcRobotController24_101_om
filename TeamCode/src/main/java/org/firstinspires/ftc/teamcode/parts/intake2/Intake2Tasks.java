@@ -116,6 +116,10 @@ public class Intake2Tasks {
         autoIntakeDropTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmAtBucket));
         autoIntakeDropTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         autoIntakeDropTask.addDelay(200); // because servo is loaded going up
+//        autoIntakeDropTask.addStep(()->{
+//            intake.getHardware().sliderServoLeft.setPosition(intake.getSettings().maxServoLeftSlide);
+//            intake.getHardware().sliderServoRight.setPosition(intake.getSettings().maxServoRightSlide);
+//        });
         // Todo: may be spinning out too fast consider .1 or .2 to slow it down
         autoIntakeDropTask.addStep(()-> setIntakeWheels(0.0));
         autoIntakeDropTask.addDelay(100);  // transfer sample to bucket
