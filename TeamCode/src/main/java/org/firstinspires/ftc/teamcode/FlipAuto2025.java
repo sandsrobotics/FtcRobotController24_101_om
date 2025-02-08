@@ -349,8 +349,20 @@ public class FlipAuto2025 extends LinearOpMode{
 
         // Hang Pre-Loaded Specimen.
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
-        positionSolver.addMoveToTaskEx(p_2, autoTasks);
-        positionSolver.addMoveToTaskEx(p_3, autoTasks);
+//        positionSolver.addMoveToTaskEx(p_2, autoTasks);
+//        positionSolver.addMoveToTaskEx(p_3, autoTasks);
+        /* LK experiment here */
+        positionSolver.addMoveToTaskEx(p_2.withY(-42), autoTasks);
+        autoTasks.addStep(() -> intake.debugDelay());
+        //autoTasks.addTimedStep(() -> {},() -> intake.adjustTarget(p_3,6),2000 );
+        autoTasks.addTimedStep(() -> {},() -> intake.adjustTarget(p_3,8) || positionSolver.isDone(),2000 );
+        autoTasks.addStep(() -> {
+            if (intake.adjustedDestination!=null) positionSolver.setNewTarget(intake.adjustedDestination, true);
+        });
+        autoTasks.addStep(() -> positionSolver.isDone());
+        autoTasks.addStep(() -> intake.debugDelay());
+        /* LK experiment ends */
+
         autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
         autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.isDone());
         positionSolver.addMoveToTaskEx(p_2, autoTasks);

@@ -39,8 +39,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public double rangingPower = 0.25; //todo: finalize
     public boolean rangeIsDone = false;
     public boolean ranging = false;
-
-
+    public Vector3 adjustedDestination = null;
 
     public boolean slideIsUnderControl = false;
     public boolean preventUserControl = false;
@@ -170,6 +169,10 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             return new Vector3(targetPosition.X, currentPosition.Y + yAdjust, targetPosition.Z);
         }
         return null;
+    }
+    public boolean adjustTarget(Vector3 targetPosition, double targetDistance) {
+        adjustedDestination = adjustTargetPositionByRangeY(targetPosition, targetDistance);
+        return adjustedDestination != null;
     }
 
     public void stopSlide() { getHardware().slideMotor.setPower(0); }
