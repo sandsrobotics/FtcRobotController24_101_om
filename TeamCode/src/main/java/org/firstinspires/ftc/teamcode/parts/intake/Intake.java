@@ -12,9 +12,11 @@ import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveControl;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
+import org.firstinspires.ftc.teamcode.parts.positiontracker.pinpoint.Pinpoint;
 
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
+import om.self.ezftc.utils.Vector3;
 import om.self.supplier.consumer.EdgeConsumer;
 import om.self.task.core.Group;
 
@@ -24,6 +26,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 
     public IntakeTasks tasks;
     protected Drive drive;
+    protected Pinpoint pinpoint;
 
     public int slideTargetPosition;
     public int liftTargetPosition;
@@ -146,7 +149,27 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
                 rangeIsDone = false;
             }
         }
+    }
 
+    /* super prototype-y method to get a modified target position based on the distance/range sensor */
+    public Vector3 adjustTargetPositionByRangeY(Vector3 targetPosition, double targetDistance) {
+        //Returns null if a suitable position is not found, otherwise a new target position based on current position
+        //Reads the distance sensor and then gets a new current pinpoint position (to do: work with positiontracker instead)
+        //The X and Z will be preserved, but Y will be changed to reflect best available position data
+        if (targetPosition.Z != 90 && targetPosition.Z != -90) return null;  //only currently works for pure Y
+        final double acceptableDiff = 5;  //how much farther away is OK for calculations?
+        final double acceptableAngle = 5;  //how far can odo angle be from target angle for calculations?
+        getRangeDistance();
+        parent.opMode.telemetry.addData ("ranging:", lastRearDistance);
+        if (lastRearDistance <= targetDistance + acceptableDiff) {   // if it's in acceptable range for calculations...
+            Vector3 currentPosition = pinpoint.getValidPosition();   // get the current odo position
+            if (currentPosition == null) return null;                // if not valid odo position, return null
+            if (Math.abs(currentPosition.Z - targetPosition.Z) > acceptableAngle) return null;   // return null if angle too large
+            double yAdjust = (lastRearDistance - targetDistance) * Math.signum(targetPosition.Z);  // distance + at 90°, - at -90°
+            // new position has original X and Z, but Y is based on currentPosition, targetDistance, and range
+            return new Vector3(targetPosition.X, currentPosition.Y + yAdjust, targetPosition.Z);
+        }
+        return null;
     }
 
     public void stopSlide() { getHardware().slideMotor.setPower(0); }
@@ -301,6 +324,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             parent.opMode.sleep(1500);
             initializeServos();
         }
+        pinpoint = getBeanManager().getBestMatch(Pinpoint.class, false);
         tasks = new IntakeTasks(this, parent);
         tasks.constructAllIntakeTasks();
 
