@@ -93,7 +93,9 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             stopSlide();
             return;
         }
-        slideTargetPosition = position;
+        //slideTargetPosition = position;
+        slideTargetPosition = !getHardware().slideZeroSwitch.getState() ? position :
+                Math.max(position, getSettings().positionSlideHome);  // if the switch is pressed, the minimum is the home position
         stopSlide();   // ???
         getHardware().slideMotor.setTargetPosition(slideTargetPosition);
         setSlidePower(power);
@@ -106,7 +108,9 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             stopLift();
             return;
         }
-        liftTargetPosition = position;
+        //liftTargetPosition = position;
+        liftTargetPosition = !getHardware().liftZeroSwitch.getState() ? position :
+                Math.max(position, getSettings().positionLiftHome);  // if the switch is pressed, the minimum is the home position
         stopLift();   // ???
         getHardware().liftMotor.setTargetPosition(liftTargetPosition);
         setLiftPower(power);
@@ -303,12 +307,12 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         // this is part of the resets lift to 0 each time it hits the limit switch
         homingLiftZero.setOnRise(() -> {
             getHardware().liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            setLiftPosition(20,0.5);
+            setLiftPosition(getSettings().positionLiftHome,0.5);
         });
         //homing hslide slide setup
         homingSlideZero.setOnRise(() -> {
             getHardware().slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            setSlidePosition(20,0.5);
+            setSlidePosition(getSettings().positionSlideHome,0.5);
         });
     }
 

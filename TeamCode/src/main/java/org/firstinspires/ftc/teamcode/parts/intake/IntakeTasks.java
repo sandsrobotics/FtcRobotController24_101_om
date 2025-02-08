@@ -307,8 +307,8 @@ public class IntakeTasks {
                 () -> intake.getHardware().liftZeroSwitch.getState(), 10000);
         autoHomeTaskLift.addStep(() -> {
             intake.getHardware().liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            intake.getHardware().liftMotor.setTargetPosition(20);
-            intake.liftTargetPosition = 20;
+            intake.getHardware().liftMotor.setTargetPosition(intake.getSettings().positionLiftHome);
+            intake.liftTargetPosition = intake.getSettings().positionLiftHome;
             setMotorsToRunConfig(1);
         });
 
@@ -320,8 +320,8 @@ public class IntakeTasks {
                 () -> intake.getHardware().slideZeroSwitch.getState(), 10000);
         autoHomeTaskSlide.addStep(() -> {
             intake.getHardware().slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            intake.getHardware().slideMotor.setTargetPosition(20);
-            intake.slideTargetPosition = 20;
+            intake.getHardware().slideMotor.setTargetPosition(intake.getSettings().positionSlideHome);
+            intake.slideTargetPosition = intake.getSettings().positionSlideHome;
             setMotorsToRunConfig(2);
         });
 

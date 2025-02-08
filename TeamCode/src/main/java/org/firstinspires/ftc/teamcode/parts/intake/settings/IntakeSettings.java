@@ -49,6 +49,7 @@ public class  IntakeSettings {
     public final int positionSlideOvershoot      = -10;
     public final int autoSampleSlideDistance     = 750; //todo : finalize number
     public final int autoSampleSlideMin          = positionSlideMin + 25;
+    public final int positionSlideHome           = 20;
 
     public final int positionLiftMin             = 10;
     public final int positionLiftMax             = 2800; // 3000;  //4200; //4350;
@@ -59,6 +60,7 @@ public class  IntakeSettings {
     public final int positionLiftHangRelease     = 980; //1000;  //2000;   //todo: get number
     public final int positionLiftTransfer        = 10;
     public final int positionLiftPreDump         = 2450;
+    public final int positionLiftHome            = 20;
     public final int toleranceLift               = 20;
 
     public final int positionHangMin             = 20;
