@@ -74,4 +74,16 @@ public class PositionSolverSettings {
             new SolverSettings(2.5, 10, false, 10000, new PIDCoefficients(0.0125, 0, 0), .4)
     );
 
+    public static PositionSolverSettings slowTestSettings = new PositionSolverSettings(
+            new SolverSettings(1, 10, true, 10000, new PIDCoefficients(0.05, 0, 0), .5),
+            new SolverSettings(1, 10, true, 10000, new PIDCoefficients(0.05, 0, 0), .5),
+            new SolverSettings(2.5, 10, true, 10000, new PIDCoefficients(0.0125, 0, 0), .5)
+    );
+
+    public static PositionSolverSettings defaultTwiceSettingsHang = new PositionSolverSettings(
+            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 0.5),
+            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 0.5),
+            new SolverSettings(2.5, 2, true, 10000, new PIDCoefficients(0.0125, 0, 0), 0.5)
+    );
+
 }

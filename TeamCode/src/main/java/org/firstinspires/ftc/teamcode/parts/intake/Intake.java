@@ -164,7 +164,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             Vector3 currentPosition = pinpoint.getValidPosition();   // get the current odo position
             if (currentPosition == null) return null;                // if not valid odo position, return null
             if (Math.abs(currentPosition.Z - targetPosition.Z) > acceptableAngle) return null;   // return null if angle too large
-            double yAdjust = (lastRearDistance - targetDistance) * Math.signum(targetPosition.Z);  // distance + at 90°, - at -90°
+            double yAdjust = (lastRearDistance - targetDistance) * -1.0 * Math.signum(targetPosition.Z);  // distance + at 90°, - at -90°
             // new position has original X and Z, but Y is based on currentPosition, targetDistance, and range
             return new Vector3(targetPosition.X, currentPosition.Y + yAdjust, targetPosition.Z);
         }
