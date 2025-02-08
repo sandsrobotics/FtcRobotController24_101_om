@@ -67,7 +67,8 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
 
         // *** DRIVER 2 CONTROLS ***
         // Driver 2 - slide control
-        parent.setUserSlidePower(-parent.parent.opMode.gamepad2.left_stick_y);
+//        parent.setUserSlidePower(-parent.parent.opMode.gamepad2.left_stick_y);
+        parent.setUserSlidePower(parent.parent.opMode.gamepad2.right_trigger-parent.parent.opMode.gamepad2.left_trigger);
         // Driver 2 - start button is a "shift" key; anything below is if start is not pushed
         if (!buttonMgr.getState(2, Buttons.start, State.isPressed)) {
             // Driver 2
@@ -100,10 +101,18 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
                 parent.tasks.lowDumpIntakeTask.restart();
             }
             if (buttonMgr.getState(2, Buttons.left_bumper, State.wasTapped)) {
-                parent.setSpinner(parent.getSettings().spinnerOut);
+                if (parent.getHardware().spinner.isSetPosition(parent.getSettings().spinnerOut)) {
+                    parent.setSpinner(parent.getSettings().spinnerOff);
+                } else {
+                    parent.setSpinner(parent.getSettings().spinnerOut);
+                }
             }
             if (buttonMgr.getState(2, Buttons.right_bumper, State.wasTapped)) {
-                parent.setSpinner(parent.getSettings().spinnerIn);
+                if (parent.getHardware().spinner.isSetPosition(parent.getSettings().spinnerIn)) {
+                    parent.setSpinner(parent.getSettings().spinnerOff);
+                } else {
+                    parent.setSpinner(parent.getSettings().spinnerIn);
+                }
             }
             if (buttonMgr.getState(2, Buttons.right_bumper, State.wasHeld)) {
                 parent.setSpinner(parent.getSettings().spinnerOff);
@@ -111,11 +120,11 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
         }
         // Driver 2 - start button is a "shift" key; anything below is when start is held first
         else {
-            if (buttonMgr.getState(2, Buttons.dpad_up, State.wasSingleTapped)) {
+            if (buttonMgr.getState(2, Buttons.dpad_up, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.prepareToHangRobotTask.restart();
             }
-            if (buttonMgr.getState(2, Buttons.dpad_right, State.wasSingleTapped)) {
+            if (buttonMgr.getState(2, Buttons.dpad_right, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.hangRobotTask.restart();
             }
@@ -133,11 +142,11 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
                 parent.getHardware().flipper.setPosition(parent.getSettings().flipperAlmostFloor);
             }
             // emergency home
-            if (buttonMgr.getState(2, Buttons.x, State.wasSingleTapped)) {
+            if (buttonMgr.getState(2, Buttons.x, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.startAutoHome();
             }
-            if (buttonMgr.getState(2, Buttons.y, State.wasSingleTapped)) {
+            if (buttonMgr.getState(2, Buttons.y, State.wasTapped)) {
                 FlipbotSettings.isYellowGood = !FlipbotSettings.isYellowGood;
             }
         }

@@ -12,9 +12,11 @@ import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveControl;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
+import org.firstinspires.ftc.teamcode.parts.positiontracker.pinpoint.Pinpoint;
 
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.core.part.ControllablePart;
+import om.self.ezftc.utils.Vector3;
 import om.self.supplier.consumer.EdgeConsumer;
 import om.self.task.core.Group;
 
@@ -24,6 +26,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 
     public IntakeTasks tasks;
     protected Drive drive;
+    protected Pinpoint pinpoint;
 
     public int slideTargetPosition;
     public int liftTargetPosition;
@@ -74,7 +77,6 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public void initializeServos() {
-        //private void initializeServos() {
         // apply settings
         getHardware().spinner.setSweepTime(getSettings().spinnerSweepTime);
         getHardware().flipper.setSweepTime(getSettings().flipperSweepTime).setOffset(getSettings().flipperOffset);
@@ -94,11 +96,13 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             stopSlide();
             return;
         }
-        slideTargetPosition = position;
+        //slideTargetPosition = position;
+        slideTargetPosition = !getHardware().slideZeroSwitch.getState() ? position :
+                Math.max(position, getSettings().positionSlideHome);  // if the switch is pressed, the minimum is the home position
         stopSlide();   // ???
         getHardware().slideMotor.setTargetPosition(slideTargetPosition);
-        getHardware().slideMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         setSlidePower(power);
+        getHardware().slideMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         slideIsUnderControl = false;
     }
 
@@ -107,11 +111,13 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             stopLift();
             return;
         }
-        liftTargetPosition = position;
+        //liftTargetPosition = position;
+        liftTargetPosition = !getHardware().liftZeroSwitch.getState() ? position :
+                Math.max(position, getSettings().positionLiftHome);  // if the switch is pressed, the minimum is the home position
         stopLift();   // ???
         getHardware().liftMotor.setTargetPosition(liftTargetPosition);
-        getHardware().liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         setLiftPower(power);
+        getHardware().liftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
     public void setHangPosition(int position, double power) {
@@ -143,7 +149,27 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
                 rangeIsDone = false;
             }
         }
+    }
 
+    /* super prototype-y method to get a modified target position based on the distance/range sensor */
+    public Vector3 adjustTargetPositionByRangeY(Vector3 targetPosition, double targetDistance) {
+        //Returns null if a suitable position is not found, otherwise a new target position based on current position
+        //Reads the distance sensor and then gets a new current pinpoint position (to do: work with positiontracker instead)
+        //The X and Z will be preserved, but Y will be changed to reflect best available position data
+        if (targetPosition.Z != 90 && targetPosition.Z != -90) return null;  //only currently works for pure Y
+        final double acceptableDiff = 5;  //how much farther away is OK for calculations?
+        final double acceptableAngle = 5;  //how far can odo angle be from target angle for calculations?
+        getRangeDistance();
+        parent.opMode.telemetry.addData ("ranging:", lastRearDistance);
+        if (lastRearDistance <= targetDistance + acceptableDiff) {   // if it's in acceptable range for calculations...
+            Vector3 currentPosition = pinpoint.getValidPosition();   // get the current odo position
+            if (currentPosition == null) return null;                // if not valid odo position, return null
+            if (Math.abs(currentPosition.Z - targetPosition.Z) > acceptableAngle) return null;   // return null if angle too large
+            double yAdjust = (lastRearDistance - targetDistance) * Math.signum(targetPosition.Z);  // distance + at 90°, - at -90°
+            // new position has original X and Z, but Y is based on currentPosition, targetDistance, and range
+            return new Vector3(targetPosition.X, currentPosition.Y + yAdjust, targetPosition.Z);
+        }
+        return null;
     }
 
     public void stopSlide() { getHardware().slideMotor.setPower(0); }
@@ -183,6 +209,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         getHardware().flipper.stop();
         getHardware().chute.stop();
         getHardware().pinch.stop();
+        getHardware().park.stop();
         //stop the hang motor
         getHardware().robotHangMotor.setPower(0);
     }
@@ -291,18 +318,25 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public void onInit() {
         setMotorsToRunConfig();
         initializeServos();
+        if (FlipbotSettings.firstRun) {
+            // the first time the servo controller comes online the positions set may be lost, so wait and try again
+            FlipbotSettings.firstRun = false;
+            parent.opMode.sleep(1500);
+            initializeServos();
+        }
+        pinpoint = getBeanManager().getBestMatch(Pinpoint.class, false);
         tasks = new IntakeTasks(this, parent);
         tasks.constructAllIntakeTasks();
 
         // this is part of the resets lift to 0 each time it hits the limit switch
         homingLiftZero.setOnRise(() -> {
             getHardware().liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            setLiftPosition(20,0.5);
+            setLiftPosition(getSettings().positionLiftHome,0.5);
         });
         //homing hslide slide setup
         homingSlideZero.setOnRise(() -> {
             getHardware().slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            setSlidePosition(20,0.5);
+            setSlidePosition(getSettings().positionSlideHome,0.5);
         });
     }
 

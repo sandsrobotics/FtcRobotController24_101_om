@@ -78,7 +78,7 @@ public class IntakeTasks {
         autonomousSampleTask.addTimedStep(() -> {}, () -> intake.isSamplePresent() || intake.isSlideInTolerance(), 1500);
 //        autonomousSampleTask.addDelay(250); //500
         autonomousSampleTask.addTimedStep(() -> {}, intake::isSamplePresent, 250);
-        autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideMin, 1));
+        autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().autoSampleSlideMin, 1));
 //        autonomousSampleTask.addStep(intake::isSlideInTolerance);
         // start new stuff - comment out if not working or worse and uncomment previous line
 //        autonomousSampleTask.addStep(() -> intake.isSlideInTolerance() || (intake.sampleDistance() < 1.5));
@@ -87,15 +87,15 @@ public class IntakeTasks {
 //        autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideMin, 1));
 //        autonomousSampleTask.addStep(() -> intake.isSlideInTolerance() || (intake.sampleDistance() < 1.5));
         // revised steps to bypass actions if sample is/was detected
-        autonomousSampleTask.addStep(() -> intake.isSamplePresent() || intake.isSlideInTolerance());
+        autonomousSampleTask.addTimedStep(() -> {}, () -> intake.isSamplePresent() || intake.isSlideInTolerance(), 1500);
         autonomousSampleTask.addStep(() -> {
             if (!intake.wasSamplePresent()) intake.setSlidePosition(intake.getSettings().autoSampleSlideDistance, 1);
         });
-        autonomousSampleTask.addStep(() -> intake.wasSamplePresent() || intake.isSamplePresent() || intake.isSlideInTolerance());
+        autonomousSampleTask.addTimedStep(() -> {}, () -> intake.wasSamplePresent() || intake.isSamplePresent() || intake.isSlideInTolerance(), 1500);
         autonomousSampleTask.addStep(() -> {
-            if (!intake.wasSamplePresent()) intake.setSlidePosition(intake.getSettings().positionSlideMin, 1);
+            if (!intake.wasSamplePresent()) intake.setSlidePosition(intake.getSettings().autoSampleSlideMin, 1);
         });
-        autonomousSampleTask.addStep(() -> intake.wasSamplePresent() || intake.isSamplePresent() || intake.isSlideInTolerance());
+        autonomousSampleTask.addTimedStep(() -> {}, () -> intake.wasSamplePresent() || intake.isSamplePresent() || intake.isSlideInTolerance(), 1500);
         // end new stuff
         autonomousSampleTask.addStep(prepareToTransferTask::restart);
         autonomousSampleTask.addStep(prepareToTransferTask::isDone);
@@ -307,8 +307,8 @@ public class IntakeTasks {
                 () -> intake.getHardware().liftZeroSwitch.getState(), 10000);
         autoHomeTaskLift.addStep(() -> {
             intake.getHardware().liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            intake.getHardware().liftMotor.setTargetPosition(20);
-            intake.liftTargetPosition = 20;
+            intake.getHardware().liftMotor.setTargetPosition(intake.getSettings().positionLiftHome);
+            intake.liftTargetPosition = intake.getSettings().positionLiftHome;
             setMotorsToRunConfig(1);
         });
 
@@ -320,8 +320,8 @@ public class IntakeTasks {
                 () -> intake.getHardware().slideZeroSwitch.getState(), 10000);
         autoHomeTaskSlide.addStep(() -> {
             intake.getHardware().slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            intake.getHardware().slideMotor.setTargetPosition(20);
-            intake.slideTargetPosition = 20;
+            intake.getHardware().slideMotor.setTargetPosition(intake.getSettings().positionSlideHome);
+            intake.slideTargetPosition = intake.getSettings().positionSlideHome;
             setMotorsToRunConfig(2);
         });
 
