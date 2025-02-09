@@ -32,6 +32,8 @@ public class IntakeSettings2 {
     public final int specimenServoOpenHeight = 920;
     public final double parkServoPosition = 0.9;
     public final double parkServoPositionParked = 0.29; // was .24
+    public final int colorSampleSkipCycles = 20;
+    public final double sampleInClawCM = 0.88; // in claw: blue reads .82 yellow reads .66 red reads .75
 
     public IntakeSettings2() {
     }

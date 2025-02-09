@@ -42,7 +42,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     static public double rangePower = 0.2;
     static public double powerMultiplier = .015;
     public boolean isTeleop;
-    public int lastSample = -1;
+    public LEDColor lastColorSample = LEDColor.GREEN;
+    private int colorSampleSkip = 0;
+    private double lastHue = 0;
 
     //***** Constructors *****
     public Intake2(Robot parent, String modeName) {
@@ -63,7 +65,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
         getHardware().intakeWheelServoLeft.setPosition(finalPower);
         getHardware().intakeWheelServoRight.setPosition(finalPower);
-    }
+
+//        identifySampleColor();
+        }
 
     private void setBucketLiftPositionUnsafe(int position) {
         getHardware().bucketLiftMotor.setTargetPosition(position);
@@ -227,7 +231,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         getHardware().backLight.stop();
         getHardware().dropperServo.stop();
         getHardware().parkServo.stop();
-        getHardware().rotationServo.stop(); 
+        getHardware().rotationServo.stop();
         getHardware().tiltServo.stop();
         getHardware().sliderServoLeft.stop();
         getHardware().sliderServoRight.stop();
@@ -269,17 +273,20 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         }
 
     }
-    public int identifySampleColor() {
-        float[] hsvValues = new float[3];
-        NormalizedRGBA colorPlural = getHardware().colorSensor.getNormalizedColors();
-        Color.colorToHSV(colorPlural.toColor(), hsvValues);
-        int hue = (int) hsvValues[0];
-        lastSample = 0;
-        if (hue > 20 && hue < 60) lastSample = 1; // Red = 1
-        if (hue > 65 && hue < 160) lastSample = 2; // Yellow = 2
-        if (hue > 190) lastSample = 3; // Blue = 3
-        parent.opMode.telemetry.addData("Hue", hue);
-        return lastSample; // Nothing detected
+    public void identifySampleColor() {
+        if(colorSampleSkip++ >= getSettings().colorSampleSkipCycles) {
+            colorSampleSkip = 0;
+            if (readSampleDistance() < getSettings().sampleInClawCM) {
+                float[] hsvValues = new float[3];
+                NormalizedRGBA colorPlural = getHardware().colorSensor.getNormalizedColors();
+                Color.colorToHSV(colorPlural.toColor(), hsvValues);
+                int hue = (int) hsvValues[0];
+                if (hue > 19 && hue < 30) lastColorSample = LEDColor.RED; // Red = 1
+                if (hue > 65 && hue < 80) lastColorSample = LEDColor.YELLOW; // Yellow = 2
+                if (hue > 200) lastColorSample = LEDColor.BLUE; // Blue = 3
+                lastHue = hue; // temporary for debug
+            } else {lastColorSample = LEDColor.OFF;}
+        }
     }
 
     public void initializeServos() {
@@ -337,6 +344,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
             setSpecimenPositions(control.specimenServoPosition);
             setRobotLiftPosition(control.robotliftPosition);
 //            setAutoSample(control.autoSupplierPosition);
+            getHardware().backLight.setPosition(lastColorSample.getLedPwm());
 
             // Check intake height and adjust rotation servo
             if (currentIntakeHeightPos >= 0.3) {
@@ -363,6 +371,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 //        parent.opMode.telemetry.addData("bucketLiftMotor postion", getHardware().bucketLiftMotor.getCurrentPosition());
 //        parent.opMode.telemetry.addData("sample distance", readSampleDistance());
 //        parent.opMode.telemetry.addData("color", identifySampleColor());
+//        parent.opMode.telemetry.addData("Hue: Name", lastHue + ": " + lastColorSample.getName());
+//        parent.opMode.telemetry.addData("Sample Dist CM", lastSampleDistance);
     }
 
     @Override
@@ -384,16 +394,33 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         public static final String specController = "specimen controller";
     }
 
-    public String getColor() {
-        switch (identifySampleColor()) {
-            case 1:
-                return "Red";
-            case 2:
-                return "Yellow";
-            case 3:
-                return "Blue";
-            default:
-                return "None";
+    public enum LEDColor {
+        OFF("off",0.0),
+        RED("Red",0.279),
+        ORANGE("Orange",0.333),
+        YELLOW("Yellow",0.388),
+        SAGE("Sage",0.444),
+        GREEN("Green", 0.500),
+        AZURE("Azure", 0.555),
+        BLUE("Blue", 0.611),
+        INDIGO("Indigo",0.666),
+        VIOLET("Violet", 0.722),
+        WHITE("White", 1.0);
+
+        private final String name;
+        private final Double ledPwm;
+
+        private Double getLedPwm(){
+            return ledPwm;
+        }
+
+        private String getName(){
+            return name;
+        }
+
+        LEDColor(String name, Double ledPwm){
+            this.ledPwm = ledPwm;
+            this.name = name;
         }
     }
 }
