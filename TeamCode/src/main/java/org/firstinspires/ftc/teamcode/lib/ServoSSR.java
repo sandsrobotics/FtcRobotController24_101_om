@@ -73,6 +73,23 @@ public class ServoSSR implements Servo {
     }
 
     /**
+     * Sets the servo sweep speed based on published servo specifications.
+     * This is an alternative to the setSweepTime() method.
+     * @param speed the time in seconds to move 60° (sec/60°), limited to 0.01-1.00 (be sure to account for voltage!)
+     * @param fullRangeAngle the full range of travel in degrees (typically 180, 270, 300), limited to 1-1800
+     * @param loadFactor a load or safety multiplier because the specs are based on an unloaded servo, limited to 1.0-3.0
+     * @return this for method chaining
+     */
+    public ServoSSR setSweepSpeed(double speed, double fullRangeAngle, double loadFactor) {
+        // example: goBilda torque = 0.25 sec/60° speed, 300° range
+        double _speed = clamp(speed,0.01,1.00);
+        double _fullRangeAngle = clamp(fullRangeAngle, 1.0, 1800.0);
+        double _loadFactor = clamp(loadFactor, 1.0, 3.0);
+        double _sweepTime = _fullRangeAngle / 60.0 * _speed * _loadFactor;
+        return setSweepTime((int)_sweepTime);
+    }
+
+    /**
      * Sets the servo "wake" time. If the servo was disabled, this time is allowed for it to return to its previous position.
      * Assumes a small amount of movement has happened while it is disabled.
      * @param wakeTime the time in ms, limited to 0–1000.
@@ -521,6 +538,7 @@ setOffset(offset) - set an offset that will be added to positions (for tuning a 
 setScale(scale) - set a scale multiplier for positions
 setSweepTime(sweepTime) - set the time expected for the servo to move its entire range
 setSweepTime(sweepTimeTo1, sweepTimeTo0) - set the bi-directional time expected for the servo to move its entire range
+setSweepSpeed(speed, fullRangeAngle, loadFactor) - set the servo sweep speed based on published servo specifications
 setWakeTime(wakeTime) - set the time expected for the servo to move back to its position after being disabled
 setFullPwmRange() - sets the controller to use pwm range of 500-2500 μs vs. the default of 600-2400 μs
 setPwmRange(low, high) - sets the controller to use an arbitrary pwm range
