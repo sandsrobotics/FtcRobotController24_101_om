@@ -66,7 +66,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         getHardware().intakeWheelServoLeft.setPosition(finalPower);
         getHardware().intakeWheelServoRight.setPosition(finalPower);
 
-//        identifySampleColor();
+        identifySampleColor();
         }
 
     private void setBucketLiftPositionUnsafe(int position) {
@@ -114,11 +114,11 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         if(rangeEnabled) {
             double range = getSpecRange();
             parent.opMode.telemetry.addData("range", range);
-            if (range < 12) {
+            if (range < 10) {
                 drive.stopRobot();
                 rangeisDone = true;
                 rangeEnabled = false;
-            } else if (range > 13) {
+            } else if (range > 11) {
                 control.power = control.power.addY(-rangePower); // (toward sub)
                 rangeisDone = false;
             }
