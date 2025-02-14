@@ -72,7 +72,7 @@ public class DriveTeleopSettings {
 
         return new DriveTeleopSettings(
                 () -> new Vector3(
-                        -gamepad.left_stick_x,
+                        gamepad.left_stick_x,
 //                        gamepad.left_trigger - gamepad.right_trigger,
                         gamepad.right_trigger - gamepad.left_trigger,
                         gamepad.right_stick_x

@@ -114,11 +114,11 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         if(rangeEnabled) {
             double range = getSpecRange();
             parent.opMode.telemetry.addData("range", range);
-            if (range < 10) {
+            if (range < 11) {
                 drive.stopRobot();
                 rangeisDone = true;
                 rangeEnabled = false;
-            } else if (range > 11) {
+            } else if (range > 12) {
                 control.power = control.power.addY(-rangePower); // (toward sub)
                 rangeisDone = false;
             }

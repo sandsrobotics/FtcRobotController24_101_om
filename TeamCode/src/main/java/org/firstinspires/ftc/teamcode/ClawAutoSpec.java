@@ -30,7 +30,7 @@ import om.self.task.other.TimedTask;
 import static om.self.ezftc.utils.Constants.tileSide;
 
 @Config
-@Autonomous(name="27050 Specimen/Human", group="27050")
+@Autonomous(name="27050 Human Specimen", group="27050")
 public class ClawAutoSpec extends LinearOpMode{
     public Function<Vector3, Vector3> transformFunc;
     public Vector3 customStartPos;
@@ -155,17 +155,14 @@ public class ClawAutoSpec extends LinearOpMode{
         Vector3 p_2 = new Vector3(11.75, -37.75, -90);
         Vector3 rightbeforespecimenbar = new Vector3(11.75, -39, -90);
         Vector3 p_3 = new Vector3(11.75, -32.75, -90);
-        Vector3 p_4 = new Vector3(36, -42, 90);  // Z: -90
+        Vector3 p_4 = new Vector3(36, -43, 90);  // Z: -90
         Vector3 p_5 = new Vector3(36, -11.75, 90);
-        Vector3 p_6 = new Vector3(44.5, -15, 90); //Z:180
-        Vector3 p_7 = new Vector3(44.5, -52.5, 90); //Z:180
-        Vector3 p_pre_8 = new Vector3(44.5, -15, 90); // Same as p_6.
-        Vector3 p_8 = new Vector3(54.5, -11.75, 90); // Z:180
-        Vector3 p_9 = new Vector3(54.5, -50.5, 90); // Z:180
-        Vector3 p_post_9 = new Vector3(54.5, -44.5, 90); // Z:180
-        Vector3 p_pre_10 = new Vector3(54.5, -11.75, 90); // Same as p_8.
-        Vector3 p_10 = new Vector3(61, -11.75, 90); // Z:180
-        Vector3 p_11 = new Vector3(61, -52.5, 90); // Z: 180
+        Vector3 p_6 = new Vector3(42.5, -15, 90); //Z:180
+        Vector3 p_7 = new Vector3(42.5, -52.5, 90); //Z:180
+        Vector3 p_pre_8 = new Vector3(42.5, -15, 90); // Same as p_6.
+        Vector3 p_8 = new Vector3(52.5, -11.75, 90); // Z:180
+        Vector3 p_9 = new Vector3(52.5, -49.5, 90); // Z:180
+        Vector3 p_post_9 = new Vector3(52.5, -44.5, 90); // Z:180
         Vector3 p_12 = new Vector3(45.5, -56.5, 90); // Y:-58.5
         Vector3 p_13 = new Vector3(45.5, -61.5, 90); // Y:61.5
         Vector3 p_14 = new Vector3(24, -47, 0);
@@ -175,9 +172,6 @@ public class ClawAutoSpec extends LinearOpMode{
         Vector3 p_18 = new Vector3(5.75, -32.75 + 1, -90); // Y:32.75
         Vector3 p_19 = new Vector3(2.75, -37.75, -90);
         Vector3 p_20 = new Vector3(2.75, -32.75, -90);
-        Vector3 p_21 = new Vector3(-0.25, -37.75, -90);
-        Vector3 p_22 = new Vector3(-0.25, -32.75, -90);
-        Vector3 p_00 = new Vector3(54, -54, -90);
 
         // Reset and Get Ready.
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
@@ -186,20 +180,18 @@ public class ClawAutoSpec extends LinearOpMode{
         autoTasks.addStep(() -> odo.setPosition(p_1));
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceNoAlwaysRunSettings));
         positionSolver.addMoveToTaskExNoWait(rightbeforespecimenbar, autoTasks);
-        autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart()); // pickup specimen and raise
-        autoTasks.addStep(() -> intake.tasks.getSpecimenTask.isDone());
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart()); // raise high for specimen hang
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.isDone());
-        autoTasks.addStep(() -> positionSolver.isDone());
         autoTasks.addStep(() -> intake.rangeEnabled = true); // range to bar
         autoTasks.addStep(() -> intake.rangeisDone);
-        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart()); // clip specimen on bar
-        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.isDone());
+        autoTasks.addStep(() -> intake.tasks.autoSpecimenHang1.restart()); // clip specimen on bar
+        autoTasks.addStep(() -> intake.tasks.autoSpecimenHang1.isDone());
 
         // Move Samples to ObservationZone.
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         // First Sample to ObservationZone.
         positionSolver.addMoveToTaskEx(p_4, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.autoSpecimenHang2.restart());
         positionSolver.addMoveToTaskEx(p_5, autoTasks);
         positionSolver.addMoveToTaskEx(p_6, autoTasks);
         positionSolver.addMoveToTaskEx(p_7, autoTasks);
@@ -212,6 +204,8 @@ public class ClawAutoSpec extends LinearOpMode{
         specimenPickupAndHang(autoTasks, p_7, p_post_9, p_13, p_14, p_15, p_16);
         // Third Specimen PickupAndHang
         specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_17, p_18);
+        // Fourth Specimen PickupAndHang
+        specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_19, p_20);
         // Park.
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(p_12, autoTasks);
@@ -219,66 +213,20 @@ public class ClawAutoSpec extends LinearOpMode{
 
     private void specimenPickupAndHang(TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three,
                                        Vector3 pos_four, Vector3 prePosition, Vector3 position) {
-        // Specimen Pickup and Hang.
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
-        positionSolver.addMoveToTaskEx(pos_two, autoTasks); //p_12
-        positionSolver.addMoveToTaskEx(pos_three, autoTasks); //p_13
+        positionSolver.addMoveToTaskEx(pos_two, autoTasks); //p_12  // before observation zone
+        positionSolver.addMoveToTaskEx(pos_three, autoTasks); //p_13 // at observation zone
         autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
         autoTasks.addStep(() -> intake.tasks.getSpecimenTask.isDone());
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
-        positionSolver.addMoveToTaskEx(pos_four, autoTasks); //p_14 observationzoneclear
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceNoAlwaysRunSettings));
-        positionSolver.addMoveToTaskEx(prePosition, autoTasks); // before bar p_15
+        positionSolver.addMoveToTaskEx(prePosition, autoTasks); // before bar p_15, p_17, p_19
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.isDone());
-//        positionSolver.addMoveToTaskEx(position, autoTasks); // at bar p_16
         autoTasks.addStep(() -> intake.rangeEnabled = true); // range to bar
         autoTasks.addStep(() -> intake.rangeisDone);
         autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
-        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.isDone());
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-        positionSolver.addMoveToTaskEx(prePosition, autoTasks); //p_15
-    }
-
-/* *************************************************************************************************************** */
-//    @Override
-//    public void SpecAuto_rangetest(TimedTask autoTasks) {
-//        Vector3 humansidestart = new Vector3(14 + 3.0 / 8.0, -62, -90);
-//        Vector3 rightbeforespecimenbar = new Vector3(11.75, -39, -90);
-//        Vector3 observationzoneclear = new Vector3(45.5, -56, 90); // to stop wall hit
-//
-//        autoTasks.addStep(() -> odo.setPosition(observationzonepickup));
-//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
-//        autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart()); // pickup specimen and raise
-//        autoTasks.addStep(() -> intake.tasks.getSpecimenTask.isDone());
-//        positionSolver.addMoveToTaskEx(observationzoneclear, autoTasks);
-//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceNoAlwaysRunSettings));
-//        positionSolver.addMoveToTaskExNoWait(rightbeforespecimenbar, autoTasks);
-//        autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart()); // raise high for specimen hang
-//        autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.isDone());
-//        autoTasks.addStep(() -> positionSolver.isDone());
-//        autoTasks.addStep(() -> intake.rangeEnabled = true); // range to bar
-//        autoTasks.addStep(() -> intake.rangeisDone);
-//        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart()); // clip specimen on bar
 //        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.isDone());
-//        autoTasks.addStep(() -> intake.getHardware().backLight.setPosition(.7));
-//    }
-
-    /****************************************************************************/
-//    private void testAuto2(TimedTask autoTasks) {
-//        Vector3 specimenbar = new Vector3(11.75, -32.75, -90);
-//        Vector3 afterfirstredbar = new Vector3(36, -40, -90);
-//        Vector3 specimenpickup = new Vector3(45, -60.5, 90);
-
-//        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
-//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultNoAlwaysRunSettings));
-//        autoTasks.addStep(()-> intake.tasks.autoSamplePickupTask.restart());
-//        autoTasks.addStep(() -> intake.tasks.autoSamplePickupTask.isDone());
-//        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.restart());
-//        autoTasks.addStep(() -> intake.tasks.autoBucketLiftTask.isDone());
-//        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.restart());
-//        autoTasks.addStep(() -> intake.tasks.autoBucketDropperTask.isDone());
-//        autoTasks.addStep(()-> intake.rangeEnabled = true);
-//        autoTasks.addStep(()-> intake.rangeisDone);
-//    }
+        autoTasks.addDelay(70);
+//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+    }
 }

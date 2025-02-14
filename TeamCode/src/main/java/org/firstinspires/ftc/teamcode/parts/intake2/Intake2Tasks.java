@@ -20,6 +20,8 @@ public class Intake2Tasks {
     public final TimedTask autoRotateServoSafe;
     public final TimedTask prepareToHangSpecimenTask;
     public final TimedTask autoSamplePickupTaskHack;
+    public final TimedTask autoSpecimenHang1;
+    public final TimedTask autoSpecimenHang2;
 
     public Intake2Tasks(Intake2 intake, Robot robot) {
         this.intake = intake;
@@ -35,6 +37,8 @@ public class Intake2Tasks {
         autoRotateServoSafe = new TimedTask(TaskNames.autoRotateServoSafe, movementTask);
         prepareToHangSpecimenTask = new TimedTask(TaskNames.autoSpecimenSet, movementTask);
         autoSamplePickupTaskHack = new TimedTask(TaskNames.autoSamplePickupTaskHack, movementTask);
+        autoSpecimenHang1 = new TimedTask(TaskNames.autoSpecimenHang1, movementTask);
+        autoSpecimenHang2 = new TimedTask(TaskNames.autoSpecimenHang2, movementTask);
     }
 
     public void constructAllIntakeTasks() {
@@ -58,6 +62,8 @@ public class Intake2Tasks {
         });
     /* ***** prepareToHangSpecimenTask ******/
         prepareToHangSpecimenTask.autoStart = false;
+        prepareToHangSpecimenTask.addStep(()-> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
+        prepareToHangSpecimenTask.addStep(()-> intake.getHardware().specimenServo.isDone());
         prepareToHangSpecimenTask.addStep(()-> intake.setLiftPosition(intake.getSettings().specimenHangPosition,1));
         prepareToHangSpecimenTask.addStep(intake::isLiftInTolerance);
 
@@ -110,6 +116,18 @@ public class Intake2Tasks {
         hangSpecimenTask.addStep(()-> intake.getHardware().specimenServo.isDone());
         hangSpecimenTask.addStep(()-> intake.setLiftPosition(intake.getSettings().minLiftPosition,1));
         hangSpecimenTask.addStep(intake::isLiftInTolerance);
+
+        /* ***** autoSpecimenHang1 ******/
+        autoSpecimenHang1.autoStart = false;
+        autoSpecimenHang1.addStep(()-> intake.setLiftPosition(intake.getSettings().specimenServoOpenHeight,1));
+        autoSpecimenHang1.addStep(intake::isLiftInTolerance);
+        autoSpecimenHang1.addStep(()-> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoOpenPosition));
+        autoSpecimenHang1.addStep(()-> intake.getHardware().specimenServo.isDone());
+
+        /* ***** autoSpecimenHang1 ******/
+        autoSpecimenHang1.autoStart = false;
+        autoSpecimenHang2.addStep(()-> intake.setLiftPosition(intake.getSettings().minLiftPosition,1));
+        autoSpecimenHang2.addStep(intake::isLiftInTolerance);
 
     /* ***** autoIntakeDropTask ******/
         autoIntakeDropTask.autoStart = false;
@@ -225,6 +243,8 @@ public class Intake2Tasks {
         public final static String autoSamplePickupTask = "auto sample pickup";
         public final static String autoSamplePickupTaskHack = "auto sample pickup hack";
         public final static String autoSpecimenSet = "auto specimen set";
+        public final static String autoSpecimenHang1 = "auto specimen set1";
+        public final static String autoSpecimenHang2 = "auto specimen set2";
     }
 
     public static final class Events {
