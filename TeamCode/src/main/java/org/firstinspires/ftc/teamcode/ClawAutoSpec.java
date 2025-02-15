@@ -156,15 +156,15 @@ public class ClawAutoSpec extends LinearOpMode{
         Vector3 rightbeforespecimenbar = new Vector3(11.75, -39, -90);
         Vector3 p_3 = new Vector3(11.75, -32.75, -90);
         Vector3 p_4 = new Vector3(36, -43, 90);  // Z: -90
-        Vector3 p_5 = new Vector3(36, -11.75, 90);
+        Vector3 p_5 = new Vector3(36, -15, 90);
         Vector3 p_6 = new Vector3(42.5, -15, 90); //Z:180
-        Vector3 p_7 = new Vector3(42.5, -52.5, 90); //Z:180
+        Vector3 p_7 = new Vector3(42.5, -50.5, 90); //Z:180
         Vector3 p_pre_8 = new Vector3(42.5, -15, 90); // Same as p_6.
-        Vector3 p_8 = new Vector3(52.5, -11.75, 90); // Z:180
+        Vector3 p_8 = new Vector3(52.5, -15, 90); // Z:180
         Vector3 p_9 = new Vector3(52.5, -49.5, 90); // Z:180
         Vector3 p_post_9 = new Vector3(52.5, -44.5, 90); // Z:180
-        Vector3 p_12 = new Vector3(45.5, -56.5, 90); // Y:-58.5
-        Vector3 p_13 = new Vector3(45.5, -61.5, 90); // Y:61.5
+        Vector3 p_12 = new Vector3(33.5, -56.5, 90); // Y:-58.5 moved pickup 10" to left
+        Vector3 p_13 = new Vector3(33.5, -61.5, 90); // Y:61.5 moved pickup 10" to left
         Vector3 p_14 = new Vector3(24, -47, 0);
         Vector3 p_15 = new Vector3(8.75, -39, -90); // Y:37.75
         Vector3 p_16 = new Vector3(8.75, -32.75 + 1, -90); // Y:32.75
@@ -172,6 +172,7 @@ public class ClawAutoSpec extends LinearOpMode{
         Vector3 p_18 = new Vector3(5.75, -32.75 + 1, -90); // Y:32.75
         Vector3 p_19 = new Vector3(2.75, -37.75, -90);
         Vector3 p_20 = new Vector3(2.75, -32.75, -90);
+        Vector3 p_00 = new Vector3(45.5, -56.5, -45); // Y:-58.5
 
         // Reset and Get Ready.
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
@@ -201,14 +202,14 @@ public class ClawAutoSpec extends LinearOpMode{
         positionSolver.addMoveToTaskEx(p_9, autoTasks);
 
         // Second Specimen PickupAndHang
-        specimenPickupAndHang(autoTasks, p_7, p_post_9, p_13, p_14, p_15, p_16);
+        specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_15, p_16);
         // Third Specimen PickupAndHang
         specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_17, p_18);
         // Fourth Specimen PickupAndHang
         specimenPickupAndHang(autoTasks, p_7, p_12, p_13, p_14, p_19, p_20);
         // Park.
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-        positionSolver.addMoveToTaskEx(p_12, autoTasks);
+        positionSolver.addMoveToTaskEx(p_00, autoTasks); // angle straight to park
     }
 
     private void specimenPickupAndHang(TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three,

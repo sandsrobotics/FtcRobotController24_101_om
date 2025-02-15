@@ -125,7 +125,7 @@ public class Intake2Tasks {
         autoSpecimenHang1.addStep(()-> intake.getHardware().specimenServo.isDone());
 
         /* ***** autoSpecimenHang1 ******/
-        autoSpecimenHang1.autoStart = false;
+        autoSpecimenHang2.autoStart = false;
         autoSpecimenHang2.addStep(()-> intake.setLiftPosition(intake.getSettings().minLiftPosition,1));
         autoSpecimenHang2.addStep(intake::isLiftInTolerance);
 
