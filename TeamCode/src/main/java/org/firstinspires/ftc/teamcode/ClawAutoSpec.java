@@ -227,7 +227,7 @@ public class ClawAutoSpec extends LinearOpMode{
         autoTasks.addStep(() -> intake.rangeisDone);
         autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
 //        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.isDone());
-        autoTasks.addDelay(70);
+        autoTasks.addDelay(80);
 //        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
     }
 }

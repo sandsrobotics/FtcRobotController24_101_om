@@ -62,6 +62,7 @@ public class Intake2Tasks {
         });
     /* ***** prepareToHangSpecimenTask ******/
         prepareToHangSpecimenTask.autoStart = false;
+        //Todo: SAFETY: disable dropper servo
         prepareToHangSpecimenTask.addStep(()-> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
         prepareToHangSpecimenTask.addStep(()-> intake.getHardware().specimenServo.isDone());
         prepareToHangSpecimenTask.addStep(()-> intake.setLiftPosition(intake.getSettings().specimenHangPosition,1));
@@ -84,6 +85,7 @@ public class Intake2Tasks {
         autoBucketDropperTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoBucketDropperTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.enable());
+        // Todo: SAFETY make sure bucket is at/near top already
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMax));
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.isDone());
         autoBucketDropperTask.addDelay(350 ); // leave bucket high to dump sample
@@ -101,6 +103,7 @@ public class Intake2Tasks {
         getSpecimenTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         getSpecimenTask.addStep(()-> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoClosePosition));
         getSpecimenTask.addStep(()-> intake.getHardware().specimenServo.isDone());
+        //ToDo: SAFETY disable dropper servo
         getSpecimenTask.addStep(()-> intake.setLiftPosition(intake.getSettings().specimenSafeHeight,1));
         getSpecimenTask.addStep(intake::isLiftInTolerance);
 
@@ -193,19 +196,13 @@ public class Intake2Tasks {
         autoHomeTask.restart();
     }
     public void startAutoBucketLift() {autoBucketLiftTask.restart();}
-    public void startAutoBucketDropper() {
-        autoBucketDropperTask.restart();
-    }
-    public void startAutoSpecimenPickup() {
-        getSpecimenTask.restart();
-    }
-    public void startAutoSpecimenHang() {
-        hangSpecimenTask.restart(); }
+    public void startAutoBucketDropper() {autoBucketDropperTask.restart();}
+    public void startAutoSpecimenPickup() {getSpecimenTask.restart();}
+    public void startAutoSpecimenHang() {hangSpecimenTask.restart(); }
     public void startAutoIntakeDropTask() {
         autoIntakeDropTask.restart();
     }
-    public void startAutoSpecimenSet() {
-        prepareToHangSpecimenTask.restart();}
+    public void startAutoSpecimenSet() {prepareToHangSpecimenTask.restart();}
     public void startAutoSamplePickup() {
         autoSamplePickupTask.restart();
     }
