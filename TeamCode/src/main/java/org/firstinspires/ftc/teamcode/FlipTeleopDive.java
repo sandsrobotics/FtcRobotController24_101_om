@@ -35,7 +35,8 @@ public class FlipTeleopDive extends LinearOpMode {
     PositionSolver positionSolver;
     PositionTracker pt;
     Pinpoint odo;
-    Vector3 fieldStartPos = new Vector3(-14.375,-62,90);  //for teleOp, this shouldn't be relevant
+    //Vector3 fieldStartPos = new Vector3(-14.375,-62,90);  //for teleOp, this shouldn't be relevant
+    Vector3 fieldStartPos = new Vector3(14.375, -62, -90);
     boolean testModeReverse = false;
 
     public void initTeleop(){

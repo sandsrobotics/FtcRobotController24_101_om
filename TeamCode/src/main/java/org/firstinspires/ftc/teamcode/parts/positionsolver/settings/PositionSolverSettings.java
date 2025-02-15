@@ -81,20 +81,26 @@ public class PositionSolverSettings {
     );
 
     public static PositionSolverSettings defaultTwiceSettingsHang = new PositionSolverSettings(
-            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 0.5),
-            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 0.5),
-            new SolverSettings(2.5, 2, true, 10000, new PIDCoefficients(0.0125, 0, 0), 0.5)
+            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 1.0),
+            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 1.0),
+            new SolverSettings(2.5, 2, true, 10000, new PIDCoefficients(0.0125, 0, 0), 1.0)
+    );
+
+    public static PositionSolverSettings defaultTwiceSettingsHang1 = new PositionSolverSettings(
+            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.035, 0, 0), 0.8),
+            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.035, 0, 0), 0.8),
+            new SolverSettings(2.5, 2, true, 10000, new PIDCoefficients(0.0125, 0, 0), 0.8)
     );
 
     public static PositionSolverSettings lkSloppyY = new PositionSolverSettings(
-            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 1.0),
-            new SolverSettings(4, 1, true, 10000, new PIDCoefficients(0.2, 0, 0), 1.0),
+            new SolverSettings(2, 1, true, 10000, new PIDCoefficients(0.05, 0, 0), 1.0),
+            new SolverSettings(4, 1, true, 10000, new PIDCoefficients(0.1, 0, 0), 1.0),
             new SolverSettings(2.5, 2, true, 10000, new PIDCoefficients(0.0125, 0, 0), 1.0)
     );
 
     public static PositionSolverSettings lkSloppyX = new PositionSolverSettings(
-            new SolverSettings(4, 1, true, 10000, new PIDCoefficients(0.2, 0, 0), 1.0),
-            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 1.0),
+            new SolverSettings(4, 1, true, 10000, new PIDCoefficients(0.1, 0, 0), 1.0),
+            new SolverSettings(2, 1, true, 10000, new PIDCoefficients(0.05, 0, 0), 1.0),
             new SolverSettings(2.5, 2, true, 10000, new PIDCoefficients(0.0125, 0, 0), 1.0)
     );
 

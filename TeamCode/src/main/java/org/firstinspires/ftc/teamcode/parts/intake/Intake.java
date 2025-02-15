@@ -159,7 +159,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         //Reads the distance sensor and then gets a new current pinpoint position (to do: work with positiontracker instead)
         //The X and Z will be preserved, but Y will be changed to reflect best available position data
         if (targetPosition.Z != 90 && targetPosition.Z != -90) return null;  //only currently works for pure Y
-        final double acceptableDiff = 10;  //how much farther away is OK for calculations?
+        final double acceptableDiff = 18;  //how much farther away is OK for calculations?
         final double acceptableAngle = 10;  //how far can odo angle be from target angle for calculations?
         getRangeDistance();
         parent.opMode.telemetry.addData ("ranging:", lastRearDistance);
