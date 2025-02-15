@@ -108,6 +108,19 @@ public class PositionSolver extends Part<Drive, PositionSolverSettings, ObjectUt
         task.addStep(() -> (System.currentTimeMillis() - startTime >= time) || isDone());
     }
 
+    private void addMoveToTaskEx(Vector3 target, TaskEx task, int time, boolean wait, PositionSolverSettings psSetting) {
+        //sanitize input
+        if(time < 0) return;
+        task.addStep(() -> setSettings(psSetting));
+        if (!wait) {
+            addMoveToTaskExNoWait(target, task);
+        } else if (time==0) {
+            addMoveToTaskEx(target, task);
+        } else {
+            addMoveToTaskEx(target, task, time);
+        }
+    }
+
     @Override
     public void onBeanLoad() {
         positionTracker = getBeanManager().getBestMatch(PositionTracker.class, false, false);

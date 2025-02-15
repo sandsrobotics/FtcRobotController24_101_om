@@ -31,6 +31,7 @@ import om.self.ezftc.utils.Constants;
 import om.self.ezftc.utils.Vector3;
 import om.self.supplier.suppliers.EdgeSupplier;
 import om.self.task.core.Group;
+import om.self.task.core.TaskEx;
 import om.self.task.other.TimedTask;
 
 @Config
@@ -397,15 +398,32 @@ public class FlipAuto2025 extends LinearOpMode{
     private void specimenHangPositionOnly (TimedTask autoTasks, Vector3 posHang, double targetDistance) {
 //        positionSolver.addMoveToTaskEx(p_2.withY(-50), autoTasks);
         autoTasks.addStep(() -> intake.debugDelay());
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettingsHang));
-        positionSolver.addMoveToTaskExNoWait(posHang, autoTasks);
-        autoTasks.addTimedStep(() -> {},() -> intake.adjustTarget(posHang,targetDistance) || positionSolver.isDone(),2000 );
-        autoTasks.addStep(() -> {
+//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettingsHang));
+//        positionSolver.addMoveToTaskExNoWait(posHang, autoTasks);
+        addMove(autoTasks, posHang, 0, false, PositionSolverSettings.defaultTwiceSettingsHang);
+//        autoTasks.addTimedStep(() -> {},() -> intake.adjustTarget(posHang,targetDistance) || positionSolver.isDone(),2000 );
+//        autoTasks.addStep(() -> {
+//            if (intake.adjustedDestination!=null) positionSolver.setNewTarget(intake.adjustedDestination, true);
+//        });
+        autoTasks.addTimedStep(()-> {
+            intake.adjustTarget(posHang,targetDistance);
             if (intake.adjustedDestination!=null) positionSolver.setNewTarget(intake.adjustedDestination, true);
-        });
-        autoTasks.addStep(() -> positionSolver.isDone());
+        }, () -> positionSolver.isDone(), 5000);
+//        autoTasks.addStep(() -> positionSolver.isDone());
         autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
+    }
+
+    private void addMove(TaskEx task, Vector3 target, int time, boolean wait, PositionSolverSettings psSetting) {
+        if (time < 0) return;
+        task.addStep(() -> positionSolver.setSettings(psSetting));
+        if (!wait) {
+            positionSolver.addMoveToTaskExNoWait(target, task);
+        } else if (time==0) {
+            positionSolver.addMoveToTaskEx(target, task);
+        } else {
+            positionSolver.addMoveToTaskEx(target, task, time);
+        }
     }
 
     private void specimenPickupAndHang (TimedTask autoTasks, Vector3 pos_two, Vector3 pos_three,

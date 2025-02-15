@@ -158,6 +158,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         if (targetPosition.Z != 90 && targetPosition.Z != -90) return null;  //only currently works for pure Y
         final double acceptableDiff = 5;  //how much farther away is OK for calculations?
         final double acceptableAngle = 5;  //how far can odo angle be from target angle for calculations?
+        final double tolerance = 0.25;     //difference to ignore (avoid setting position and resetting PID)
         getRangeDistance();
         parent.opMode.telemetry.addData ("ranging:", lastRearDistance);
         if (lastRearDistance <= targetDistance + acceptableDiff) {   // if it's in acceptable range for calculations...
@@ -165,6 +166,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             if (currentPosition == null) return null;                // if not valid odo position, return null
             if (Math.abs(currentPosition.Z - targetPosition.Z) > acceptableAngle) return null;   // return null if angle too large
             double yAdjust = (lastRearDistance - targetDistance) * -1.0 * Math.signum(targetPosition.Z);  // distance + at 90°, - at -90°
+            if (Math.abs(yAdjust) <= tolerance) return null;         // if within tolerance, return null
             // new position has original X and Z, but Y is based on currentPosition, targetDistance, and range
             return new Vector3(targetPosition.X, currentPosition.Y + yAdjust, targetPosition.Z);
         }
@@ -173,6 +175,10 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public boolean adjustTarget(Vector3 targetPosition, double targetDistance) {
         adjustedDestination = adjustTargetPositionByRangeY(targetPosition, targetDistance);
         return adjustedDestination != null;
+    }
+    public Vector3 adjustedTargetV3(Vector3 targetPosition, double targetDistance) {
+        adjustedDestination = adjustTargetPositionByRangeY(targetPosition, targetDistance);
+        return adjustedDestination != null ? adjustedDestination : targetPosition;
     }
 
     public void stopSlide() { getHardware().slideMotor.setPower(0); }
