@@ -406,23 +406,22 @@ public class FlipAuto2025 extends LinearOpMode{
 //            if (intake.adjustedDestination!=null) positionSolver.setNewTarget(intake.adjustedDestination, true);
 //        });
         autoTasks.addTimedStep(()-> {
-            intake.adjustTarget(posHang,targetDistance);
-            if (intake.adjustedDestination!=null) positionSolver.setNewTarget(intake.adjustedDestination, true);
+            if (intake.adjustTarget(posHang,targetDistance)) positionSolver.setNewTarget(intake.adjustedDestination, true);
         }, () -> positionSolver.isDone(), 5000);
 //        autoTasks.addStep(() -> positionSolver.isDone());
         autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
     }
 
-    private void addMove(TaskEx task, Vector3 target, int time, boolean wait, PositionSolverSettings psSetting) {
-        if (time < 0) return;
+    private void addMove(TaskEx task, Vector3 target, int timeLimit, boolean wait, PositionSolverSettings psSetting) {
+        if (timeLimit < 0) return;
         task.addStep(() -> positionSolver.setSettings(psSetting));
         if (!wait) {
             positionSolver.addMoveToTaskExNoWait(target, task);
-        } else if (time==0) {
+        } else if (timeLimit==0) {
             positionSolver.addMoveToTaskEx(target, task);
         } else {
-            positionSolver.addMoveToTaskEx(target, task, time);
+            positionSolver.addMoveToTaskEx(target, task, timeLimit);
         }
     }
 

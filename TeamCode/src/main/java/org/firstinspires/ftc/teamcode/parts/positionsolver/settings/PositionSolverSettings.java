@@ -86,4 +86,35 @@ public class PositionSolverSettings {
             new SolverSettings(2.5, 2, true, 10000, new PIDCoefficients(0.0125, 0, 0), 0.5)
     );
 
+    public static PositionSolverSettings lkSloppyY = new PositionSolverSettings(
+            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 1.0),
+            new SolverSettings(4, 1, true, 10000, new PIDCoefficients(0.2, 0, 0), 1.0),
+            new SolverSettings(2.5, 2, true, 10000, new PIDCoefficients(0.0125, 0, 0), 1.0)
+    );
+
+    public static PositionSolverSettings lkSloppyX = new PositionSolverSettings(
+            new SolverSettings(4, 1, true, 10000, new PIDCoefficients(0.2, 0, 0), 1.0),
+            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 1.0),
+            new SolverSettings(2.5, 2, true, 10000, new PIDCoefficients(0.0125, 0, 0), 1.0)
+    );
+
+    public static PositionSolverSettings lkSloppyZ = new PositionSolverSettings(
+            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 1.0),
+            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 1.0),
+            new SolverSettings(5, 1, true, 10000, new PIDCoefficients(0.05, 0, 0), 1.0)
+    );
+
+    public static PositionSolverSettings lkD2MoveBias = new PositionSolverSettings(
+            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 1),
+            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 1),
+            new SolverSettings(2.5, 2, true, 10000, new PIDCoefficients(0.0125, 0, 0), 0.5)
+    );
+
+    public static PositionSolverSettings lkD2RotateBias = new PositionSolverSettings(
+            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 0.5),
+            new SolverSettings(1, 2, true, 10000, new PIDCoefficients(0.05, 0, 0), 0.5),
+            new SolverSettings(2.5, 2, true, 10000, new PIDCoefficients(0.0125, 0, 0), 1)
+    );
+
+
 }

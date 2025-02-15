@@ -108,16 +108,16 @@ public class PositionSolver extends Part<Drive, PositionSolverSettings, ObjectUt
         task.addStep(() -> (System.currentTimeMillis() - startTime >= time) || isDone());
     }
 
-    private void addMoveToTaskEx(Vector3 target, TaskEx task, int time, boolean wait, PositionSolverSettings psSetting) {
+    private void addMoveToTaskEx(Vector3 target, TaskEx task, int timeLimit, boolean wait, PositionSolverSettings psSetting) {
         //sanitize input
-        if(time < 0) return;
+        if(timeLimit < 0) return;
         task.addStep(() -> setSettings(psSetting));
         if (!wait) {
             addMoveToTaskExNoWait(target, task);
-        } else if (time==0) {
+        } else if (timeLimit==0) {
             addMoveToTaskEx(target, task);
         } else {
-            addMoveToTaskEx(target, task, time);
+            addMoveToTaskEx(target, task, timeLimit);
         }
     }
 

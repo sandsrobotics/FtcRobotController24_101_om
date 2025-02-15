@@ -148,6 +148,8 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
             }
             if (buttonMgr.getState(2, Buttons.y, State.wasTapped)) {
                 FlipbotSettings.isYellowGood = !FlipbotSettings.isYellowGood;
+                if (FlipbotSettings.isYellowGood) parent.leds.yellowGood.restart();
+                else parent.leds.yellowBad.restart();
             }
         }
 

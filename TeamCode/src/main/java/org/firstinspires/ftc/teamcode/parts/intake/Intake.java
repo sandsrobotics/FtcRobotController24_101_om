@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveControl;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
+import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.pinpoint.Pinpoint;
 
 import om.self.ezftc.core.Robot;
@@ -25,8 +26,10 @@ import static java.lang.Math.abs;
 public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardware, IntakeControl> {
 
     public IntakeTasks tasks;
+    public LedTasks leds;
     protected Drive drive;
     protected Pinpoint pinpoint;
+    protected PositionTracker positionTracker;
 
     public int slideTargetPosition;
     public int liftTargetPosition;
@@ -156,30 +159,42 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         //Reads the distance sensor and then gets a new current pinpoint position (to do: work with positiontracker instead)
         //The X and Z will be preserved, but Y will be changed to reflect best available position data
         if (targetPosition.Z != 90 && targetPosition.Z != -90) return null;  //only currently works for pure Y
-        final double acceptableDiff = 5;  //how much farther away is OK for calculations?
-        final double acceptableAngle = 5;  //how far can odo angle be from target angle for calculations?
-        final double tolerance = 0.25;     //difference to ignore (avoid setting position and resetting PID)
+        final double acceptableDiff = 10;  //how much farther away is OK for calculations?
+        final double acceptableAngle = 10;  //how far can odo angle be from target angle for calculations?
         getRangeDistance();
         parent.opMode.telemetry.addData ("ranging:", lastRearDistance);
         if (lastRearDistance <= targetDistance + acceptableDiff) {   // if it's in acceptable range for calculations...
-            Vector3 currentPosition = pinpoint.getValidPosition();   // get the current odo position
-            if (currentPosition == null) return null;                // if not valid odo position, return null
+//            Vector3 currentPosition = pinpoint.getValidPosition();   // get the current odo position
+//            if (currentPosition == null) return null;                // if not valid odo position, return null
+            Vector3 currentPosition = positionTracker.getCurrentPosition();
             if (Math.abs(currentPosition.Z - targetPosition.Z) > acceptableAngle) return null;   // return null if angle too large
             double yAdjust = (lastRearDistance - targetDistance) * -1.0 * Math.signum(targetPosition.Z);  // distance + at 90°, - at -90°
-            if (Math.abs(yAdjust) <= tolerance) return null;         // if within tolerance, return null
             // new position has original X and Z, but Y is based on currentPosition, targetDistance, and range
             return new Vector3(targetPosition.X, currentPosition.Y + yAdjust, targetPosition.Z);
         }
         return null;
     }
     public boolean adjustTarget(Vector3 targetPosition, double targetDistance) {
-        adjustedDestination = adjustTargetPositionByRangeY(targetPosition, targetDistance);
-        return adjustedDestination != null;
+        // returns true if adjustedDestination has changed and should be used
+        final double YTolerance = 0.25;     //difference to ignore (avoid setting position and resetting PID)
+        Vector3 newAdjustedDestination = adjustTargetPositionByRangeY(targetPosition, targetDistance);
+        if (newAdjustedDestination != null) {
+            // first, if adjustedDestination is already set and within YTolerance, don't change and return false (don't change destination)
+            if (adjustedDestination != null && Math.abs(newAdjustedDestination.Y - adjustedDestination.Y) <= YTolerance) {
+                return false;
+            }
+            // next, whether adjustedDestination isn't set or is out of YTolerance, change and return true (change destination)
+            adjustedDestination = newAdjustedDestination;
+            leds.ranging.restart();
+            return true;
+        }
+        // finally, newAdjustedDestination wasn't determined, so return false (don't change destination)
+        return false;
     }
-    public Vector3 adjustedTargetV3(Vector3 targetPosition, double targetDistance) {
-        adjustedDestination = adjustTargetPositionByRangeY(targetPosition, targetDistance);
-        return adjustedDestination != null ? adjustedDestination : targetPosition;
-    }
+//    public Vector3 adjustedTargetV3(Vector3 targetPosition, double targetDistance) {
+//        adjustedDestination = adjustTargetPositionByRangeY(targetPosition, targetDistance);
+//        return adjustedDestination != null ? adjustedDestination : targetPosition;
+//    }
 
     public void stopSlide() { getHardware().slideMotor.setPower(0); }
     public void stopLift() { getHardware().liftMotor.setPower(0); }
@@ -280,6 +295,18 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         if (hue > 20 && hue < 60) lastSample = 1; // Red = 1
         if (hue > 65 && hue < 160) lastSample = 2; // Yellow = 2
         if (hue > 160) lastSample = 3; // Blue = 3
+        switch (lastSample) {
+            case 1:
+                leds.isRed.restart();
+                break;
+            case 2:
+                leds.isYellow.restart();
+                break;
+            case 3:
+                leds.isBlue.restart();
+                break;
+            default:
+        }
         return lastSample; // Nothing detected
     }
     public boolean isSampleGood(int sample) {
@@ -334,8 +361,11 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             initializeServos();
         }
         pinpoint = getBeanManager().getBestMatch(Pinpoint.class, false);
+        positionTracker = getBeanManager().getBestMatch(PositionTracker.class, false);
         tasks = new IntakeTasks(this, parent);
         tasks.constructAllIntakeTasks();
+        leds = new LedTasks(this, parent);
+        leds.constructAllLedTasks();
 
         // this is part of the resets lift to 0 each time it hits the limit switch
         homingLiftZero.setOnRise(() -> {

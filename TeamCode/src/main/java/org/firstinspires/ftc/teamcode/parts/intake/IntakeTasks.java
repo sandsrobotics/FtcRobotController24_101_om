@@ -276,6 +276,7 @@ public class IntakeTasks {
 
         /* == Task: ejectBadSampleTask == */
         ejectBadSampleTask.autoStart = false;
+        ejectBadSampleTask.addStep(() -> intake.leds.ejecting.restart());
         ejectBadSampleTask.addStep(() -> intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOut));
         ejectBadSampleTask.addDelay(1500);
         ejectBadSampleTask.addStep(autoIntakeTask::restart);
