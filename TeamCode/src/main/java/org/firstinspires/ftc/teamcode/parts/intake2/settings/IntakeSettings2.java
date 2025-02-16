@@ -25,8 +25,9 @@ public class IntakeSettings2 {
     public final double rotationServoStep = 0.01;
     public final double dropperServoMax = 0.36;
     public final double dropperServoMin = 0.5;
-    public final double specimenServoOpenPosition = 0.485;
-    public final double specimenServoClosePosition = 0.68;
+    public final double dropperDockSafe = .716;
+    public final double specimenServoOpenPosition = 0.517; // .517 was .485
+    public final double specimenServoClosePosition = 0.725; // .715 was .68
     public final int specimenSafeHeight = 461;
     public final int specimenHangPosition = 1392;
     public final int specimenServoOpenHeight = 920;

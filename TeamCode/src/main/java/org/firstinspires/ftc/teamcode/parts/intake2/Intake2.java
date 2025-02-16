@@ -114,7 +114,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         if(rangeEnabled) {
             double range = getSpecRange();
             parent.opMode.telemetry.addData("range", range);
-            if (range < 11) {
+            if (range <= 11) {
                 drive.stopRobot();
                 rangeisDone = true;
                 rangeEnabled = false;
@@ -292,7 +292,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public void initializeServos() {
         getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp);
         getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition);
-        getHardware().dropperServo.setPosition(.716);
+        getHardware().dropperServo.setPosition(getSettings().dropperDockSafe);
         getHardware().rotationServo.setPosition(.5);
         parent.opMode.sleep(200);
         getHardware().dropperServo.disable();

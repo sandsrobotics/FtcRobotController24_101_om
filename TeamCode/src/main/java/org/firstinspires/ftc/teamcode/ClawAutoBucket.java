@@ -77,6 +77,9 @@ public class ClawAutoBucket extends ClawAutoSpec {
         } else {
             positionSolver.addMoveToTaskExNoWait(pos_one, autoTasks);
         }
+        // added dropperDockSafe for safety might be too slow
+        autoTasks.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperDockSafe));
+        autoTasks.addStep(()-> intake.getHardware().dropperServo.isDone());
         autoTasks.addStep(()-> intake.getHardware().dropperServo.disable());
         autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().minLiftPosition, 1));
         autoTasks.addStep(intake::isLiftInTolerance);

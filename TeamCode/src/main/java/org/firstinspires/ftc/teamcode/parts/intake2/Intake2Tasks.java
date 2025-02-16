@@ -49,6 +49,8 @@ public class Intake2Tasks {
         autoHomeTask.addStep(() -> {
             intake.incrementIntakeUpDown(0);
             intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoOpenPosition);
+            intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperDockSafe);
+            intake.getHardware().dropperServo.isDone();
             intake.getHardware().dropperServo.disable();
         });
         autoHomeTask.addTimedStep(() -> {
@@ -72,6 +74,8 @@ public class Intake2Tasks {
         autoBucketLiftTask.autoStart = false;
         autoBucketLiftTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoBucketLiftTask.addStep(()-> intake.getHardware().tiltServo.isDone());
+        //Todo: maybe drive droper down if needed
+        // autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperDockSafe);
         autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.disable());
         autoBucketLiftTask.addStep(()-> intake.setLiftPosition(intake.getSettings().maxLiftPosition,1));
         autoBucketLiftTask.addStep(() -> intake.getHardware().bucketLiftMotor.getCurrentPosition() > 1100);
@@ -89,7 +93,7 @@ public class Intake2Tasks {
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMax));
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.isDone());
         autoBucketDropperTask.addDelay(350 ); // leave bucket high to dump sample
-        autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin));
+        autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperDockSafe));
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.isDone());
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.disable());
         if(intake.isTeleop) {
