@@ -80,7 +80,6 @@ public class FlipAuto2025LK extends LinearOpMode{
         new BulkRead(robot);
         intake = new Intake(robot);
 
-//        Vector3 fieldStartPos = new Vector3(0,0,-90);
         Vector3 fieldStartPos = new Vector3(14.375, -62, -90);
 
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
@@ -138,10 +137,9 @@ public class FlipAuto2025LK extends LinearOpMode{
         // Setting up group container, task queue, and setting positionSolver target
         Group container = new Group("container", robot.taskManager);
         TimedTask autoTasks = new TimedTask("auto task", container);
-        //positionSolver.setNewTarget(pt.getCurrentPosition(), true);
 
         // testNewAuto - Successfully Tested!
-         testNewAuto(autoTasks);
+        testNewAuto(autoTasks);
 
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
@@ -167,64 +165,37 @@ public class FlipAuto2025LK extends LinearOpMode{
     private void testNewAuto(TimedTask autoTasks) {
         // Positions to travel in SpecAuto
         Vector3 start = new Vector3(14.375, -62, -90);
-//        Vector3 p_2 = new Vector3(11.75, -37.75, -90);
-//        Vector3 preHang1 = new Vector3(11.75, -40.25, -90);
-        Vector3 preHang1 = new Vector3(11.75, -48.25, -90);
-//        Vector3 hang1 = new Vector3(11.75, -32.75, -90);
         Vector3 hang1 = new Vector3(11.75, -36, -90); //-35
         Vector3 p_4 = new Vector3(36, -42, 90);  // Z: -90
         Vector3 sample1Pre = new Vector3(36, -11.75, 90);
         Vector3 sample1Start= new Vector3(44.5, -11.75, 90); //Z:180
-//        Vector3 sample1End = new Vector3(44.5, -52.5, 90); //Z:180
         Vector3 sample1End = new Vector3(44.5, -47, 90); //Z:180
-//        Vector3 sample2Pre = new Vector3(44.5, -11.75, 90); // Same as p_6.
-//        Vector3 sample2Start = new Vector3(54.5, -11.75, 90); // Z:180
-//        Vector3 sample2End = new Vector3(54.5, -50.5, 90); // Z:180
         Vector3 sample2Pre = new Vector3(44.5, -11.75, 90); // Same as p_6.
         Vector3 sample2Start = new Vector3(52.5, -11.75, 90); // Z:180
-//        Vector3 sample2End = new Vector3(51.5, -50.5, 90); // Z:180
         Vector3 sample2End = new Vector3(52.5, -47, 90); // Z:180
-
-//        Vector3 spec2Pre = new Vector3(54.5, -44.5, 90); // Z:180
-//        Vector3 spec2Pre = new Vector3(47, -44.5, 90); // Z:180
         Vector3 spec2Pre = new Vector3(35, -55, 90); // Z:180 //47
-//        Vector3 spec3Pre = new Vector3(47, -58.5, 90);
         Vector3 spec3Pre = new Vector3(35, -55, 90);
         Vector3 specPickup = new Vector3(35, -61.0, 90); // Y:61.5
-        Vector3 p_14 = new Vector3(24, -47, 0);
         Vector3 preHang2 = new Vector3(8.75, -40.25, -90); // Y:37.75
-//        Vector3 hang2 = new Vector3(8.75, -32.75 + 1, -90); // Y:32.75
         Vector3 hang2 = new Vector3(8.75, -35, -90); // Y:32.75
         Vector3 preHang3 = new Vector3(3.75, -40.25, -90); // Y:37.75
-//        Vector3 hang3 = new Vector3(5.75, -32.75 + 1, -90); // Y:32.75
         Vector3 hang3 = new Vector3(3.75, -35 + 1, -90); // Y:32.75
         Vector3 preHang4 = new Vector3(1.75, -40.25, -90); // Y:37.75
-//        Vector3 hang4 = new Vector3(3.75, -32.75 + 1, -90); // Y:32.75
         Vector3 hang4 = new Vector3(1.75, -35 + 1, -90); // Y:32.75
 
         // Reset and Get Ready.
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
         autoTasks.addStep(() -> odo.setPosition(start));
-//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
 
         // Hang Pre-Loaded Specimen.
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
-//        positionSolver.addMoveToTaskEx(preHang1, autoTasks);
-//        addMove(autoTasks, preHang1, 0, true, PositionSolverSettings.lkSloppyY);
-        /* LK experiment here */
-        specimenHangPositionOnly(autoTasks, hang1,3,true);
-
+        specimenRanging(autoTasks, hang1,3,true);
         autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
-//        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.isDone());
         autoTasks.addDelay(200);
-//        positionSolver.addMoveToTaskEx(preHang1, autoTasks);
-//        addMove(autoTasks, preHang1, 0, true, PositionSolverSettings.lkSloppyY);
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
-
-        positionSolver.addMoveToTaskExNoWait(p_4.withZ(0), autoTasks);
-        autoTasks.addDelay(250);   //assure it starts to turn counter-clockwise
 
         // Move First Sample to ObservationZone.
+        positionSolver.addMoveToTaskExNoWait(p_4.withZ(0), autoTasks); //assure it starts to turn counter-clockwise
+        autoTasks.addDelay(250);
         positionSolver.addMoveToTaskEx(p_4, autoTasks);
         positionSolver.addMoveToTaskEx(sample1Pre, autoTasks);
         positionSolver.addMoveToTaskEx(sample1Start, autoTasks);
@@ -236,26 +207,26 @@ public class FlipAuto2025LK extends LinearOpMode{
         positionSolver.addMoveToTaskEx(sample2End, autoTasks);
 
         // Second Specimen PickupAndHang
-        specimenPickupAndHang(autoTasks, spec2Pre, specPickup, p_14, preHang2, hang2);
-
-        positionSolver.addMoveToTaskExNoWait(spec3Pre.withZ(180), autoTasks);
-        autoTasks.addDelay(250);   //assure it starts to turn clockwise
+        specimenPickupAndHang(autoTasks, spec2Pre, specPickup, preHang2, hang2);
 
         // Third Specimen PickupAndHang
-        specimenPickupAndHang(autoTasks, spec3Pre, specPickup, p_14, preHang3, hang3);
-
-        positionSolver.addMoveToTaskExNoWait(spec3Pre.withZ(180), autoTasks);
-        autoTasks.addDelay(250);   //assure it starts to turn clockwise
+        positionSolver.addMoveToTaskExNoWait(spec3Pre.withZ(180), autoTasks);  //assure it starts to turn clockwise
+        autoTasks.addDelay(250);
+        specimenPickupAndHang(autoTasks, spec3Pre, specPickup, preHang3, hang3);
 
         // Fourth Specimen PickupAndHang
-        specimenPickupAndHang(autoTasks, spec3Pre, specPickup, p_14, preHang4, hang4);
+        positionSolver.addMoveToTaskExNoWait(spec3Pre.withZ(180), autoTasks); //assure it starts to turn clockwise
+        autoTasks.addDelay(250);
+        specimenPickupAndHang(autoTasks, spec3Pre, specPickup, preHang4, hang4);
 
         // Park.
+        positionSolver.addMoveToTaskExNoWait(spec3Pre.withZ(180), autoTasks); //assure it starts to turn clockwise
+        autoTasks.addDelay(250);
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-        positionSolver.addMoveToTaskEx(spec3Pre, autoTasks);
+        positionSolver.addMoveToTaskEx(spec3Pre.withZ(180), autoTasks);
     }
 
-    private void specimenHangPositionOnly (TimedTask autoTasks, Vector3 posHang, double targetDistance, boolean first) {
+    private void specimenRanging(TimedTask autoTasks, Vector3 posHang, double targetDistance, boolean first) {
         autoTasks.addStep(() -> intake.debugDelay());
         if (first) {
             addMove(autoTasks, posHang, 0, false, PositionSolverSettings.defaultTwiceSettingsHang1);
@@ -265,9 +236,25 @@ public class FlipAuto2025LK extends LinearOpMode{
         autoTasks.addTimedStep(()-> {
             if (intake.adjustTarget(posHang,targetDistance)) positionSolver.setNewTarget(intake.adjustedDestination, true);
         }, () -> positionSolver.isDone(), 5000);
-//        autoTasks.addStep(() -> positionSolver.isDone());
         autoTasks.addStep(() -> intake.debugDelay());
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
+    }
+
+    private void specimenPickupAndHang (TimedTask autoTasks, Vector3 posPrePickup, Vector3 posPickup,
+                                        Vector3 posPreHang, Vector3 posHang) {
+        // Specimen Pickup and Hang.
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
+        positionSolver.addMoveToTaskEx(posPrePickup, autoTasks);
+        specimenRanging(autoTasks, posPickup,1.5, false); //1.0
+        autoTasks.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed));
+        autoTasks.addDelay(200);
+        autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
+        positionSolver.addMoveToTaskExNoWait(posHang.withZ(180), autoTasks); //assure it starts to turn counter-clockwise
+        autoTasks.addDelay(250);
+        specimenRanging(autoTasks, posHang,3, false);
+        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
+        autoTasks.addDelay(200);
+        positionSolver.addMoveToTaskEx(posPreHang, autoTasks);   // todo: can this be eliminated?
     }
 
     private void addMove(TaskEx task, Vector3 target, int timeLimit, boolean wait, PositionSolverSettings psSetting) {
@@ -281,32 +268,4 @@ public class FlipAuto2025LK extends LinearOpMode{
             positionSolver.addMoveToTaskEx(target, task, timeLimit);
         }
     }
-
-    private void specimenPickupAndHang (TimedTask autoTasks, Vector3 posPrePickup, Vector3 posPickup,
-                                        Vector3 pos_four, Vector3 posPreHang, Vector3 posHang) {
-        // Specimen Pickup and Hang.
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
-        positionSolver.addMoveToTaskEx(posPrePickup, autoTasks);
-//        positionSolver.addMoveToTaskEx(pos_three, autoTasks);
-        specimenHangPositionOnly(autoTasks, posPickup,1.5, false); //1.0
-//        autoTasks.addStep(() -> intake.tasks.getSpecimenTask.restart());
-//        autoTasks.addStep(() -> intake.tasks.getSpecimenTask.isDone());
-        autoTasks.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed));
-        autoTasks.addDelay(200);
-        autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
-//        positionSolver.addMoveToTaskEx(pos_four, autoTasks);
-//        positionSolver.addMoveToTaskEx(posPreHang, autoTasks);
-//        autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.isDone());
-//        positionSolver.addMoveToTaskEx(position, autoTasks);
-        //*****positionSolver.addMoveToTaskEx(position, autoTasks);
-        positionSolver.addMoveToTaskExNoWait(posHang.withZ(180), autoTasks);
-        autoTasks.addDelay(250);   //assure it starts to turn counter-clockwise
-        specimenHangPositionOnly(autoTasks, posHang,3, false);
-        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
-//        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.isDone());
-        autoTasks.addDelay(200);
-        positionSolver.addMoveToTaskEx(posPreHang, autoTasks);
-    }
-
-
  }
