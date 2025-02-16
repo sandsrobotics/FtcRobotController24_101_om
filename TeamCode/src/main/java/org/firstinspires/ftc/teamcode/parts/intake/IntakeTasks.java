@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import om.self.ezftc.core.Robot;
 import om.self.task.core.Group;
-import om.self.task.core.TaskEx;
 import om.self.task.other.TimedTask;
 
 public class IntakeTasks {
@@ -245,10 +244,11 @@ public class IntakeTasks {
             intake.getHardware().chute.setPosition(intake.getSettings().chuteReady);
             intake.setLiftPosition(intake.getSettings().positionLiftMax, 1);
         });
-        depositTask.addStep(() -> intake.isLiftInTolerance() && intake.getHardware().chute.isDone());
+//        depositTask.addStep(() -> intake.isLiftInTolerance() && intake.getHardware().chute.isDone());
+        depositTask.addStep(() -> intake.getLiftPosition() > intake.getSettings().positionLiftPreDump);
         depositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteDeposit));
         depositTask.addStep(() -> intake.getHardware().chute.isDone());
-        depositTask.addDelay(200); // 200
+        depositTask.addDelay(400); // 200
         depositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteParked));
         depositTask.addStep(() -> intake.getHardware().chute.isDone());
         depositTask.addStep(dockTask::restart);
@@ -286,7 +286,7 @@ public class IntakeTasks {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerSlowOut);
         });
         //prepareToTransferTask.addDelay(350);
-        prepareToTransferTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleUnload, 350);
+        prepareToTransferTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleUnload, 350); //todo: try a longer timeout
         prepareToTransferTask.addStep(() -> {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
             transferTask.restart();

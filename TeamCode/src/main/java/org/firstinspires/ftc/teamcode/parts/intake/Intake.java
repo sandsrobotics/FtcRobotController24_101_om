@@ -31,7 +31,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public int slideTargetPosition;
     public int liftTargetPosition;
     private int currentSlidePos;
-    private int currentBucketPos;
+    private int currentLiftPos;
     public int lastSample = -1;
     public double lastSampleDistance = 10;  // in cm
     public double lastRearDistance = 323;  // in inches
@@ -182,7 +182,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public boolean isLiftInTolerance() {
-        return Math.abs(liftTargetPosition - currentBucketPos) <= getSettings().toleranceLift;
+        return Math.abs(liftTargetPosition - currentLiftPos) <= getSettings().toleranceLift;
     }
 
     public int getSlidePosition() {
@@ -190,7 +190,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public int getLiftPosition() {
-        return currentBucketPos;
+        return currentLiftPos;
     }
 
     public void setSpinner(double speed) {
@@ -307,7 +307,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 //        int liftPMin = getSettings().positionSlideStartIntake;
 //        int liftPMax = getSettings().positionLiftHangRelease;
 //        double liftMaxReduction = 0.67;
-//        double liftGov = 1 - liftMaxReduction*(clamp(currentBucketPos, liftPMin, liftPMax)-liftPMin)/(liftPMax-liftPMin);
+//        double liftGov = 1 - liftMaxReduction*(clamp(currentLiftPos, liftPMin, liftPMax)-liftPMin)/(liftPMax-liftPMin);
 //        FlipbotSettings.setControlGovernor(Math.min(slideGov,liftGov));
 //    }
 //    private static int clamp(int val, int min, int max) {
@@ -348,7 +348,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public void onRun(IntakeControl control) {
         spinnerSliderPower = 0.0; // control.strafePower;
         currentSlidePos = getHardware().slideMotor.getCurrentPosition();
-        currentBucketPos = getHardware().liftMotor.getCurrentPosition();
+        currentLiftPos = getHardware().liftMotor.getCurrentPosition();
 //        applyControlGovernor();
 
         homingLiftZero.accept(getHardware().liftZeroSwitch.getState());

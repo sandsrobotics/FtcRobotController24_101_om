@@ -175,11 +175,11 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
                 parent.tasks.hangSpecimenTask.restart();
             }
             if (buttonMgr.getState(1, Buttons.dpad_up, State.wasTapped)) {
-                parent.stopAllIntakeTasks();
+//                parent.stopAllIntakeTasks();
                 parent.tasks.prepareToHangRobotTask.restart();
             }
             if (buttonMgr.getState(1, Buttons.dpad_down, State.wasTapped)) {
-                parent.stopAllIntakeTasks();
+//                parent.stopAllIntakeTasks();
                 parent.tasks.hangRobotTask.restart();
             }
         }
