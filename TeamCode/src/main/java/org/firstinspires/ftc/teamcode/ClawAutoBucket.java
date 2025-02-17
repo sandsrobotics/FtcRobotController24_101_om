@@ -35,6 +35,7 @@ public class ClawAutoBucket extends ClawAutoSpec {
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
         autoTasks.addStep(() -> intake.tasks.setMotorsToRunConfig());
+        autoTasks.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe)); // just outsid the 18"
         autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1)); // h-slide in
 
         if (!bucketSample) { //Spec side of bucket

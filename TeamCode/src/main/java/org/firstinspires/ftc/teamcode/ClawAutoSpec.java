@@ -178,6 +178,7 @@ public class ClawAutoSpec extends LinearOpMode{
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
         autoTasks.addStep(() -> intake.tasks.setMotorsToRunConfig());
         autoTasks.addStep(() -> intake.setHorizontalSlidePosition(-1)); // h-slide in
+        autoTasks.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe)); // just outsid the 18"
         autoTasks.addStep(() -> odo.setPosition(p_1));
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceNoAlwaysRunSettings));
         positionSolver.addMoveToTaskExNoWait(rightbeforespecimenbar, autoTasks);
@@ -228,6 +229,5 @@ public class ClawAutoSpec extends LinearOpMode{
         autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.restart());
 //        autoTasks.addStep(() -> intake.tasks.hangSpecimenTask.isDone());
         autoTasks.addDelay(80);
-//        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
     }
 }

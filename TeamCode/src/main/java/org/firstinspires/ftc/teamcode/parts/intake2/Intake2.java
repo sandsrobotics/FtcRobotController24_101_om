@@ -290,6 +290,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public void initializeServos() {
+//        getHardware().rotationServo.setSweepTime(getSettings().rotationSweepTime);
+//        getHardware().dropperServo.setSweepTime(getSettings().dropperSweepTime);
+//        getHardware().specimenServo.setSweepTime(getSettings().specimenSweepTime);
         getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp);
         getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition);
         getHardware().dropperServo.setPosition(getSettings().dropperDockSafe);
