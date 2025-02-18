@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import om.self.ezftc.core.Robot;
 import om.self.task.core.Group;
-import om.self.task.core.TaskEx;
 import om.self.task.other.TimedTask;
 
 public class IntakeTasks {
@@ -166,10 +165,11 @@ public class IntakeTasks {
         /* == Task: hangSpecimenTask == */
         hangSpecimenTask.autoStart = false;
         hangSpecimenTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideSpecimen, 0.2));
-        hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchSuperLoose));
-        hangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangRelease, 0.7));
+        hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed)); // pinchSuperLoose
+        hangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangRelease, 1)); // power: 0.7
         hangSpecimenTask.addStep(intake::isLiftInTolerance);
         hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen));
+        hangSpecimenTask.addDelay(50);
         hangSpecimenTask.addStep(dockTask::restart);
 
         /* == Task: lowDumpIntakeTask == */
@@ -245,10 +245,11 @@ public class IntakeTasks {
             intake.getHardware().chute.setPosition(intake.getSettings().chuteReady);
             intake.setLiftPosition(intake.getSettings().positionLiftMax, 1);
         });
-        depositTask.addStep(() -> intake.isLiftInTolerance() && intake.getHardware().chute.isDone());
+//        depositTask.addStep(() -> intake.isLiftInTolerance() && intake.getHardware().chute.isDone());
+        depositTask.addStep(() -> intake.getLiftPosition() > intake.getSettings().positionLiftPreDump);
         depositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteDeposit));
         depositTask.addStep(() -> intake.getHardware().chute.isDone());
-        depositTask.addDelay(200); // 200
+        depositTask.addDelay(400); // 200
         depositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteParked));
         depositTask.addStep(() -> intake.getHardware().chute.isDone());
         depositTask.addStep(dockTask::restart);
@@ -286,7 +287,7 @@ public class IntakeTasks {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerSlowOut);
         });
         //prepareToTransferTask.addDelay(350);
-        prepareToTransferTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleUnload, 350);
+        prepareToTransferTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleUnload, 1000); //todo: try a longer timeout
         prepareToTransferTask.addStep(() -> {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
             transferTask.restart();

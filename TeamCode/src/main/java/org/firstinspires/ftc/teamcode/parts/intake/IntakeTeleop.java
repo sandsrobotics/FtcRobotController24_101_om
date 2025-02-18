@@ -155,9 +155,9 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
         // Driver 1 - start button is a "shift" key; anything below is if start is not pushed
         if (!buttonMgr.getState(1, Buttons.start, State.isPressed)) {
             // Driver 1
-            if (buttonMgr.getState(1, Buttons.right_bumper, State.wasTapped)) {
-                parent.ranging = !parent.ranging;
-            }
+//            if (buttonMgr.getState(1, Buttons.right_bumper, State.wasTapped)) {
+//                parent.rangeEnabled = !parent.rangeEnabled;
+//            }
             if (buttonMgr.getState(1, Buttons.x, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.prepareToGetSpecimenTask.restart();
@@ -175,11 +175,11 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
                 parent.tasks.hangSpecimenTask.restart();
             }
             if (buttonMgr.getState(1, Buttons.dpad_up, State.wasTapped)) {
-                parent.stopAllIntakeTasks();
+//                parent.stopAllIntakeTasks();
                 parent.tasks.prepareToHangRobotTask.restart();
             }
             if (buttonMgr.getState(1, Buttons.dpad_down, State.wasTapped)) {
-                parent.stopAllIntakeTasks();
+//                parent.stopAllIntakeTasks();
                 parent.tasks.hangRobotTask.restart();
             }
         }

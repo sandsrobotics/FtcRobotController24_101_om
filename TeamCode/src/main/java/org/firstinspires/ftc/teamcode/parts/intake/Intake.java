@@ -31,15 +31,15 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public int slideTargetPosition;
     public int liftTargetPosition;
     private int currentSlidePos;
-    private int currentBucketPos;
+    private int currentLiftPos;
     public int lastSample = -1;
     public double lastSampleDistance = 10;  // in cm
     public double lastRearDistance = 323;  // in inches
     private double spinnerSliderPower = 0.0;// what is this?
-    public double rangingPower = 0.25; //todo: finalize
+    public double rangePower = 0.20; //todo: finalize
     public boolean rangeIsDone = false;
-    public boolean ranging = false;
-
+    public boolean rangeEnabled = false;
+    public Vector3 adjustedDestination = null;
 
 
     public boolean slideIsUnderControl = false;
@@ -127,31 +127,31 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public double getRangeDistance(){
-        lastRearDistance = getHardware().distanceSensor.getDistance(DistanceUnit.INCH);
+        lastRearDistance = getHardware().distanceSensor.getDistance(DistanceUnit.CM);
         return lastRearDistance;
     }
-    //ranging
-    public void doRanging(DriveControl control){
-        if (ranging) {
-            getRangeDistance();
-            double power = rangingPower;
-            parent.opMode.telemetry.addData ("ranging:", lastRearDistance);
-            //away from sub
-            if (lastRearDistance <= 5) {
+
+    // ranging - This will not maintain angle.
+    // 2m distance sensor
+    //
+    public void doRanging(DriveControl control) {
+        if(rangeEnabled) {
+            double range = getRangeDistance();
+//            parent.opMode.telemetry.addData("range", range);
+            if (range <= 11) {
                 drive.stopRobot();
-               // FlipbotSettings.isRangingEnabled = false;
                 rangeIsDone = true;
-                ranging = false;
-            }
-            //towards sub
-            if (lastRearDistance > 5){
-                control.power = control.power.addY(-power);
+                rangeEnabled = false;
+            } else { // if (range > 11)
+                control.power = control.power.addY(-rangePower); // (toward sub)
                 rangeIsDone = false;
             }
         }
     }
 
-    /* super prototype-y method to get a modified target position based on the distance/range sensor */
+
+
+    //   method to get a modified target position based on the distance/range sensor.
     public Vector3 adjustTargetPositionByRangeY(Vector3 targetPosition, double targetDistance) {
         //Returns null if a suitable position is not found, otherwise a new target position based on current position
         //Reads the distance sensor and then gets a new current pinpoint position (to do: work with positiontracker instead)
@@ -165,13 +165,17 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             Vector3 currentPosition = pinpoint.getValidPosition();   // get the current odo position
             if (currentPosition == null) return null;                // if not valid odo position, return null
             if (Math.abs(currentPosition.Z - targetPosition.Z) > acceptableAngle) return null;   // return null if angle too large
-            double yAdjust = (lastRearDistance - targetDistance) * Math.signum(targetPosition.Z);  // distance + at 90°, - at -90°
+            double yAdjust = (lastRearDistance - targetDistance) * -1.0 * Math.signum(targetPosition.Z);  // distance + at 90°, - at -90°
             // new position has original X and Z, but Y is based on currentPosition, targetDistance, and range
             return new Vector3(targetPosition.X, currentPosition.Y + yAdjust, targetPosition.Z);
         }
         return null;
     }
 
+    public boolean adjustTarget(Vector3 targetPosition, double targetDistance) {
+        adjustedDestination = adjustTargetPositionByRangeY(targetPosition, targetDistance);
+        return adjustedDestination != null;
+    }
     public void stopSlide() { getHardware().slideMotor.setPower(0); }
     public void stopLift() { getHardware().liftMotor.setPower(0); }
     public void setSlidePower (double m0) { getHardware().slideMotor.setPower(m0); }
@@ -182,7 +186,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public boolean isLiftInTolerance() {
-        return Math.abs(liftTargetPosition - currentBucketPos) <= getSettings().toleranceLift;
+        return Math.abs(liftTargetPosition - currentLiftPos) <= getSettings().toleranceLift;
     }
 
     public int getSlidePosition() {
@@ -190,7 +194,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     }
 
     public int getLiftPosition() {
-        return currentBucketPos;
+        return currentLiftPos;
     }
 
     public void setSpinner(double speed) {
@@ -307,7 +311,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 //        int liftPMin = getSettings().positionSlideStartIntake;
 //        int liftPMax = getSettings().positionLiftHangRelease;
 //        double liftMaxReduction = 0.67;
-//        double liftGov = 1 - liftMaxReduction*(clamp(currentBucketPos, liftPMin, liftPMax)-liftPMin)/(liftPMax-liftPMin);
+//        double liftGov = 1 - liftMaxReduction*(clamp(currentLiftPos, liftPMin, liftPMax)-liftPMin)/(liftPMax-liftPMin);
 //        FlipbotSettings.setControlGovernor(Math.min(slideGov,liftGov));
 //    }
 //    private static int clamp(int val, int min, int max) {
@@ -348,7 +352,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public void onRun(IntakeControl control) {
         spinnerSliderPower = 0.0; // control.strafePower;
         currentSlidePos = getHardware().slideMotor.getCurrentPosition();
-        currentBucketPos = getHardware().liftMotor.getCurrentPosition();
+        currentLiftPos = getHardware().liftMotor.getCurrentPosition();
 //        applyControlGovernor();
 
         homingLiftZero.accept(getHardware().liftZeroSwitch.getState());
