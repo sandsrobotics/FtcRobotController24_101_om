@@ -165,10 +165,11 @@ public class IntakeTasks {
         /* == Task: hangSpecimenTask == */
         hangSpecimenTask.autoStart = false;
         hangSpecimenTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideSpecimen, 0.2));
-        hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchSuperLoose));
-        hangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangRelease, 0.7));
+        hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed)); // pinchSuperLoose
+        hangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangRelease, 1)); // power: 0.7
         hangSpecimenTask.addStep(intake::isLiftInTolerance);
         hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchFullOpen));
+        hangSpecimenTask.addDelay(50);
         hangSpecimenTask.addStep(dockTask::restart);
 
         /* == Task: lowDumpIntakeTask == */
