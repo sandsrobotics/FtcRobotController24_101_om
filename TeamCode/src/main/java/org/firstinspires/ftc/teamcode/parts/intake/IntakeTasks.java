@@ -286,7 +286,7 @@ public class IntakeTasks {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerSlowOut);
         });
         //prepareToTransferTask.addDelay(350);
-        prepareToTransferTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleUnload, 350); //todo: try a longer timeout
+        prepareToTransferTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleUnload, 1000); //todo: try a longer timeout
         prepareToTransferTask.addStep(() -> {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
             transferTask.restart();
