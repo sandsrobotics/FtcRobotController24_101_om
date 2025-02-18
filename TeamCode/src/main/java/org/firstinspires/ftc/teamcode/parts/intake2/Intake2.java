@@ -118,7 +118,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
                 drive.stopRobot();
                 rangeisDone = true;
                 rangeEnabled = false;
-            } else if (range > 12) {
+            } else {
                 control.power = control.power.addY(-rangePower); // (toward sub)
                 rangeisDone = false;
             }
@@ -291,8 +291,8 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     public void initializeServos() {
 //        getHardware().rotationServo.setSweepTime(getSettings().rotationSweepTime);
-//        getHardware().dropperServo.setSweepTime(getSettings().dropperSweepTime);
-//        getHardware().specimenServo.setSweepTime(getSettings().specimenSweepTime);
+        getHardware().specimenServo.setSweepTime(getSettings().specimenSweepTime);
+        getHardware().tiltServo.setSweepTime(getSettings().tiltSweepTime);
         getHardware().tiltServo.setPosition(getSettings().intakeArmStraightUp);
         getHardware().specimenServo.setPosition(getSettings().specimenServoOpenPosition);
         getHardware().dropperServo.setPosition(getSettings().dropperDockSafe);

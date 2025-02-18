@@ -6,6 +6,7 @@ public class IntakeSettings2 {
     public final int maxSlideSpeed = 50;
     public final double tiltServoDownPosition = 0.85;
     public final double tiltServoUpPosition = 0.2;
+    public final int tiltSweepTime = 1000;
     public final int maxDownLiftSpeed = 150;
     public final int maxUpLiftSpeed = 150;
     public final int minLiftPosition = 0;

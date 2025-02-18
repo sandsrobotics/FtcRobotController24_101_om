@@ -67,6 +67,7 @@ public class ClawAutoBucket extends ClawAutoSpec {
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         autoTasks.addStep(() -> intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked));
         positionSolver.addMoveToTaskEx(park, autoTasks);
+        autoTasks.addStep(() -> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmAtBucket));
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSlowSettings));
         positionSolver.addMoveToTaskEx(park2, autoTasks);
         autoTasks.addStep(() -> intake.getHardware().parkServo.setPosition(intake.getSettings().parkServoPositionParked -.02));
