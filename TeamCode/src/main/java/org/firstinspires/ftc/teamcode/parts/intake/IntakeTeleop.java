@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.parts.intake;
 
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.MotorControlAlgorithm;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeTeleopSettings;
 import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
@@ -186,6 +190,35 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
         // Driver 1 - start button is a "shift" key; anything below is when start is held first
         else {
             // add shifted controls here
+            if (buttonMgr.getState(1, Buttons.dpad_up, State.wasTapped)) {
+                // p up for run using encoders
+                parent.pidf_rue = parent.getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER);
+                parent.pidf_rue = new PIDFCoefficients(parent.pidf_rue.p + parent.pIncrement,
+                        parent.pidf_rue.i, parent.pidf_rue.d, parent.pidf_rue.f, MotorControlAlgorithm.LegacyPID);
+                parent.getHardware().liftMotor.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, parent.pidf_rue);
+            }
+            if (buttonMgr.getState(1, Buttons.dpad_down, State.wasTapped)) {
+                // p down for run using encoders
+                parent.pidf_rue = parent.getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER);
+                parent.pidf_rue = new PIDFCoefficients(parent.pidf_rue.p - parent.pIncrement,
+                        parent.pidf_rue.i, parent.pidf_rue.d, parent.pidf_rue.f, MotorControlAlgorithm.LegacyPID);
+                parent.getHardware().liftMotor.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, parent.pidf_rue);
+            }
+            if (buttonMgr.getState(1, Buttons.y, State.wasTapped)) {
+                // p up for run to position
+                parent.pidf_rtp = parent.getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION);
+                parent.pidf_rtp = new PIDFCoefficients(parent.pidf_rtp.p + parent.pIncrement,
+                        parent.pidf_rtp.i, parent.pidf_rtp.d, parent.pidf_rtp.f, MotorControlAlgorithm.LegacyPID);
+                parent.getHardware().liftMotor.setPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION, parent.pidf_rtp);
+            }
+            if (buttonMgr.getState(1, Buttons.a, State.wasTapped)) {
+                // p down for run to position
+                parent.pidf_rtp = parent.getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION);
+                parent.pidf_rtp = new PIDFCoefficients(parent.pidf_rtp.p -parent.pIncrement,
+                        parent.pidf_rtp.i, parent.pidf_rtp.d, parent.pidf_rtp.f, MotorControlAlgorithm.LegacyPID);
+                parent.getHardware().liftMotor.setPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION, parent.pidf_rtp);
+            }
+
         }
     }
 }

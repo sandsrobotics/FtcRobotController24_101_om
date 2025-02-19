@@ -128,6 +128,10 @@ public class FlipTeleopDive extends LinearOpMode {
 //            telemetry.addData("Speed Governor", FlipbotSettings.getControlGovernor());
             telemetry.addData("time", System.currentTimeMillis() - start);
 //            telemetry.addData("Rear Distance (inches)", intake.readRearDistance());  // this costs loop time, so remove when done
+
+            telemetry.addData("PIDF RUE",intake.pidf_rue);
+            telemetry.addData("PIDF RTP",intake.pidf_rtp);
+
             dashboard.sendTelemetryPacket(packet);
             telemetry.update();
         }

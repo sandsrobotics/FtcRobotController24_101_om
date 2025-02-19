@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
@@ -41,6 +42,10 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public boolean rangeEnabled = false;
     public Vector3 adjustedDestination = null;
 
+    // for testing PID
+    public PIDFCoefficients pidf_rue = new PIDFCoefficients();
+    public PIDFCoefficients pidf_rtp = new PIDFCoefficients();
+    public float pIncrement = 1;
 
     public boolean slideIsUnderControl = false;
     public boolean preventUserControl = false;
@@ -331,6 +336,9 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         pinpoint = getBeanManager().getBestMatch(Pinpoint.class, false);
         tasks = new IntakeTasks(this, parent);
         tasks.constructAllIntakeTasks();
+
+        pidf_rue = getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        pidf_rtp = getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION);
 
         // this is part of the resets lift to 0 each time it hits the limit switch
         homingLiftZero.setOnRise(() -> {

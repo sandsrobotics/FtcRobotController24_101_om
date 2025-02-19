@@ -72,6 +72,8 @@ public class IntakeTasks {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerIn);
         });
         autonomousSampleTask.addStep(() -> intake.getHardware().flipper.isDone());
+        // 20250219 try disabling flipper servo like done in teleop; remove if trouble (does this help with new bouncing/rising problem?)
+        autonomousSampleTask.addStep(() -> intake.getHardware().flipper.disable());
         autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().autoSampleSlideDistance, 1));
 //        autonomousSampleTask.addStep(intake::isSlideInTolerance); // todo: consider a timeout in case it jams against the field border at Sample3
         autonomousSampleTask.addTimedStep(() -> {}, () -> intake.isSamplePresent() || intake.isSlideInTolerance(), 1500);
@@ -152,7 +154,7 @@ public class IntakeTasks {
         getSpecimenTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideSpecimen, 0.2));
         getSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed));
         getSpecimenTask.addStep(() -> intake.getHardware().pinch.isDone());
-        getSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftRaiseSpeciman, 0.7));
+        getSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftRaiseSpeciman, 1.0)); //0.7
         getSpecimenTask.addStep(intake::isLiftInTolerance);
 
         /* == Task: prepareToHangSpecimenTask == */
