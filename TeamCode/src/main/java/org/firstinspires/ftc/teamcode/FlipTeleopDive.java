@@ -26,7 +26,7 @@ import java.text.DecimalFormat;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Vector3;
 
-@TeleOp(name="14273.3 Arcade RED", group="14273")
+@TeleOp(name="14273.3 Arcade RED", group="B14273")
 public class FlipTeleopDive extends LinearOpMode {
     double tileSide = 23.5;
     Drive drive;

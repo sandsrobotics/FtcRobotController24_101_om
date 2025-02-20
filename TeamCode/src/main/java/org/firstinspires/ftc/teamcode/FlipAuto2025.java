@@ -325,7 +325,7 @@ public class FlipAuto2025 extends LinearOpMode{
     private void testNewAuto(TimedTask autoTasks) {
         // Positions to travel in SpecAuto
         Vector3 p_1 = new Vector3(14.375, -62, -90);
-        Vector3 p_2 = new Vector3(11.75, -40.25, -90); // Y:-37.75
+        Vector3 p_2 = new Vector3(11.75, -40.25 + 5, -90); // Y:-37.75
         Vector3 p_3 = new Vector3(11.75, -32.75 + 1, -90);
         Vector3 p_4 = new Vector3(36, -43, 90);  // Z: -90
         Vector3 p_5 = new Vector3(36, -15, 90); // Y:-11.75
@@ -336,15 +336,15 @@ public class FlipAuto2025 extends LinearOpMode{
         Vector3 p_9 = new Vector3(52.5, -49.5, 90); // X:54.5, Y:-52.5, Z:180
         Vector3 post_9 = new Vector3(52.5, -44.5, 90); // X:54.5
         Vector3 p_12 = new Vector3(33.5, -56.5, 90); // X:45.5
-        Vector3 p_13 = new Vector3(33.5, -61.0, 90); // X:45.5, Y:61.5
+        Vector3 p_13 = new Vector3(33.5, -61.5, 90); // X:45.5, Y:61.5
         Vector3 p_14 = new Vector3(24, -47, 0);
-        Vector3 p_15 = new Vector3(8.75, -40.25, -90); // Y:37.75
+        Vector3 p_15 = new Vector3(8.75, -40.25 + 5, -90); // Y:37.75
         Vector3 p_16 = new Vector3(8.75, -32.75 + 1, -90); // Y:32.75
-        Vector3 p_17 = new Vector3(5.75, -40.25, -90); // Y:37.75
+        Vector3 p_17 = new Vector3(5.75, -40.25 + 5 , -90); // Y:37.75
         Vector3 p_18 = new Vector3(5.75, -32.75 + 1, -90); // Y:32.75
-        Vector3 p_19 = new Vector3(2.75, -40.25, -90); // Y:37.75
+        Vector3 p_19 = new Vector3(2.75, -40.25 + 5 , -90); // Y:37.75
         Vector3 p_20 = new Vector3(2.75, -32.75 + 1, -90); // Y:32.75
-        Vector3 p_00 = new Vector3(45.5, -56.5, -45); // Y:32.75
+        Vector3 p_00 = new Vector3(55.5, -56.5, 0); // Y:32.75
 
         // Reset and Get Ready.
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
@@ -379,8 +379,16 @@ public class FlipAuto2025 extends LinearOpMode{
         // Second Specimen PickupAndHang
         specimenPickupAndHang(autoTasks, p_12, p_13, p_14, p_15, p_16);
 
+        //cw
+        positionSolver.addMoveToTaskExNoWait(p_12.withZ(0), autoTasks);
+        autoTasks.addDelay(150);
+
         // Third Specimen PickupAndHang
         specimenPickupAndHang(autoTasks, p_12, p_13, p_14, p_17, p_18);
+
+        //cw
+        positionSolver.addMoveToTaskExNoWait(p_12.withZ(0), autoTasks);
+        autoTasks.addDelay(150);
 
         // Fourth Specimen PickupAndHang
         specimenPickupAndHang(autoTasks, p_12, p_13, p_14, p_19, p_20);
@@ -402,6 +410,9 @@ public class FlipAuto2025 extends LinearOpMode{
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
 //        positionSolver.addMoveToTaskEx(pos_four, autoTasks);
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceNoAlwaysRunSettings));
+        ////CCW
+        positionSolver.addMoveToTaskExNoWait(prePosition.withZ(0), autoTasks);
+        autoTasks.addDelay(150);
         positionSolver.addMoveToTaskEx(prePosition, autoTasks);
 //        specimenPositionWithRange(autoTasks, position, 3);
 //        positionSolver.addMoveToTaskEx(position, autoTasks);

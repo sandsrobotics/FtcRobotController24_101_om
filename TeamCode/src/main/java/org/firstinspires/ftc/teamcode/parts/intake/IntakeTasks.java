@@ -154,7 +154,7 @@ public class IntakeTasks {
         getSpecimenTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideSpecimen, 0.2));
         getSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed));
         getSpecimenTask.addStep(() -> intake.getHardware().pinch.isDone());
-        getSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftRaiseSpeciman, 1.0)); //0.7
+        getSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftRaiseSpecimen, 1.0)); //0.7
         getSpecimenTask.addStep(intake::isLiftInTolerance);
 
         /* == Task: prepareToHangSpecimenTask == */
@@ -199,7 +199,7 @@ public class IntakeTasks {
             intake.getHardware().chute.setPosition(intake.getSettings().chuteParked);
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
             intake.setSlidePosition(intake.getSettings().positionSlideOvershoot, 1);
-            intake.setLiftPosition(intake.getSettings().positionLiftMin, 1);
+            intake.setLiftPosition(intake.getSettings().positionLiftMin, .667); //1
             intake.getHardware().park.setPosition(intake.getSettings().parkDown);
         });
         dockTask.addStep(() ->
