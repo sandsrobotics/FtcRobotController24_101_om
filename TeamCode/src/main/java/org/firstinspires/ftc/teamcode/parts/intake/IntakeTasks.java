@@ -68,7 +68,7 @@ public class IntakeTasks {
         /* == Task: autonomousSampleTask == */
         autonomousSampleTask.autoStart = false;
         autonomousSampleTask.addStep(() -> {
-            intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor);
+            intake.getHardware().flipper.setPosition(intake.getSettings().flipperAutoSample);  //flipperAlmostFloor
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerIn);
         });
         autonomousSampleTask.addStep(() -> intake.getHardware().flipper.isDone());

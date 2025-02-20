@@ -11,6 +11,7 @@ public class  IntakeSettings {
     public final double flipperFloor             = 0.839;  // 0.859
     public final double flipperAlmostFloor       = 0.824; // 0.844
     public final double flipperSafe              = 0.678; // 0.698
+    public final double flipperAutoSample        = flipperAlmostFloor;
     public final double flipperVertical          = 0.507; // 0.527
     public final double flipperBalanced          = 0.448; // 0.468
     public final double flipperParked            = 0.255; // 0.275
