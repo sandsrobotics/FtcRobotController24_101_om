@@ -134,6 +134,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 
     public double getRangeDistance(){
         lastRearDistance = getHardware().distanceSensor.getDistance(DistanceUnit.CM);
+        if (lastRearDistance > 1000) lastRearDistance = 0;
         return lastRearDistance;
     }
 
@@ -143,14 +144,17 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public void doRanging(DriveControl control) {
         if(rangeEnabled) {
             double range = getRangeDistance();
-//            parent.opMode.telemetry.addData("range", range);
-            if (range <= 10) {
+            parent.opMode.telemetry.addData("range", range);
+            if (range <= 7) {  //
                 drive.stopRobot();
                 rangeIsDone = true;
                 rangeEnabled = false;
-            } else { // if (range > 10)
-                control.power = control.power.addY(-rangePower); // (toward sub)
+            } else { // if (range > 7)
+                double currRangePower = rangePower;
+//                double currRangePower = Math.min(0.6, 0.1 + ((range - 7) * 0.5));
+                control.power = control.power.addY(-currRangePower); // (toward sub)
                 rangeIsDone = false;
+//                parent.opMode.telemetry.addData("range", range);
             }
         }
     }

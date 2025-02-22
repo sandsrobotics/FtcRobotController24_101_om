@@ -33,7 +33,7 @@ public class  IntakeSettings {
     public final int pinchSweepTime              = 1000; //1500;   // spec is 1250
     public final double pinchOffset              = 0.0;
 
-    public final double parkDown                 = 0.708;
+    public final double parkDown                 = 0.665;
     public final double parkUp                   = 0.210;
     public final int parkSweepTime               = 400;
     public final double parkOffset               = 0.0;

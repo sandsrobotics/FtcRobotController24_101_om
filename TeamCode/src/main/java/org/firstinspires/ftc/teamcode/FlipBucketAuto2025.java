@@ -217,7 +217,7 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
 
         // Grab Sample.
-        autoTasks.addStep(() -> intake.getHardware().flipper.setPosition(intake.getSettings().flipperSafe)); //flipperAlmostFloor));
+        autoTasks.addStep(() -> intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor)); //flipperAlmostFloor));
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());
