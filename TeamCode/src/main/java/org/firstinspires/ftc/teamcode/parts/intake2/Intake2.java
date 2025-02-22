@@ -102,7 +102,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public double getSpecRange(){
-        return (getHardware().rangeSensor.getDistance(DistanceUnit.CM));
+        lastRange = getHardware().rangeSensor.getDistance(DistanceUnit.CM);
+        if (lastRange > 1000) lastRange = 0;
+        return lastRange;
     }
 
     double ensureRange(double value, double min, double max) {
