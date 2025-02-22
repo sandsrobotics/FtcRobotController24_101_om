@@ -340,10 +340,10 @@ public class FlipAuto2025 extends LinearOpMode{
         Vector3 p_14 = new Vector3(24, -47, 0);
         Vector3 p_15 = new Vector3(8.75, -40.25 + 5, -90); // Y:37.75
         Vector3 p_16 = new Vector3(8.75, -32.75 + 1, -90); // Y:32.75
-        Vector3 p_17 = new Vector3(5.75, -40.25 + 5 , -90); // Y:37.75
-        Vector3 p_18 = new Vector3(5.75, -32.75 + 1, -90); // Y:32.75
-        Vector3 p_19 = new Vector3(2.75, -40.25 + 5 , -90); // Y:37.75
-        Vector3 p_20 = new Vector3(2.75, -32.75 + 1, -90); // Y:32.75
+        Vector3 p_17 = new Vector3(5.75 - 3, -40.25 + 5 , -90); // Y:37.75
+        Vector3 p_18 = new Vector3(5.75 - 3, -32.75 + 1, -90); // Y:32.75
+        Vector3 p_19 = new Vector3(2.75 - 6, -40.25 + 5 , -90); // Y:37.75
+        Vector3 p_20 = new Vector3(2.75 - 6, -32.75 + 1, -90); // Y:32.75
         Vector3 p_00 = new Vector3(55.5, -56.5, 0); // Y:32.75
 
         // Reset and Get Ready.

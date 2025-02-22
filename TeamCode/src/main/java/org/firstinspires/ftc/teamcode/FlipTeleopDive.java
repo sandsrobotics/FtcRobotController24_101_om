@@ -131,6 +131,8 @@ public class FlipTeleopDive extends LinearOpMode {
 
             telemetry.addData("PIDF RUE",intake.pidf_rue);
             telemetry.addData("PIDF RTP",intake.pidf_rtp);
+            telemetry.addData("Last RangeDist", intake.lastRearDistance);
+
 
             dashboard.sendTelemetryPacket(packet);
             telemetry.update();
