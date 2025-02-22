@@ -128,18 +128,19 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     }
 
     public void incrementIntakeUpDown(int direction) {
-
-        if (getHardware().rotationServo.isDone()) {
-            if (Math.abs(direction) != 0) {
-                double adjustment = 0.01 * Math.signum(direction);
-                currentIntakeHeightPos = Math.max(
-                        getSettings().intakeArmAtSpecimen,
-                        Math.min(
-                                getSettings().intakeArmAtBucket,
-                                currentIntakeHeightPos + adjustment
-                        )
-                );
-                getHardware().tiltServo.setPosition(currentIntakeHeightPos);
+        if (!tasks.bucketliftinprogress) {
+            if (getHardware().rotationServo.isDone()) {
+                if (Math.abs(direction) != 0) {
+                    double adjustment = 0.01 * Math.signum(direction);
+                    currentIntakeHeightPos = Math.max(
+                            getSettings().intakeArmAtSpecimen,
+                            Math.min(
+                                    getSettings().intakeArmAtBucket,
+                                    currentIntakeHeightPos + adjustment
+                            )
+                    );
+                    getHardware().tiltServo.setPosition(currentIntakeHeightPos);
+                }
             }
         }
     }

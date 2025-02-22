@@ -4,7 +4,9 @@ import android.graphics.Color;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.MotorControlAlgorithm;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
@@ -36,11 +38,15 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public double lastSampleDistance = 10;  // in cm
     public double lastRearDistance = 323;  // in inches
     private double spinnerSliderPower = 0.0;// what is this?
-    public double rangePower = 0.20; //todo: finalize
+    public double rangePower = 0.40; //todo: finalize
     public boolean rangeIsDone = false;
     public boolean rangeEnabled = false;
     public Vector3 adjustedDestination = null;
 
+    // for testing PID
+    public PIDFCoefficients pidf_rue = new PIDFCoefficients();
+    public PIDFCoefficients pidf_rtp = new PIDFCoefficients();
+    public float pIncrement = 1;
 
     public boolean slideIsUnderControl = false;
     public boolean preventUserControl = false;
@@ -138,11 +144,11 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         if(rangeEnabled) {
             double range = getRangeDistance();
 //            parent.opMode.telemetry.addData("range", range);
-            if (range <= 11) {
+            if (range <= 10) {
                 drive.stopRobot();
                 rangeIsDone = true;
                 rangeEnabled = false;
-            } else { // if (range > 11)
+            } else { // if (range > 10)
                 control.power = control.power.addY(-rangePower); // (toward sub)
                 rangeIsDone = false;
             }
@@ -332,6 +338,10 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         tasks = new IntakeTasks(this, parent);
         tasks.constructAllIntakeTasks();
 
+//        pidf_rue = getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER);
+//        pidf_rtp = getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION);
+        initLiftPID();
+
         // this is part of the resets lift to 0 each time it hits the limit switch
         homingLiftZero.setOnRise(() -> {
             getHardware().liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -342,6 +352,19 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             getHardware().slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             setSlidePosition(getSettings().positionSlideHome,0.5);
         });
+    }
+
+    private void initLiftPID () {
+        // run using encoder --> P=15
+        pidf_rue = getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        pidf_rue = new PIDFCoefficients(getSettings().liftP_rue,
+                pidf_rue.i, pidf_rue.d, pidf_rue.f, MotorControlAlgorithm.LegacyPID);
+        getHardware().liftMotor.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidf_rue);
+        // run to position --> P=20
+        pidf_rtp = getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION);
+        pidf_rtp = new PIDFCoefficients(getSettings().liftP_rtp,
+                pidf_rtp.i, pidf_rtp.d, pidf_rtp.f, MotorControlAlgorithm.LegacyPID);
+        getHardware().liftMotor.setPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION, pidf_rtp);
     }
 
     @Override

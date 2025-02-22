@@ -68,10 +68,12 @@ public class IntakeTasks {
         /* == Task: autonomousSampleTask == */
         autonomousSampleTask.autoStart = false;
         autonomousSampleTask.addStep(() -> {
-            intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor);
+            intake.getHardware().flipper.setPosition(intake.getSettings().flipperAutoSample);  //flipperAlmostFloor
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerIn);
         });
         autonomousSampleTask.addStep(() -> intake.getHardware().flipper.isDone());
+        // 20250219 try disabling flipper servo like done in teleop; remove if trouble (does this help with new bouncing/rising problem?)
+        autonomousSampleTask.addStep(() -> intake.getHardware().flipper.disable());
         autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().autoSampleSlideDistance, 1));
 //        autonomousSampleTask.addStep(intake::isSlideInTolerance); // todo: consider a timeout in case it jams against the field border at Sample3
         autonomousSampleTask.addTimedStep(() -> {}, () -> intake.isSamplePresent() || intake.isSlideInTolerance(), 1500);
@@ -152,7 +154,7 @@ public class IntakeTasks {
         getSpecimenTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideSpecimen, 0.2));
         getSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed));
         getSpecimenTask.addStep(() -> intake.getHardware().pinch.isDone());
-        getSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftRaiseSpeciman, 0.7));
+        getSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftRaiseSpecimen, 1.0)); //0.7
         getSpecimenTask.addStep(intake::isLiftInTolerance);
 
         /* == Task: prepareToHangSpecimenTask == */
@@ -197,7 +199,7 @@ public class IntakeTasks {
             intake.getHardware().chute.setPosition(intake.getSettings().chuteParked);
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
             intake.setSlidePosition(intake.getSettings().positionSlideOvershoot, 1);
-            intake.setLiftPosition(intake.getSettings().positionLiftMin, 1);
+            intake.setLiftPosition(intake.getSettings().positionLiftMin, .667); //1
             intake.getHardware().park.setPosition(intake.getSettings().parkDown);
         });
         dockTask.addStep(() ->

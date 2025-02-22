@@ -11,10 +11,11 @@ public class  IntakeSettings {
     public final double flipperFloor             = 0.839;  // 0.859
     public final double flipperAlmostFloor       = 0.824; // 0.844
     public final double flipperSafe              = 0.678; // 0.698
+    public final double flipperAutoSample        = flipperAlmostFloor;
     public final double flipperVertical          = 0.507; // 0.527
     public final double flipperBalanced          = 0.448; // 0.468
     public final double flipperParked            = 0.255; // 0.275
-    public final int flipperSweepTime            = 1000; //1500;   // spec is 1250
+    public final int flipperSweepTime            = 1200; //1500;   // spec is 1250
     public final double flipperOffset            = 0.0;
 
     public final double chuteParked              = 0.677; //0.689;
@@ -66,13 +67,15 @@ public class  IntakeSettings {
     public final int positionLiftMax             = (int)(2800 * 435.0 / 1150); // 3000;  //4200; //4350;
     public final int positionLiftReady           = (int)(1500 * 435.0 / 1150);
     public final int positionLiftGetSpecimen     = (int)(10 * 435.0 / 1150);     //todo: finalize number
-    public final int positionLiftRaiseSpeciman   = (int)(150 * 435.0 / 1150); //= 50;
-    public final int positionLiftHangReady       = (int)(1350 * 435.0 / 1150); //1440;  //2500;   //todo: get number
+    public final int positionLiftRaiseSpecimen   = 100; //(int)(150 * 435.0 / 1150); //= 50;
+    public final int positionLiftHangReady       = 550; //(int)(1350 * 435.0 / 1150); //1440;  //2500;   //todo: get number
     public final int positionLiftHangRelease     = (int)(980 * 435.0 / 1150); //1000;  //2000;   //todo: get number
     public final int positionLiftTransfer        = (int)(10 * 435.0 / 1150);
     public final int positionLiftPreDump         = (int)(2500 * 435.0 / 1150); //2450;
     public final int positionLiftHome            = (int)(20 * 435.0 / 1150);
     public final int toleranceLift               = (int)(20 * 435.0 / 1150);
+    public final double liftP_rue                = 15;  // P for Run Using Encoder PIDF
+    public final double liftP_rtp                = 20;  // P for Run To Position PIDF
 
     public final int positionHangMin             = 20;
     public final int positionHangMax             = 13500; //4350;
