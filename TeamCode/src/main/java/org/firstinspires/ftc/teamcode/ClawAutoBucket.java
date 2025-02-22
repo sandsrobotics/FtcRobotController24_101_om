@@ -23,10 +23,10 @@ public class ClawAutoBucket extends ClawAutoSpec {
         Vector3 bucketsamplestart = new Vector3(-37.5, -62, 90);
         Vector3 beforespecimenhang = new Vector3(-10, -39, -90);
         Vector3 specimenhang = new Vector3(-10, -32.75, -90); //specimen must be lifted before hang
-        firstsample = new Vector3(-47.8, -38.5, 90);
+        firstsample = new Vector3(-47.3, -38.5, 90); // -47.8
         Vector3 Highbasketscore = new Vector3(-54.5, -53.5, 45);
         Vector3 Highbasketscorethird = new Vector3(-53.5, -52.5, 45);
-        secondsample = new Vector3(-58.2, -38.5, 90);
+        secondsample = new Vector3(-57.7, -38.5, 90); // -58.2
         thirdsample = new Vector3(-56, -25.25, 180);
         Vector3 park = new Vector3(-47, -11, 0);
         Vector3 park2 = new Vector3(-25, -11,0); //x change x was 27 was 23.5

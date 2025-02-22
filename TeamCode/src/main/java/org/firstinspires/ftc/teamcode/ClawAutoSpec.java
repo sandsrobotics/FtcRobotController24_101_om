@@ -172,7 +172,7 @@ public class ClawAutoSpec extends LinearOpMode{
         Vector3 p_18 = new Vector3(5.75, -32.75 + 1, -90); // Y:32.75
         Vector3 p_19 = new Vector3(2.75, -37.75, -90);
         Vector3 p_20 = new Vector3(2.75, -32.75, -90);
-        Vector3 p_00 = new Vector3(45.5, -56.5, -45); // Y:-58.5
+        Vector3 p_00 = new Vector3(58, -56.5, 0); // Y:-58.5
 
         // Reset and Get Ready.
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());

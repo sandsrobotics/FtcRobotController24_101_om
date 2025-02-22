@@ -45,6 +45,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public LEDColor lastColorSample = LEDColor.GREEN;
     private int colorSampleSkip = 0;
     private double lastHue = 0;
+    private double lastRange = 0;
 
     //***** Constructors *****
     public Intake2(Robot parent, String modeName) {
@@ -113,8 +114,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
     public void doSpecRange(DriveControl control) {
         if(rangeEnabled) {
             double range = getSpecRange();
+            lastRange = range;
             parent.opMode.telemetry.addData("range", range);
-            if (range <= 11) {
+            if (range <= 13) {
                 drive.stopRobot();
                 rangeisDone = true;
                 rangeEnabled = false;
@@ -367,7 +369,7 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
         strafePower = control.strafePower;
         homingBucketZero.accept(getHardware().bucketLiftZeroSwitch.getState());
         currentBucketLiftPos = getHardware().bucketLiftMotor.getCurrentPosition();
-//        parent.opMode.telemetry.addData("Sub Range",getSpecRange());
+        parent.opMode.telemetry.addData("Sub Range",lastRange);
 //        parent.opMode.telemetry.addData("Specimen Color", getColor());
 //        parent.opMode.telemetry.addData("Intake height", currentIntakeHeightPos);
 //        parent.opMode.telemetry.addData("Rotation servo position", currentRotationPos);

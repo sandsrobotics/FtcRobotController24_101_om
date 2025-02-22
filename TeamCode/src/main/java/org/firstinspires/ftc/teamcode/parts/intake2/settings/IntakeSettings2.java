@@ -14,9 +14,9 @@ public class IntakeSettings2 {
     public final double minRegisterVal = 0.05;
     public final int tolerance = 20;
     public final double minServoLeftSlide = 0.559;
-    public final double maxServoLeftSlide = 0.737;
+    public final double maxServoLeftSlide = 0.755; // was 0.737
     public final double minServoRightSlide = 0.559;
-    public final double maxServoRightSlide = 0.737;
+    public final double maxServoRightSlide = 0.755; // was 0.737
 
     public final double intakeArmAtSpecimen = 0.21;
     public final double intakeArmAtBucket = 0.64;
