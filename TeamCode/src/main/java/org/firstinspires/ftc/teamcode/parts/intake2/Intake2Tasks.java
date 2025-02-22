@@ -28,7 +28,7 @@ public class Intake2Tasks {
         this.intake = intake;
         this.robot = robot;
         movementTask = new Group("auto movement", intake.getTaskManager());
-        this.bucketliftinprogress = bucketliftinprogress;
+//        this.bucketliftinprogress = bucketliftinprogress;
         autoHomeTask = new TimedTask(TaskNames.autoHome, movementTask);
         autoBucketLiftTask = new TimedTask(TaskNames.autoBucketLift, movementTask);
         autoBucketDropperTask = new TimedTask(TaskNames.autoBucketDropper, movementTask);
@@ -74,7 +74,7 @@ public class Intake2Tasks {
 
     /* ***** autoBucketLiftTask ******/
         autoBucketLiftTask.autoStart = false;
-        bucketliftinprogress = true;
+//        autoBucketLiftTask.addStep(()-> bucketliftinprogress = true);
         autoBucketLiftTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoBucketLiftTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         //Todo: maybe drive droper down if needed
@@ -85,12 +85,12 @@ public class Intake2Tasks {
         autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.enable());
         autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.setPosition(intake.getSettings().dropperServoMin));
         autoBucketLiftTask.addStep(() -> intake.getHardware().bucketLiftMotor.getCurrentPosition() > 2600);
-        bucketliftinprogress = false;
+//        autoBucketLiftTask.addStep(()-> bucketliftinprogress = false);
 //        autoBucketLiftTask.addStep(()-> intake.getHardware().dropperServo.isDone()); //if greater than 500 set servo straight
 
     /* ***** autoBucketDropperTask ******/
         autoBucketDropperTask.autoStart = false;
-        bucketliftinprogress = true;
+//        autoBucketDropperTask.addStep(()-> bucketliftinprogress = true);
         autoBucketDropperTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         autoBucketDropperTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         autoBucketDropperTask.addStep(()-> intake.getHardware().dropperServo.enable());
@@ -104,9 +104,9 @@ public class Intake2Tasks {
         if(intake.isTeleop) {
             autoBucketDropperTask.addStep(() -> intake.setLiftPosition(intake.getSettings().minLiftPosition, 1));
             autoBucketDropperTask.addStep(intake::isLiftInTolerance);
-            bucketliftinprogress = false;
+//            autoBucketDropperTask.addStep(()-> bucketliftinprogress = true);
         }
-        bucketliftinprogress = false;
+//        autoBucketDropperTask.addStep(()-> bucketliftinprogress = false);
 
     /* ***** getSpecimenTask ******/
         getSpecimenTask.autoStart = false;
@@ -120,7 +120,7 @@ public class Intake2Tasks {
 
     /* ***** hangSpecimenTask ******/
         hangSpecimenTask.autoStart = false;
-        bucketliftinprogress = true;
+//        hangSpecimenTask.addStep(()-> bucketliftinprogress = true);
         hangSpecimenTask.addStep(()-> intake.getHardware().tiltServo.setPosition(intake.getSettings().intakeArmSafe));
         hangSpecimenTask.addStep(()-> intake.getHardware().tiltServo.isDone());
         hangSpecimenTask.addStep(()-> intake.getHardware().dropperServo.disable());
@@ -130,23 +130,19 @@ public class Intake2Tasks {
         hangSpecimenTask.addStep(()-> intake.getHardware().specimenServo.isDone());
         hangSpecimenTask.addStep(()-> intake.setLiftPosition(intake.getSettings().minLiftPosition,1));
         hangSpecimenTask.addStep(intake::isLiftInTolerance);
-        bucketliftinprogress = false;
+//        hangSpecimenTask.addStep(()-> bucketliftinprogress = false);
 
         /* ***** autoSpecimenHang1 ******/
         autoSpecimenHang1.autoStart = false;
-        bucketliftinprogress = true;
         autoSpecimenHang1.addStep(()-> intake.setLiftPosition(intake.getSettings().specimenServoOpenHeight,1));
         autoSpecimenHang1.addStep(intake::isLiftInTolerance);
         autoSpecimenHang1.addStep(()-> intake.getHardware().specimenServo.setPosition(intake.getSettings().specimenServoOpenPosition));
         autoSpecimenHang1.addStep(()-> intake.getHardware().specimenServo.isDone());
-        bucketliftinprogress = false;
 
         /* ***** autoSpecimenHang1 ******/
         autoSpecimenHang2.autoStart = false;
-        bucketliftinprogress = true;
         autoSpecimenHang2.addStep(()-> intake.setLiftPosition(intake.getSettings().minLiftPosition,1));
         autoSpecimenHang2.addStep(intake::isLiftInTolerance);
-        bucketliftinprogress = false;
 
     /* ***** autoIntakeDropTask ******/
         autoIntakeDropTask.autoStart = false;
