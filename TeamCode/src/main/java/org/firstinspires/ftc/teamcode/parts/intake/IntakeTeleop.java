@@ -153,6 +153,15 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
             if (buttonMgr.getState(2, Buttons.y, State.wasTapped)) {
                 FlipbotSettings.isYellowGood = !FlipbotSettings.isYellowGood;
             }
+            // test out-take speed
+            if (buttonMgr.getState(2, Buttons.left_bumper, State.wasTapped)) {
+                parent.testSpinnerOut += parent.sIncrement;
+                parent.testSpinnerOut = Math.max(0, Math.min(parent.testSpinnerOut, 0.5));
+            }
+            if (buttonMgr.getState(2, Buttons.right_bumper, State.wasTapped)) {
+                parent.testSpinnerOut -= parent.sIncrement;
+                parent.testSpinnerOut = Math.max(0, Math.min(parent.testSpinnerOut, 0.5));
+            }
         }
 
         // *** DRIVER 1 CONTROLS ***

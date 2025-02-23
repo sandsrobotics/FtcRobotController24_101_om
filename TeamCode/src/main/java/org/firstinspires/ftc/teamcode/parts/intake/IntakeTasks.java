@@ -220,7 +220,8 @@ public class IntakeTasks {
         transferTask.addStep(() -> {
             intake.getHardware().flipper.setPosition(intake.getSettings().flipperParked);
             intake.getHardware().chute.setPosition(intake.getSettings().chuteParked);
-            intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOut);
+            //intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOut);
+            intake.getHardware().spinner.setPosition(intake.testSpinnerOut);
         });
 //        transferTask.addDelay(500); // 1500  //todo: Are you SURE this is a good idea?
         transferTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleEmpty, 1000);

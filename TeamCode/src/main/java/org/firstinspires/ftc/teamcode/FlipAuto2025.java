@@ -395,7 +395,7 @@ public class FlipAuto2025 extends LinearOpMode{
 
         // Park.
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-        positionSolver.addMoveToTaskEx(p_00, autoTasks);
+        positionSolver.addMoveToTaskEx(p_19, autoTasks);  //p_00
     }
 
     private void specimenPickupAndHang (TimedTask autoTasks, Vector3 pos_two, Vector3 pos_three,

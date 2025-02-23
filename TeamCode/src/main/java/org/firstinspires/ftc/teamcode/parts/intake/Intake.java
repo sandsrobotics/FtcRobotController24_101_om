@@ -48,6 +48,10 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public PIDFCoefficients pidf_rtp = new PIDFCoefficients();
     public float pIncrement = 1;
 
+    // for testing outtake speed
+    public double testSpinnerOut = 0.0;
+    public double sIncrement = 0.05;
+
     public boolean slideIsUnderControl = false;
     public boolean preventUserControl = false;
 
@@ -331,12 +335,14 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     @Override
     public void onInit() {
         setMotorsToRunConfig();
-        initializeServos();
-        if (FlipbotSettings.firstRun) {
-            // the first time the servo controller comes online the positions set may be lost, so wait and try again
-            FlipbotSettings.firstRun = false;
-            parent.opMode.sleep(1500);
+        if (FlipbotSettings.isAuto()) {
             initializeServos();
+            if (FlipbotSettings.firstRun) {
+                // the first time the servo controller comes online the positions set may be lost, so wait and try again
+                FlipbotSettings.firstRun = false;
+                parent.opMode.sleep(1500);
+                initializeServos();
+            }
         }
         pinpoint = getBeanManager().getBestMatch(Pinpoint.class, false);
         tasks = new IntakeTasks(this, parent);
@@ -391,6 +397,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         drive = getBeanManager().getBestMatch(Drive.class, false);
 //        drive.addController(Intake.ControllerNames.distanceController, this::strafeRobot);
         drive.addController(ControllerNames.distanceController, this::doRanging);
+        if (FlipbotSettings.isTeleOp()) initializeServos();
         if (FlipbotSettings.isTeleOp())  tasks.startAutoHome();
     }
 
