@@ -74,8 +74,11 @@ public class  IntakeSettings {
     public final int positionLiftPreDump         = (int)(2500 * 435.0 / 1150); //2450;
     public final int positionLiftHome            = (int)(20 * 435.0 / 1150);
     public final int toleranceLift               = (int)(20 * 435.0 / 1150);
-    public final double liftP_rue                = 15;  // P for Run Using Encoder PIDF
-    public final double liftP_rtp                = 20;  // P for Run To Position PIDF
+    public final double liftSpecP_rue = 15;  // P for Run Using Encoder PIDF Spec
+    public final double liftSpecP_rtp = 20;  // P for Run To Position PIDF Spec
+    public final double liftSampleP_rue = 15;  // P for Run Using Encoder PIDF Sample todo: finalize number
+    public final double liftSampleP_rtp = 16;  // P for Run To Position PIDF Sample todo: finalize number
+
 
     public final int positionHangMin             = 20;
     public final int positionHangMax             = 13500; //4350;

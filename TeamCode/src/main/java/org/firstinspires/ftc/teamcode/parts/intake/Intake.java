@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.parts.intake;
 
 import android.graphics.Color;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.MotorControlAlgorithm;
@@ -46,6 +47,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     // for testing PID
     public PIDFCoefficients pidf_rue = new PIDFCoefficients();
     public PIDFCoefficients pidf_rtp = new PIDFCoefficients();
+//    public PIDFCoefficients sample_pidf_rue = new PIDFCoefficients();
+//    public PIDFCoefficients sample_pidf_rtp = new PIDFCoefficients();
     public float pIncrement = 1;
 
     // for testing outtake speed
@@ -135,6 +138,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         getHardware().robotHangMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         getHardware().robotHangMotor.setPower(power);
     }
+
 
     public double getRangeDistance(){
         lastRearDistance = getHardware().distanceSensor.getDistance(DistanceUnit.CM);
@@ -350,7 +354,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 
 //        pidf_rue = getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER);
 //        pidf_rtp = getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION);
-        initLiftPID();
+        initSpecLiftPID();
+//        initSampleLiftPID();
 
         // this is part of the resets lift to 0 each time it hits the limit switch
         homingLiftZero.setOnRise(() -> {
@@ -364,15 +369,29 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         });
     }
 
-    private void initLiftPID () {
-        // run using encoder --> P=15
+    public void initSpecLiftPID() {
+       // if (true) return;
+        //  spec run using encoder --> P=15
         pidf_rue = getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        pidf_rue = new PIDFCoefficients(getSettings().liftP_rue,
+        pidf_rue = new PIDFCoefficients(getSettings().liftSpecP_rue,
                 pidf_rue.i, pidf_rue.d, pidf_rue.f, MotorControlAlgorithm.LegacyPID);
         getHardware().liftMotor.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidf_rue);
-        // run to position --> P=20
+        // spec run to position --> P=20
         pidf_rtp = getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION);
-        pidf_rtp = new PIDFCoefficients(getSettings().liftP_rtp,
+        pidf_rtp = new PIDFCoefficients(getSettings().liftSpecP_rtp,
+                pidf_rtp.i, pidf_rtp.d, pidf_rtp.f, MotorControlAlgorithm.LegacyPID);
+        getHardware().liftMotor.setPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION, pidf_rtp);
+    }
+    public void initSampleLiftPID() {
+      //  if (true) return;
+        // bucket run using encoder --> P=12.5
+        pidf_rue = getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        pidf_rue = new PIDFCoefficients(getSettings().liftSampleP_rue,
+                pidf_rue.i, pidf_rue.d, pidf_rue.f, MotorControlAlgorithm.LegacyPID);
+        getHardware().liftMotor.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidf_rue);
+        // bucket run to position --> P=17.5
+        pidf_rtp = getHardware().liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION);
+        pidf_rtp = new PIDFCoefficients(getSettings().liftSampleP_rtp,
                 pidf_rtp.i, pidf_rtp.d, pidf_rtp.f, MotorControlAlgorithm.LegacyPID);
         getHardware().liftMotor.setPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION, pidf_rtp);
     }

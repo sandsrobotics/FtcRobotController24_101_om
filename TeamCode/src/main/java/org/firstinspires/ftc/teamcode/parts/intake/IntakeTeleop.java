@@ -125,12 +125,10 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
         // Driver 2 - start button is a "shift" key; anything below is when start is held first
         else {
             if (buttonMgr.getState(2, Buttons.dpad_up, State.wasTapped)) {
-                parent.stopAllIntakeTasks();
-                parent.tasks.prepareToHangRobotTask.restart();
+                parent.getHardware().park.setPosition(parent.getSettings().parkUp);
             }
             if (buttonMgr.getState(2, Buttons.dpad_right, State.wasTapped)) {
-                parent.stopAllIntakeTasks();
-                parent.tasks.hangRobotTask.restart();
+                parent.getHardware().park.setPosition(parent.getSettings().parkDown);
             }
             // this is for testing the autonomous sample task
             if (buttonMgr.getState(2, Buttons.dpad_down, State.wasDoubleTapped)) {

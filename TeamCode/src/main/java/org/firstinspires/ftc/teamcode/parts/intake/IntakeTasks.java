@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.parts.intake;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import om.self.ezftc.core.Robot;
@@ -141,6 +142,7 @@ public class IntakeTasks {
 
         /* == Task: prepareToGetSpecimenTask == */
         prepareToGetSpecimenTask.autoStart = false;
+        prepareToGetSpecimenTask.addStep(intake::initSpecLiftPID);
         prepareToGetSpecimenTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideSpecimen, 0.2));
         prepareToGetSpecimenTask.addStep(() -> {
             intake.setLiftPosition(intake.getSettings().positionLiftGetSpecimen, 1);
@@ -151,6 +153,7 @@ public class IntakeTasks {
 
         /* == Task: getSpecimenTask == */
         getSpecimenTask.autoStart = false;
+        getSpecimenTask.addStep(intake::initSpecLiftPID);
         getSpecimenTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideSpecimen, 0.2));
         getSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed));
         getSpecimenTask.addStep(() -> intake.getHardware().pinch.isDone());
@@ -159,6 +162,7 @@ public class IntakeTasks {
 
         /* == Task: prepareToHangSpecimenTask == */
         prepareToHangSpecimenTask.autoStart = false;
+        prepareToHangSpecimenTask.addStep(intake::initSpecLiftPID);
         prepareToHangSpecimenTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideSpecimen, 0.2));
         prepareToHangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchLoose));
         prepareToHangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangReady, 1));
@@ -166,6 +170,7 @@ public class IntakeTasks {
 
         /* == Task: hangSpecimenTask == */
         hangSpecimenTask.autoStart = false;
+        hangSpecimenTask.addStep(intake::initSpecLiftPID);
         hangSpecimenTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideSpecimen, 0.2));
         hangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed)); // pinchSuperLoose
         hangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangRelease, 1)); // power: 0.7
@@ -234,6 +239,7 @@ public class IntakeTasks {
 
         /* == Task: prepareToDepositTask == */
         prepareToDepositTask.autoStart = false;
+        prepareToDepositTask.addStep(intake::initSampleLiftPID);
         prepareToDepositTask.addStep(() -> intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff));
         prepareToDepositTask.addStep(() -> intake.getHardware().spinner.isDone());
         prepareToDepositTask.addStep(() -> {
@@ -244,6 +250,7 @@ public class IntakeTasks {
 
         /* == Task: depositTask == */
         depositTask.autoStart = false;
+        depositTask.addStep(intake::initSampleLiftPID);
         depositTask.addStep(() -> {
             intake.getHardware().chute.setPosition(intake.getSettings().chuteReady);
             intake.setLiftPosition(intake.getSettings().positionLiftMax, 1);
