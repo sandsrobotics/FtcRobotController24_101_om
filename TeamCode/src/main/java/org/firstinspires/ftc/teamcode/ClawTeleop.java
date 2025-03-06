@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -20,7 +21,7 @@ import java.text.DecimalFormat;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Vector3;
 import static om.self.ezftc.utils.Constants.tileSide;
-
+@Disabled
 @TeleOp(name="27050 Teleop", group="27050")
 public class ClawTeleop extends LinearOpMode {
     Drive drive;

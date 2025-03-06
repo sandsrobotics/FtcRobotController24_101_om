@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -28,7 +29,7 @@ import om.self.supplier.suppliers.EdgeSupplier;
 import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
 import static om.self.ezftc.utils.Constants.tileSide;
-
+@Disabled
 @Config
 @Autonomous(name="27050 Human Specimen", group="27050")
 public class ClawAutoSpec extends LinearOpMode{

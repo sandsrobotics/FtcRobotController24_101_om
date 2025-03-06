@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolverSettings;
 import java.util.Objects;
 import om.self.ezftc.utils.Vector3;
 import om.self.task.other.TimedTask;
 
-//@Disabled
+@Disabled
 @Autonomous(name="27050 Bucket Specimen", group="27050")
 public class ClawAutoBucket extends ClawAutoSpec {
     Vector3 bucketsidestart = new Vector3(-14 - 3.0 / 8.0, -62, -90);
