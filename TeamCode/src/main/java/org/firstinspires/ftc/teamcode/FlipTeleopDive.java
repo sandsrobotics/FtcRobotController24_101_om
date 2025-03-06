@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 import org.firstinspires.ftc.teamcode.parts.intake.IntakeTeleop;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.XRelativeSolver;
+import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolverSettings;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.PositionTracker;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.hardware.PositionTrackerHardware;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.pinpoint.Pinpoint;
@@ -55,11 +56,18 @@ public class FlipTeleopDive extends LinearOpMode {
 //        drive = new Drive(robot, DriveSettings.makeDefault(), DriveHardware.lkTestChassis(robot.opMode.hardwareMap));
         initTeleop();
 
+        final Vector3 p_atObsZone = new Vector3(33.5, -56.5, 90); // p_12: Position near ObsZone for Pickup-Specimen.
+        Vector3 tempPosition = FlipbotSettings.getRobotPosition();
+
+        if (tempPosition.X == 0.0 && tempPosition.Y == 0.0 && tempPosition.Z == 0.0)  {
+            FlipbotSettings.storeRobotPosition(p_atObsZone);
+        }
+
         PositionTrackerSettings pts = new PositionTrackerSettings(AxesOrder.XYZ, false,
 //               100, new Vector3(2,2,2), fieldStartPos);
                 100, new Vector3(2,2,2), FlipbotSettings.getRobotPosition());
         pt = new PositionTracker(robot,pts, PositionTrackerHardware.makeDefault(robot));
-      XRelativeSolver solver = new XRelativeSolver(drive);
+     // XRelativeSolver solver = new XRelativeSolver(drive);
 
 //       EncoderTracker et = new EncoderTracker(pt);
 //       pt.positionSourceId = EncoderTracker.class;
@@ -68,7 +76,8 @@ public class FlipTeleopDive extends LinearOpMode {
                 -56.0, 52.0, 13.26291192f,
                 GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
         pt.positionSourceId = Pinpoint.class;
-        //positionSolver = new PositionSolver(drive); // removed so it won't rotate 90deg clockwise
+        positionSolver = new PositionSolver(drive); // removed so it won't rotate 90deg clockwise
+        positionSolver.setSettings(PositionSolverSettings.specimenAssistSettings);
 
         intake = new Intake(robot);
         new IntakeTeleop(intake);
@@ -82,7 +91,7 @@ public class FlipTeleopDive extends LinearOpMode {
 //            telemetry.update();
 //            //todo: What to do if it doesn't initialize?
 //        }
-//        odo.setPosition(FlipbotSettings.getRobotPosition());
+        odo.setPosition(FlipbotSettings.getRobotPosition());
 
         extraSettings();
 

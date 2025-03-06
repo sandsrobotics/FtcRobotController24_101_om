@@ -99,29 +99,29 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         while (!isStarted()) {
             robot.buttonMgr.runLoop();
             // example configuration capability during init
-            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.dpad_down, ButtonMgr.State.wasTapped)) {
-                FlipbotSettings.autonomousDebugMode = !FlipbotSettings.autonomousDebugMode;   //todo: disable this before competition!
-            }
-            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.right_bumper, ButtonMgr.State.wasTapped)) {
-                startDelay += 1000;
-            }
-            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.left_bumper, ButtonMgr.State.wasTapped)) {
-                startDelay -= 1000;
-                if(startDelay < 0) startDelay = 0;
-            }
-            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.a, ButtonMgr.State.wasTapped)) {
-                parkPosition = 1;
-            }
-            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.b, ButtonMgr.State.wasTapped)) {
-                parkPosition = 2;
-            }
-            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.x, ButtonMgr.State.wasTapped)) {
-                parkPosition = 3;
-            }
-            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.y, ButtonMgr.State.wasTapped)) {
-                parkPosition = 0;
-            }
-            if(startDelay > maxDelay) startDelay = maxDelay;
+//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.dpad_down, ButtonMgr.State.wasTapped)) {
+//                FlipbotSettings.autonomousDebugMode = !FlipbotSettings.autonomousDebugMode;   //todo: disable this before competition!
+//            }
+//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.right_bumper, ButtonMgr.State.wasTapped)) {
+//                startDelay += 1000;
+//            }
+//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.left_bumper, ButtonMgr.State.wasTapped)) {
+//                startDelay -= 1000;
+//                if(startDelay < 0) startDelay = 0;
+//            }
+//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.a, ButtonMgr.State.wasTapped)) {
+//                parkPosition = 1;
+//            }
+//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.b, ButtonMgr.State.wasTapped)) {
+//                parkPosition = 2;
+//            }
+//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.x, ButtonMgr.State.wasTapped)) {
+//                parkPosition = 3;
+//            }
+//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.y, ButtonMgr.State.wasTapped)) {
+//                parkPosition = 0;
+//            }
+//            if(startDelay > maxDelay) startDelay = maxDelay;
 
             telemetry.addData("DEBUG?:", FlipbotSettings.autonomousDebugMode ? "***** YES *****" : "No, normal");
             telemetry.addData("PARK POSITION:", parkPosition == 0 ? "Normal mid wall" : parkPosition == 1 ? "Park MID" : parkPosition == 2 ? "Park CORNER" : "Park BOARD");
@@ -214,10 +214,10 @@ public class FlipBucketAuto2025 extends LinearOpMode{
 
     private void grabAndDepositSample (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three) {
 
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings)); // defaultTwiceSettings;
 
         // Grab Sample.
-        autoTasks.addStep(() -> intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor)); //flipperAlmostFloor));
+        autoTasks.addStep(() -> intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor)); //flipperAlmostFloor;
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());

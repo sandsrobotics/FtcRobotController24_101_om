@@ -62,6 +62,12 @@ public class PositionSolverSettings {
             new SolverSettings(2.5, 2, true, 10000, new PIDCoefficients(0.0125, 0, 0), 1)
     );
 
+    public static PositionSolverSettings specimenAssistSettings = new PositionSolverSettings(
+            new SolverSettings(1, 2, false, 10000, new PIDCoefficients(0.05, 0, 0), 1),
+            new SolverSettings(1, 2, false, 10000, new PIDCoefficients(0.05, 0, 0), 1),
+            new SolverSettings(2.5, 2, false, 10000, new PIDCoefficients(0.0125, 0, 0), 1)
+    );
+
     public static PositionSolverSettings defaultNoAlwaysRunSettings = new PositionSolverSettings(
             new SolverSettings(1, 10, false, 10000, new PIDCoefficients(0.05, 0, 0), 1),
             new SolverSettings(1, 10, false, 10000, new PIDCoefficients(0.05, 0, 0), 1),

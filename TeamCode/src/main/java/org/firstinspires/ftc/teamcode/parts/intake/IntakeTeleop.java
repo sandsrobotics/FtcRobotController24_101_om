@@ -167,6 +167,17 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
         if (!buttonMgr.getState(1, Buttons.start, State.isPressed)) {
             // Driver 1
 
+            if (buttonMgr.getState(1, Buttons.right_bumper, State.wasTapped)) {
+                parent.tasks.moveToPickupSpecimenTask.restart();
+            }
+            if (buttonMgr.getState(1, Buttons.left_bumper, State.wasTapped)) {
+                parent.tasks.moveToHangSpecimenTask.restart();
+            }
+            if (buttonMgr.getState(1, Buttons.dpad_left, State.wasTapped)) {
+                // Reset Position to p_13: p_atObservationZone - Vector3(33.5, -61.5, 90);
+                parent.pinpoint.setPosition(parent.p_atObsZone);
+            }
+
             if (buttonMgr.getState(1, Buttons.x, State.wasTapped)) {
                 parent.stopAllIntakeTasks();
                 parent.tasks.prepareToGetSpecimenTask.restart();

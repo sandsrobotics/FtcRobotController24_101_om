@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.parts.drive.Drive;
 import org.firstinspires.ftc.teamcode.parts.drive.DriveControl;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.intake.settings.IntakeSettings;
+import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
 import org.firstinspires.ftc.teamcode.parts.positiontracker.pinpoint.Pinpoint;
 
 import om.self.ezftc.core.Robot;
@@ -30,6 +31,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public IntakeTasks tasks;
     protected Drive drive;
     protected Pinpoint pinpoint;
+    protected PositionSolver positionSolver;
 
     public int slideTargetPosition;
     public int liftTargetPosition;
@@ -61,6 +63,9 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     // this is part of the resets lift to 0 each time it hits the limit switch
     private final EdgeConsumer homingLiftZero = new EdgeConsumer();
     private final EdgeConsumer homingSlideZero = new EdgeConsumer();
+
+    public final Vector3 p_atObsZone = new Vector3(33.5, -56.5, 90); // p_12: Position near ObsZone for Pickup-Specimen.
+    public final Vector3 p_beforeHighRung = new Vector3(2.75 - 6, -40.25 + 5 , -90); // p_19: Position before High-Rung for Hang-Specimen.
 
     //***** Constructors *****
     public Intake(Robot parent) {
@@ -349,6 +354,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             }
         }
         pinpoint = getBeanManager().getBestMatch(Pinpoint.class, false);
+        positionSolver = getBeanManager().getBestMatch(PositionSolver.class, false);
         tasks = new IntakeTasks(this, parent);
         tasks.constructAllIntakeTasks();
 

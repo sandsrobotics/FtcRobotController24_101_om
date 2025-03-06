@@ -3,8 +3,11 @@ package org.firstinspires.ftc.teamcode.parts.intake;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
+import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolverSettings;
 import om.self.ezftc.core.Robot;
+import om.self.ezftc.utils.Vector3;
 import om.self.task.core.Group;
+import om.self.task.core.TaskEx;
 import om.self.task.other.TimedTask;
 
 public class IntakeTasks {
@@ -12,6 +15,8 @@ public class IntakeTasks {
     public final TimedTask autonomousSampleTask;
     public final TimedTask specAutoIntakePickupTask;
     public final TimedTask specAutoIntakeDepositTask;
+    public final TimedTask moveToPickupSpecimenTask;
+    public final TimedTask moveToHangSpecimenTask;
     public final TimedTask autoHomeTask;
     public final TimedTask autoHomeTaskLift;
     public final TimedTask autoHomeTaskSlide;
@@ -41,6 +46,8 @@ public class IntakeTasks {
         autonomousSampleTask = new TimedTask(TaskNames.autonomousSample, intakeTasksGroup);
         specAutoIntakePickupTask = new TimedTask(TaskNames.specAutoIntakePickup, intakeTasksGroup);
         specAutoIntakeDepositTask = new TimedTask(TaskNames.specAutoIntakeDeposit, intakeTasksGroup);
+        moveToPickupSpecimenTask = new TimedTask(TaskNames.moveToPickupSpecimen, intakeTasksGroup);
+        moveToHangSpecimenTask = new TimedTask(TaskNames.moveToHangSpecimen, intakeTasksGroup);
         autoHomeTask = new TimedTask(TaskNames.autoHome, intakeTasksGroup);
         autoHomeTaskLift = new TimedTask("autoHomeLift", intakeTasksGroup);
         autoHomeTaskSlide = new TimedTask("autoHomeSlide", intakeTasksGroup);
@@ -129,6 +136,16 @@ public class IntakeTasks {
         specAutoIntakeDepositTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleEmpty, 500);
         specAutoIntakeDepositTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideAutoSampleRetract, 1));
         specAutoIntakeDepositTask.addStep(() -> intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff));
+
+        // Move to PickupSpecimen Position - for use in Teleop.
+        moveToPickupSpecimenTask.autoStart = false;
+        moveToPickupSpecimenTask.addStep(() -> intake.positionSolver.setNewTarget(intake.p_atObsZone, true));
+        moveToPickupSpecimenTask.addStep(() -> intake.positionSolver.isDone());
+
+        // Move to HangSpecimen Position - for use in Teleop.
+        moveToHangSpecimenTask.autoStart = false;
+        moveToHangSpecimenTask.addStep(() -> intake.positionSolver.setNewTarget(intake.p_beforeHighRung, true));
+        moveToHangSpecimenTask.addStep(() -> intake.positionSolver.isDone());
 
         /* == Task: prepareToIntakeTask == */
         prepareToIntakeTask.autoStart = false;
@@ -365,6 +382,8 @@ public class IntakeTasks {
         public final static String autonomousSample = "autonomous sample";
         public final static String specAutoIntakePickup = "specimen Auto Intake Pickup";
         public final static String specAutoIntakeDeposit = "specimen Auto Intake Deposit";
+        public final static String moveToPickupSpecimen = "move to Pickup Specimen Position";
+        public final static String moveToHangSpecimen = "move to Hang Specimen Position";
         public final static String autoHome = "auto home";
         public final static String prepareToIntake = "prepare to intake";
         public final static String safe = "safe";
