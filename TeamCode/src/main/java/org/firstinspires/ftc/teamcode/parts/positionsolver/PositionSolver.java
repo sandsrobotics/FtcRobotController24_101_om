@@ -81,6 +81,11 @@ public class PositionSolver extends Part<Drive, PositionSolverSettings, ObjectUt
         triggerEvent(Robot.Events.START);// TODO make this better
     }
 
+    public void stopSolver() {
+        // experimental new stop method
+        triggerEvent(Robot.Events.STOP);
+    }
+
     public void setMaxPower(double maxX, double maxY, double maxR){
         xChannel.setMaxPower(maxX);
         yChannel.setMaxPower(maxY);

@@ -69,6 +69,18 @@ public class IntakeTeleop extends LoopedPartImpl<Intake, IntakeTeleopSettings, O
             parent.eStop();
         }
 
+        //in telelop, disable positiontracker if Driver1 uses controls
+        if (FlipbotSettings.isTeleOp()) {
+            if (parent.parent.opMode.gamepad1.right_trigger+
+                    parent.parent.opMode.gamepad1.left_trigger+
+                    parent.parent.opMode.gamepad1.left_stick_x+
+                    parent.parent.opMode.gamepad1.left_stick_y+
+                    parent.parent.opMode.gamepad1.right_stick_x+
+                    parent.parent.opMode.gamepad1.right_stick_y != 0) {
+                parent.positionSolver.stopSolver();
+            }
+        }
+
         // *** DRIVER 2 CONTROLS ***
         // Driver 2 - slide control
 //        parent.setUserSlidePower(-parent.parent.opMode.gamepad2.left_stick_y);

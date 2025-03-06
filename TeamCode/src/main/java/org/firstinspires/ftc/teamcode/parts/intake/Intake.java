@@ -239,6 +239,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         getHardware().park.stop();
         //stop the hang motor
         getHardware().robotHangMotor.setPower(0);
+        //stop the position solver?
+        positionSolver.stopSolver();
     }
 
     public void stopAllIntakeTasks() {
