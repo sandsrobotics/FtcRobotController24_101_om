@@ -19,6 +19,7 @@ public class PositionSolver extends Part<Drive, PositionSolverSettings, ObjectUt
 
     private boolean t = false;
     private long startTime;
+    private boolean isStarted = false;
 
     protected PositionTracker positionTracker;
 
@@ -79,11 +80,15 @@ public class PositionSolver extends Part<Drive, PositionSolverSettings, ObjectUt
         rChannel.setNewTarget(target.Z, resetPID);
 
         triggerEvent(Robot.Events.START);// TODO make this better
+        isStarted = true;
     }
 
     public void stopSolver() {
         // experimental new stop method
-        triggerEvent(Robot.Events.STOP);
+        if (isStarted) {
+            triggerEvent(Robot.Events.STOP);
+            isStarted = false;
+        }
     }
 
     public void setMaxPower(double maxX, double maxY, double maxR){
