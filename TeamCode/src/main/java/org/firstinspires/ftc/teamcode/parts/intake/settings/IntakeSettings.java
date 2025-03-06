@@ -5,7 +5,8 @@ public class  IntakeSettings {
     public final double spinnerIn                = 1;
     public final double spinnerOff               = 0.5;
     public final double spinnerOut               = 0;
-    public final double spinnerSlowOut           = 0.35;  //todo: finalize number
+    public final double spinnerTransfer          = 0.0;
+    public final double spinnerSlowOut           = 0.39; //0.35 //todo: finalize number
     public final int spinnerSweepTime            = 100;  //probably not relevant
 
     public final double flipperFloor             = 0.839;  // 0.859
@@ -20,7 +21,8 @@ public class  IntakeSettings {
 
     public final double chuteParked              = 0.677; //0.689;
     public final double chuteReady               = 0.535;
-    public final double chuteDeposit             = 0.327;
+    public final double chuteSampleDeposit       = 0.327; // Maybe .327 so sample is not launched-jas
+    public final double chuteHumanDeposit        = 0.3;
     public final double chuteInspect             = 0.407;
     public final int chuteSweepTime              = 1000; //1500;   // spec is 1250
     public final double chuteOffset              = 0.0;
@@ -49,6 +51,7 @@ public class  IntakeSettings {
     public final int toleranceSlide              = 20;
     public final int positionSlideOvershoot      = -10;
     public final int autoSampleSlideDistance     = 750; //todo : finalize number
+    public final int autoSampleSlideDistanceTest = 1200; //todo : finalize number
     public final int autoSampleSlideMin          = positionSlideMin + 25;
     public final int positionSlideHome           = 20;
 
@@ -77,7 +80,7 @@ public class  IntakeSettings {
     public final double liftSpecP_rue = 15;  // P for Run Using Encoder PIDF Spec
     public final double liftSpecP_rtp = 20;  // P for Run To Position PIDF Spec
     public final double liftSampleP_rue = 15;  // P for Run Using Encoder PIDF Sample todo: finalize number
-    public final double liftSampleP_rtp = 16;  // P for Run To Position PIDF Sample todo: finalize number
+    public final double liftSampleP_rtp = 25;  // P for Run To Position PIDF Sample todo: finalize number
 
 
     public final int positionHangMin             = 20;

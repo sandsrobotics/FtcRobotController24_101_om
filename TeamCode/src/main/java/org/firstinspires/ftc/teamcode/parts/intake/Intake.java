@@ -273,6 +273,12 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         lastSampleDistance = ((DistanceSensor) getHardware().colorSensor).getDistance(DistanceUnit.CM);
         return lastSampleDistance;
     }
+    public boolean sampleInIntake () {
+        if (lastSampleDistance < 8) {
+            return lastSampleDistance > 8;
+        }
+        return false;
+    }
     public boolean isSamplePresent (boolean pollSensor) {
         if (!pollSensor) return lastSampleDistance <= getSettings().distSampleGood;
         return readSampleDistance() <= getSettings().distSampleGood;

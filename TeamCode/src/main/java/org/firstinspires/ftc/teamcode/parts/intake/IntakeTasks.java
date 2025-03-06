@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.parts.intake;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolverSettings;
@@ -20,6 +19,8 @@ public class IntakeTasks {
     public final TimedTask autoHomeTask;
     public final TimedTask autoHomeTaskLift;
     public final TimedTask autoHomeTaskSlide;
+    public final TimedTask autoDepositTask;
+    public final TimedTask autoDepositSample3;
     public final TimedTask prepareToIntakeTask;
     public final TimedTask dockTask;
     public final TimedTask transferTask;
@@ -51,6 +52,8 @@ public class IntakeTasks {
         autoHomeTask = new TimedTask(TaskNames.autoHome, intakeTasksGroup);
         autoHomeTaskLift = new TimedTask("autoHomeLift", intakeTasksGroup);
         autoHomeTaskSlide = new TimedTask("autoHomeSlide", intakeTasksGroup);
+        autoDepositTask = new TimedTask("autoDepositTask", intakeTasksGroup);
+        autoDepositSample3 = new TimedTask("autoDepositSample3", intakeTasksGroup);
         prepareToIntakeTask = new TimedTask(TaskNames.prepareToIntake, intakeTasksGroup);
         dockTask = new TimedTask(TaskNames.safe, intakeTasksGroup);
         transferTask = new TimedTask(TaskNames.transfer, intakeTasksGroup);
@@ -82,9 +85,9 @@ public class IntakeTasks {
         autonomousSampleTask.addStep(() -> intake.getHardware().flipper.isDone());
         // 20250219 try disabling flipper servo like done in teleop; remove if trouble (does this help with new bouncing/rising problem?)
         autonomousSampleTask.addStep(() -> intake.getHardware().flipper.disable());
-        autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().autoSampleSlideDistance, 1));
+        autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().autoSampleSlideDistanceTest, 1));
 //        autonomousSampleTask.addStep(intake::isSlideInTolerance); // todo: consider a timeout in case it jams against the field border at Sample3
-        autonomousSampleTask.addTimedStep(() -> {}, () -> intake.isSamplePresent() || intake.isSlideInTolerance(), 1500);
+        autonomousSampleTask.addTimedStep(() -> {}, () -> intake.isSamplePresent() || intake.isSlideInTolerance(), 1000);
 //        autonomousSampleTask.addDelay(250); //500
         autonomousSampleTask.addTimedStep(() -> {}, intake::isSamplePresent, 250);
         autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().autoSampleSlideMin, 1));
@@ -96,9 +99,9 @@ public class IntakeTasks {
 //        autonomousSampleTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideMin, 1));
 //        autonomousSampleTask.addStep(() -> intake.isSlideInTolerance() || (intake.sampleDistance() < 1.5));
         // revised steps to bypass actions if sample is/was detected
-        autonomousSampleTask.addTimedStep(() -> {}, () -> intake.isSamplePresent() || intake.isSlideInTolerance(), 1500);
+        autonomousSampleTask.addTimedStep(() -> {}, () -> intake.isSamplePresent() || intake.isSlideInTolerance(), 1000);
         autonomousSampleTask.addStep(() -> {
-            if (!intake.wasSamplePresent()) intake.setSlidePosition(intake.getSettings().autoSampleSlideDistance, 1);
+            if (!intake.wasSamplePresent()) intake.setSlidePosition(intake.getSettings().autoSampleSlideDistanceTest, 1);
         });
         autonomousSampleTask.addTimedStep(() -> {}, () -> intake.wasSamplePresent() || intake.isSamplePresent() || intake.isSlideInTolerance(), 1500);
         autonomousSampleTask.addStep(() -> {
@@ -136,6 +139,22 @@ public class IntakeTasks {
         specAutoIntakeDepositTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleEmpty, 500);
         specAutoIntakeDepositTask.addStep(() -> intake.setSlidePosition(intake.getSettings().positionSlideAutoSampleRetract, 1));
         specAutoIntakeDepositTask.addStep(() -> intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff));
+
+        // Sample Three Deposit Task
+
+        autoDepositSample3.autoStart = false;
+        autoDepositSample3.addStep(intake::initSampleLiftPID);
+        autoDepositSample3.addStep(() -> {
+            intake.getHardware().chute.setPosition(intake.getSettings().chuteReady);
+            intake.setLiftPosition(intake.getSettings().positionLiftMax, 1);
+        });
+//        depositTask.addStep(() -> intake.isLiftInTolerance() && intake.getHardware().chute.isDone());
+        autoDepositSample3.addStep(() -> intake.getLiftPosition() > intake.getSettings().positionLiftPreDump);
+        autoDepositSample3.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteSampleDeposit));
+        autoDepositSample3.addStep(() -> intake.getHardware().chute.isDone());
+        autoDepositSample3.addDelay(400); // 200
+        autoDepositSample3.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteParked));
+        autoDepositSample3.addStep(() -> intake.getHardware().chute.isDone());
 
         // Move to PickupSpecimen Position - for use in Teleop.
         moveToPickupSpecimenTask.autoStart = false;
@@ -198,7 +217,7 @@ public class IntakeTasks {
 
         /* == Task: lowDumpIntakeTask == */
         lowDumpIntakeTask.autoStart = false;
-        lowDumpIntakeTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteDeposit));
+        lowDumpIntakeTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteHumanDeposit));
         lowDumpIntakeTask.addStep(() -> intake.getHardware().chute.isDone());
         lowDumpIntakeTask.addDelay(500);
         lowDumpIntakeTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteParked));
@@ -242,12 +261,12 @@ public class IntakeTasks {
         transferTask.addStep(() -> {
             intake.getHardware().flipper.setPosition(intake.getSettings().flipperParked);
             intake.getHardware().chute.setPosition(intake.getSettings().chuteParked);
-            //intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOut);
-            intake.getHardware().spinner.setPosition(intake.testSpinnerOut);
+            intake.getHardware().spinner.setPosition(intake.getSettings().spinnerTransfer);
+    //        intake.getHardware().spinner.setPosition(intake.testSpinnerOut);
         });
 //        transferTask.addDelay(500); // 1500  //todo: Are you SURE this is a good idea?
-        transferTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleEmpty, 1000);
-        transferTask.addDelay(500);  // a bit of time to truly finish; test and change as necessary
+        transferTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleEmpty, 500);
+        transferTask.addDelay(50);  // a bit of time to truly finish; test and change as necessary
         transferTask.addStep(() -> {
             intake.getHardware().flipper.disable();
             intake.getHardware().chute.disable();
@@ -264,6 +283,21 @@ public class IntakeTasks {
             intake.setLiftPosition(intake.getSettings().positionLiftReady, 1);
         });
         prepareToDepositTask.addStep(intake::isLiftInTolerance);
+//           AUTO DEPOSIT
+        autoDepositTask.autoStart = false;
+        autoDepositTask.addStep(intake::initSampleLiftPID);
+        autoDepositTask.addStep(() -> {
+            intake.getHardware().chute.setPosition(intake.getSettings().chuteReady);
+            intake.setLiftPosition(intake.getSettings().positionLiftMax, 1);
+        });
+//        depositTask.addStep(() -> intake.isLiftInTolerance() && intake.getHardware().chute.isDone());
+        autoDepositTask.addStep(() -> intake.getLiftPosition() > intake.getSettings().positionLiftPreDump);
+        autoDepositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteSampleDeposit));
+        autoDepositTask.addStep(() -> intake.getHardware().chute.isDone());
+        autoDepositTask.addDelay(400); // 200
+        autoDepositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteParked));
+        autoDepositTask.addStep(() -> intake.getHardware().chute.isDone());
+        autoDepositTask.addStep(autoHomeTaskLift::restart);
 
         /* == Task: depositTask == */
         depositTask.autoStart = false;
@@ -274,7 +308,7 @@ public class IntakeTasks {
         });
 //        depositTask.addStep(() -> intake.isLiftInTolerance() && intake.getHardware().chute.isDone());
         depositTask.addStep(() -> intake.getLiftPosition() > intake.getSettings().positionLiftPreDump);
-        depositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteDeposit));
+        depositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteSampleDeposit));
         depositTask.addStep(() -> intake.getHardware().chute.isDone());
         depositTask.addDelay(400); // 200
         depositTask.addStep(() -> intake.getHardware().chute.setPosition(intake.getSettings().chuteParked));
@@ -314,7 +348,7 @@ public class IntakeTasks {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerSlowOut);
         });
         //prepareToTransferTask.addDelay(350);
-        prepareToTransferTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleUnload, 1000); //todo: try a longer timeout
+        prepareToTransferTask.addTimedStep(() -> {}, () -> intake.readSampleDistance() >= intake.getSettings().distSampleUnload, 2000); //todo: try a longer timeout
         prepareToTransferTask.addStep(() -> {
             intake.getHardware().spinner.setPosition(intake.getSettings().spinnerOff);
             transferTask.restart();

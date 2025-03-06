@@ -29,7 +29,6 @@ import java.util.function.Function;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Constants;
 import om.self.ezftc.utils.Vector3;
-import om.self.supplier.suppliers.EdgeSupplier;
 import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
 
@@ -52,6 +51,7 @@ public class FlipAuto2025 extends LinearOpMode{
     /**************************/
     public int startDelay;
     private int parkPosition;
+    public long startTime;
 
     public void initAuto(){
         transformFunc = (v) -> v;
@@ -70,7 +70,6 @@ public class FlipAuto2025 extends LinearOpMode{
     @Override
     public void runOpMode() {
         FlipbotSettings.setAuto();
-        long start;
         initAuto();
         FtcDashboard dashboard = FtcDashboard.getInstance();
         TelemetryPacket packet = new TelemetryPacket();
@@ -148,15 +147,15 @@ public class FlipAuto2025 extends LinearOpMode{
 
         //testNewAutoWithIntake needs Testing!
         // testNewAutoWithIntake(autoTasks);
-
+        startTime = System.currentTimeMillis();
         while (opModeIsActive()) {
-            start = System.currentTimeMillis();
+//            start = System.currentTimeMillis();
             robot.run();
             FlipbotSettings.storeRobotPosition(pt.getCurrentPosition());
             dashboardTelemetry.addData("position", pt.getCurrentPosition());
             telemetry.addData("position", pt.getCurrentPosition());
             telemetry.addData("tile position", fieldToTile(pt.getCurrentPosition()));
-            telemetry.addData("time", System.currentTimeMillis() - start);
+            telemetry.addData("time", System.currentTimeMillis() - startTime);
             dashboardTelemetry.update();
             telemetry.update();
         }
@@ -394,8 +393,13 @@ public class FlipAuto2025 extends LinearOpMode{
         specimenPickupAndHang(autoTasks, p_12, p_13, p_14, p_19, p_20);
 
         // Park.
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-        positionSolver.addMoveToTaskEx(p_19, autoTasks);  //p_00
+        if ((double) (System.currentTimeMillis() - startTime) /1000 < 3.5) {
+            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+            positionSolver.addMoveToTaskEx(p_19, autoTasks);  //p_00
+        } else {
+            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+            positionSolver.addMoveToTaskEx(p_00, autoTasks);  //p_00
+        }
     }
 
     private void specimenPickupAndHang (TimedTask autoTasks, Vector3 pos_two, Vector3 pos_three,
