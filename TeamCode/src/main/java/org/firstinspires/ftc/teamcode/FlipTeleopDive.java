@@ -91,7 +91,12 @@ public class FlipTeleopDive extends LinearOpMode {
 //            telemetry.update();
 //            //todo: What to do if it doesn't initialize?
 //        }
-        odo.setPosition(FlipbotSettings.getRobotPosition());
+        try {
+            odo.setPosition(FlipbotSettings.getRobotPosition());
+        } catch (Exception e) {
+            telemetry.addLine("Exception while odo.setPosition; Ignoring");
+            telemetry.update();
+        }
 
         extraSettings();
 

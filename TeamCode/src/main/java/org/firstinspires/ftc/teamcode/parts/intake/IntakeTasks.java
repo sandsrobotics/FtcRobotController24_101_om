@@ -158,7 +158,7 @@ public class IntakeTasks {
 
         // Move to PickupSpecimen Position - for use in Teleop.
         moveToPickupSpecimenTask.autoStart = false;
-        moveToPickupSpecimenTask.addStep(() -> intake.positionSolver.setNewTarget(intake.p_atObsZone, true));
+        moveToPickupSpecimenTask.addStep(() -> intake.positionSolver.setNewTarget(intake.p_nearObsZone, true));
         moveToPickupSpecimenTask.addStep(() -> intake.positionSolver.isDone());
 
         // Move to HangSpecimen Position - for use in Teleop.

@@ -64,7 +64,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     private final EdgeConsumer homingLiftZero = new EdgeConsumer();
     private final EdgeConsumer homingSlideZero = new EdgeConsumer();
 
-    public final Vector3 p_atObsZone = new Vector3(33.5, -56.5, 90); // p_12: Position near ObsZone for Pickup-Specimen.
+    public final Vector3 p_nearObsZone = new Vector3(33.5, -56.5, 90); // p_12: Position near ObsZone for Pickup-Specimen.
+    public final Vector3 p_atObsZone = new Vector3(33.5, -61.5, 90); // p_13: Position at ObsZone for Pickup-Specimen.
     public final Vector3 p_beforeHighRung = new Vector3(2.75 - 6, -40.25 + 5 , -90); // p_19: Position before High-Rung for Hang-Specimen.
 
     //***** Constructors *****
@@ -274,12 +275,6 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public double readSampleDistance() {
         lastSampleDistance = ((DistanceSensor) getHardware().colorSensor).getDistance(DistanceUnit.CM);
         return lastSampleDistance;
-    }
-    public boolean sampleInIntake () {
-        if (lastSampleDistance < 8) {
-            return lastSampleDistance > 8;
-        }
-        return false;
     }
     public boolean isSamplePresent (boolean pollSensor) {
         if (!pollSensor) return lastSampleDistance <= getSettings().distSampleGood;
