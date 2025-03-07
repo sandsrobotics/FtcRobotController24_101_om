@@ -141,13 +141,15 @@ public class FlipTeleopDive extends LinearOpMode {
             telemetry.addData("Lift Position", intake.getLiftPosition());
 //            telemetry.addData("Speed Governor", FlipbotSettings.getControlGovernor());
             telemetry.addData("time", System.currentTimeMillis() - start);
+            telemetry.addData("Last RangeDist", intake.lastRearDistance);
 //            telemetry.addData("Rear Distance (inches)", intake.readRearDistance());  // this costs loop time, so remove when done
-
+            telemetry.addData("Last SampleDist", intake.lastSampleDistance);
+            telemetry.addData("Last Hue", intake.lastHue);
+            telemetry.addData("Last Sample", intake.lastSample);
+            telemetry.addData("Is Yellow good?", FlipbotSettings.isYellowGood);
             telemetry.addData("PIDF RUE",intake.pidf_rue);
             telemetry.addData("PIDF RTP",intake.pidf_rtp);
             telemetry.addData("SpinnerOut",intake.testSpinnerOut);
-            telemetry.addData("Last SampleDist", intake.lastSampleDistance);
-            telemetry.addData("Last RangeDist", intake.lastRearDistance);
 
 
             dashboard.sendTelemetryPacket(packet);

@@ -225,10 +225,13 @@ public class IntakeTasks {
         /* == Task: prepareToHangRobotTask == */
         prepareToHangRobotTask.autoStart = false;
         prepareToHangRobotTask.addStep(() -> intake.setHangPosition(intake.getSettings().positionHangReady, 1));
+        prepareToHangRobotTask.addStep(() -> intake.getHardware().hang.setPosition(intake.getSettings().hangServoUp));
 
         /* == Task: hangRobotTask == */
         hangRobotTask.autoStart = false;
         hangRobotTask.addStep(() -> intake.setHangPosition(intake.getSettings().positionHangFinal, 1));
+        hangRobotTask.addDelay(1000);
+        hangRobotTask.addStep(() ->intake.getHardware().hang.disable());
 
         /* == Task: dockTask == */
         dockTask.autoStart = false;
@@ -369,6 +372,7 @@ public class IntakeTasks {
                 () -> intake.getHardware().liftZeroSwitch.getState(), 10000);
         autoHomeTaskLift.addStep(() -> {
             intake.getHardware().liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            intake.zeroLiftPos();
             intake.getHardware().liftMotor.setTargetPosition(intake.getSettings().positionLiftHome);
             intake.liftTargetPosition = intake.getSettings().positionLiftHome;
             setMotorsToRunConfig(1);

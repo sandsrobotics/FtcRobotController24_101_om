@@ -45,6 +45,8 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
     public boolean rangeIsDone = false;
     public boolean rangeEnabled = false;
     public Vector3 adjustedDestination = null;
+    public int lastHue;
+    private boolean enableLiftLimit = true;
 
     // for testing PID
     public PIDFCoefficients pidf_rue = new PIDFCoefficients();
@@ -130,6 +132,9 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
             stopLift();
             return;
         }
+        if (position > currentLiftPos) {enableLiftLimit = false;}
+        else {enableLiftLimit = true;}
+
         //liftTargetPosition = position;
         liftTargetPosition = !getHardware().liftZeroSwitch.getState() ? position :
                 Math.max(position, getSettings().positionLiftHome);  // if the switch is pressed, the minimum is the home position
@@ -217,6 +222,10 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         return currentSlidePos;
     }
 
+    public void zeroLiftPos() {
+        currentLiftPos = 0;
+    }
+
     public int getLiftPosition() {
         return currentLiftPos;
     }
@@ -298,6 +307,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         Color.colorToHSV(colorPlural.toColor(), hsvValues);
         int hue = (int) hsvValues[0];
         lastSample = 0;
+        lastHue = hue;
         if (hue > 20 && hue < 60) lastSample = 1; // Red = 1
         if (hue > 65 && hue < 160) lastSample = 2; // Yellow = 2
         if (hue > 160) lastSample = 3; // Blue = 3
@@ -368,10 +378,13 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 
         // this is part of the resets lift to 0 each time it hits the limit switch
         homingLiftZero.setOnRise(() -> {
-            getHardware().liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            setLiftPosition(getSettings().positionLiftHome,0.5);
+            if (enableLiftLimit) {
+                getHardware().liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+                zeroLiftPos();
+                setLiftPosition(getSettings().positionLiftHome, 0.5);
+            }
         });
-        //homing hslide slide setup
+        //homing slide slide setup
         homingSlideZero.setOnRise(() -> {
             getHardware().slideMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
             setSlidePosition(getSettings().positionSlideHome,0.5);

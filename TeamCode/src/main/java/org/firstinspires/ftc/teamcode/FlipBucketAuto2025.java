@@ -29,7 +29,6 @@ import java.util.function.Function;
 import om.self.ezftc.core.Robot;
 import om.self.ezftc.utils.Constants;
 import om.self.ezftc.utils.Vector3;
-import om.self.supplier.suppliers.EdgeSupplier;
 import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
 
@@ -40,18 +39,22 @@ public class FlipBucketAuto2025 extends LinearOpMode{
     public Vector3 customStartPos;
     public boolean shutdownps;
     PositionSolver positionSolver;
-    PositionTracker pt;
-    Vector3 startPosition;
     Pinpoint odo;
     Intake intake;
+    /**************************/
+    public int startDelay;
     //  DASHBOARD VARIABLES (static public)
     static public int shortDelay = 1000;
     static public int midDelay = 2000;
+    PositionTracker pt;
+    Vector3 startPosition;
     static public int longDelay = 3000;
     public static int maxDelay = 3000;
-    /**************************/
-    public int startDelay;
     private int parkPosition;
+    public long startTime;
+    public double samplePosFish = -11;
+    public int modelOfSub = 3;
+
 
     public void initAuto(){
         transformFunc = (v) -> v;
@@ -98,40 +101,68 @@ public class FlipBucketAuto2025 extends LinearOpMode{
 
         while (!isStarted()) {
             robot.buttonMgr.runLoop();
+
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.x, ButtonMgr.State.wasTapped)) {
+                FlipbotSettings.isBlueGood = true;
+                FlipbotSettings.isRedGood = false;
+            }
+
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.b, ButtonMgr.State.wasTapped)) {
+                FlipbotSettings.isBlueGood = false;
+                FlipbotSettings.isRedGood = true;
+            }
+
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.dpad_left, ButtonMgr.State.wasTapped)) {
+                samplePosFish = samplePosFish - 1;
+                modelOfSub = modelOfSub-1;
+            }
+
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.dpad_right, ButtonMgr.State.wasTapped)) {
+                samplePosFish = samplePosFish + 1;
+                modelOfSub++;
+            }
             // example configuration capability during init
-//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.dpad_down, ButtonMgr.State.wasTapped)) {
-//                FlipbotSettings.autonomousDebugMode = !FlipbotSettings.autonomousDebugMode;   //todo: disable this before competition!
-//            }
-//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.right_bumper, ButtonMgr.State.wasTapped)) {
-//                startDelay += 1000;
-//            }
-//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.left_bumper, ButtonMgr.State.wasTapped)) {
-//                startDelay -= 1000;
-//                if(startDelay < 0) startDelay = 0;
-//            }
-//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.a, ButtonMgr.State.wasTapped)) {
-//                parkPosition = 1;
-//            }
-//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.b, ButtonMgr.State.wasTapped)) {
-//                parkPosition = 2;
-//            }
-//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.x, ButtonMgr.State.wasTapped)) {
-//                parkPosition = 3;
-//            }
-//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.y, ButtonMgr.State.wasTapped)) {
-//                parkPosition = 0;
-//            }
-//            if(startDelay > maxDelay) startDelay = maxDelay;
+
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.dpad_down, ButtonMgr.State.wasTapped)) {
+                FlipbotSettings.autonomousDebugMode = !FlipbotSettings.autonomousDebugMode;   //todo: disable this before competition!
+            }
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.right_bumper, ButtonMgr.State.wasTapped)) {
+                startDelay += 1000;
+            }
+            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.left_bumper, ButtonMgr.State.wasTapped)) {
+                startDelay -= 1000;
+                if(startDelay < 0) startDelay = 0;
+            }
 
             telemetry.addData("DEBUG?:", FlipbotSettings.autonomousDebugMode ? "***** YES *****" : "No, normal");
             telemetry.addData("PARK POSITION:", parkPosition == 0 ? "Normal mid wall" : parkPosition == 1 ? "Park MID" : parkPosition == 2 ? "Park CORNER" : "Park BOARD");
             telemetry.addData("START DELAY:", startDelay / 1000);
+            telemetry.addData("SamplePos", samplePosFish);
+            StringBuilder tempString1 =new StringBuilder();
+            for (int j=9; j > modelOfSub; j--) {
+                tempString1.append("");
+            }
+
+            StringBuilder tempString = new StringBuilder();
+            for (int i=0; i< modelOfSub; i++) {
+                tempString.append(" ");
+            }
+            tempString.append("*");
+
+            telemetry.addLine("|    " + tempString + tempString1 + "|");
+            telemetry.addLine("|------------------------|");
+            telemetry.addLine("|                        |");
+            telemetry.addLine("|                        |");
+            telemetry.addLine("|                        |");
+            telemetry.addLine("|                        |");
+            telemetry.addLine("|________________________|" );
             telemetry.update();
             sleep(50);
         }
 
         odo.setPosition(fieldStartPos);
         robot.start();
+        intake.getHardware().hang.setPosition(intake.getSettings().hangServoDown);
 
         if(shutdownps) positionSolver.triggerEvent(Robot.Events.STOP);
 
@@ -141,8 +172,8 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         //positionSolver.setNewTarget(pt.getCurrentPosition(), true);
 
         // Here is where we schedule the tasks for the autonomous run (testAuto function below run loop)
-        testBucketAuto(autoTasks);
-
+        testNewBucketAuto(autoTasks);
+        startTime = System.currentTimeMillis();
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
             robot.run();
@@ -188,6 +219,7 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         autoTasks.addStep(() -> intake.stopAllIntakeTasks());
         autoTasks.addStep(() -> odo.setPosition(p_1));
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+        autoTasks.addStep(() -> intake.getHardware().hang.setPosition(intake.getSettings().hangServoUp));
 
         {
             // Deposit Pre-loaded Sample in High-basket
@@ -208,16 +240,20 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         // Third Sample.
         grabAndDepositSample(autoTasks, p_6, p_7, p_3);
 
+        //Fishing for samples
+        intakeSampleForAuto(autoTasks, p_3, p_8, p_9);
+
         // ParK for AutoAscent.
         parkForAutoAscent(autoTasks, p_8, p_9);
+
     }
 
     private void grabAndDepositSample (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three) {
 
-        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings)); // defaultTwiceSettings;
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
 
         // Grab Sample.
-        autoTasks.addStep(() -> intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor)); //flipperAlmostFloor;
+        autoTasks.addStep(() -> intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor)); //flipperAlmostFloor));
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
         autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());
@@ -229,11 +265,216 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         autoTasks.addStep(() -> intake.tasks.depositTask.isDone());
     }
 
+    private void grabAndDepositSampleTest (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three) {
+
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
+
+        // Grab Sample.
+        autoTasks.addStep(() -> intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor)); //flipperAlmostFloor));
+        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
+        autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());
+
+        // Deposit Sample in High-Basket.
+        positionSolver.addMoveToTaskExNoWait(pos_three, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.transferTask.isDone());
+        autoTasks.addStep(() -> intake.tasks.depositTask.restart());
+
+        autoTasks.addStep(() -> intake.tasks.depositTask.isDone());
+    }
+    private void grabAndDepositSampleTestForMultitasking (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three, Vector3 pos_four) {
+
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
+
+        // Grab Sample.
+        autoTasks.addStep(() -> intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor)); //flipperAlmostFloor));
+        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
+        autoTasks.addDelay(750);
+   //     autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());
+
+        // Deposit Sample in High-Basket.
+        positionSolver.addMoveToTaskExNoWait(pos_three, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.transferTask.isDone());
+        positionSolver.addMoveToTaskEx(pos_four, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.autoDepositTask.restart());
+   //     autoTasks.addDelay(650);
+
+        autoTasks.addStep(() -> intake.tasks.autoDepositTask.isDone());
+    }
+    private void grabAndDepositSampleTwoTest (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three, Vector3 pos_four) {
+
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
+
+        // Grab Sample.
+        autoTasks.addStep(() -> intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor));//flipperAlmostFloor));
+        positionSolver.setSettings(PositionSolverSettings.slowSettings);
+        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
+        positionSolver.setSettings(PositionSolverSettings.slowSettings);
+        autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
+        autoTasks.addDelay(500);
+//        positionSolver.addMoveToTaskEx(pos_four, autoTasks);
+//        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());
+
+        // Deposit Sample in High-Basket.
+        positionSolver.addMoveToTaskExNoWait(pos_three, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.transferTask.isDone());
+        autoTasks.addStep(() -> intake.tasks.autoDepositTask.restart());
+        autoTasks.addStep(() -> intake.tasks.autoDepositTask.isDone());
+    }
+
+    private void grabAndDepositSampleOneTest (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three, Vector3 pos_four) {
+
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
+
+        // Grab Sample.
+        autoTasks.addStep(() -> intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor)); //flipperAlmostFloor));
+        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
+        autoTasks.addDelay(500);
+        positionSolver.addMoveToTaskEx(pos_four, autoTasks);
+        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());
+
+        // Deposit Sample in High-Basket.
+        autoTasks.addStep(() -> intake.tasks.transferTask.isDone());
+        positionSolver.addMoveToTaskExNoWait(pos_three, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.autoDepositTask.restart());
+        autoTasks.addStep(() -> intake.tasks.autoDepositTask.isDone());
+    }
+
+    private void grabAndDepositSampleThreeTest (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two, Vector3 pos_three, Vector3 pos_four) {
+
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.slowSettings));
+
+        // Grab Sample.
+        autoTasks.addStep(() -> intake.getHardware().flipper.setPosition(intake.getSettings().flipperAlmostFloor)); //flipperAlmostFloor));
+        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
+        autoTasks.addDelay(500);
+        positionSolver.addMoveToTaskEx(pos_four, autoTasks);
+        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());
+
+        // Deposit Sample in High-Basket.
+//        autoTasks.addStep(() -> intake.tasks.transferTask.isDone());
+//        autoTasks.addStep(() -> {if (intake.isSamplePresent()) {
+//            positionSolver.addMoveToTaskExNoWait(pos_three, autoTasks);
+//            autoTasks.addStep(() -> intake.tasks.autoDepositTask.restart());
+//            autoTasks.addStep(() -> intake.tasks.autoDepositTask.isDone());
+//        }});
+        positionSolver.addMoveToTaskEx(pos_three, autoTasks);
+        autoTasks.addStep(() -> intake.tasks.transferTask.isDone());
+        autoTasks.addStep(() -> intake.tasks.autoDepositSample3.restart());
+        autoTasks.addStep(() -> intake.tasks.autoDepositSample3.isDone());
+    }
+
     private void parkForAutoAscent (TimedTask autoTasks, Vector3 pos_one, Vector3 pos_two) {
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(pos_one, autoTasks);
         autoTasks.addStep(() -> intake.getHardware().park.setPosition(intake.getSettings().parkUp));  // lk moved up
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
         positionSolver.addMoveToTaskEx(pos_two, autoTasks);
+    }
+
+    private void intakeSampleForAuto (TimedTask autoTasks, Vector3 pos_three, Vector3 pos_two, Vector3 pos_one) {
+
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
+
+        //Move to submersible
+
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
+        autoTasks.addStep(() -> intake.getHardware().park.setPosition(intake.getSettings().parkUp));  // lk moved up
+        positionSolver.addMoveToTaskEx(pos_one, autoTasks);
+        //Go Fishing
+        autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
+        autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());
+        positionSolver.addMoveToTaskEx(pos_three, autoTasks);
+//        if (intake.sampleInIntake()) {
+//            //autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.restart());
+////            autoTasks.addStep(() -> intake.tasks.autonomousSampleTask.isDone());
+//            autoTasks.addStep(() -> intake.tasks.prepareToDepositTask.restart());
+//            autoTasks.addStep(() -> intake.tasks.prepareToDepositTask.isDone());
+//            autoTasks.addStep(() -> intake.tasks.autoDepositTask.restart());
+//            autoTasks.addStep(() -> intake.tasks.depositTask.isDone());
+//        }
+
+    }
+
+    private void autoIntakeDeposit (TimedTask autoTasks) {
+//        autoTasks.addStep(() -> intake.tasks.prepareToDepositTask.restart());
+//        autoTasks.addStep(() -> intake.tasks.prepareToDepositTask.isDone());
+        autoTasks.addStep(() -> intake.tasks.depositTask.restart());
+        autoTasks.addStep(() -> intake.tasks.depositTask.isDone());
+
+
+    }
+
+
+    private void testNewBucketAuto(TimedTask autoTasks) {
+        //positions
+        Vector3 posBucketSideStart = new Vector3(-14.375, -62, 90);
+        Vector3 posBucketScore = new Vector3(-53.5, -53.5, 45);
+        Vector3 posSample1 = new Vector3(-58.75, -50, 67);
+        Vector3 posSample1Random = new Vector3(-58.75, -46, 67);
+        Vector3 posSample2 = new Vector3(-58.5, -53.5, 90);
+        Vector3 posSample3Random = new Vector3(-58.77, -44.5, 112);
+        Vector3 posSample3 = new Vector3(-59, -50, 112);
+        Vector3 posPark = new Vector3(-23.5 ,samplePosFish , 0);
+        Vector3 posPrePark = new Vector3(-39, samplePosFish , 0);
+
+        // TODO: Rename the positions to be  more descriptive.
+        Vector3 p_1 = new Vector3(-14.375 - 23.5, -62, 90);
+        Vector3 p_2 = new Vector3(-14.375 - 23.5, -52, 90);
+        Vector3 p_pre_3 = new Vector3(-53.5, -53.5, 90);
+        Vector3 p_3 = new Vector3(-53.5, -53.5, 45);
+        Vector3 p_4 = new Vector3(-59.75, -50, 86);
+        Vector3 p_pre_5 = new Vector3(-36, -39, 45);
+        Vector3 p_5 = new Vector3(-36, -39, 135);
+        Vector3 new_p5 = new Vector3(-56.5, -42.5, 66);
+        Vector3 p_pre_6 = new Vector3(-46.5, -39, 45);
+        Vector3 p_6 = new Vector3(-46.5, -39, 135);
+        Vector3 new_p6 = new Vector3(-51,-42.5,115);
+        Vector3 p_7 = new Vector3(-58, -42, 119); //X:-59
+        Vector3 p_8 = new Vector3(-39, -11, 0);
+        Vector3 p_9 = new Vector3(-23.5, -11, 0);
+
+        autoTasks.addStep(() -> intake.stopAllIntakeTasks());
+        autoTasks.addStep(() -> odo.setPosition(p_1));
+        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
+
+        {
+            // Deposit Pre-loaded Sample in High-basket
+            autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftMax, 1));
+            positionSolver.addMoveToTaskEx(p_2, autoTasks);
+            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
+            positionSolver.addMoveToTaskEx(posSample1, autoTasks);
+            autoTasks.addStep(() -> intake.tasks.autoDepositTask.restart());
+            grabAndDepositSampleOneTest(autoTasks, p_pre_3, posSample1, posSample1, posSample1Random);
+            autoTasks.addStep(() -> intake.tasks.autoDepositTask.isDone());
+            autoTasks.addStep(() -> intake.tasks.dockTask.restart());
+        }
+
+//        grabAndDepositSampleTestForMultitasking(autoTasks, p_pre_5, posSample1, posSample1);
+
+        grabAndDepositSampleTwoTest(autoTasks, p_pre_5, posSample2, posSample1, posSample3Random);
+
+        grabAndDepositSampleThreeTest(autoTasks, p_pre_3, posSample3, posSample1, posSample3Random);
+
+        autoTasks.addStep(() -> intake.tasks.dockTask.restart());
+
+        intakeSampleForAuto(autoTasks, p_3, posPrePark, posPark);
+        autoTasks.addStep(() ->{
+            if ((double) (System.currentTimeMillis() - startTime) /1000 < 5) {
+                parkForAutoAscent(autoTasks, p_8, p_9);
+
+            } else {autoIntakeDeposit(autoTasks);
+            }});
+
+        parkForAutoAscent(autoTasks, p_8, p_9);
+
+
     }
 }

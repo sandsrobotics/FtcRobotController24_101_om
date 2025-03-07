@@ -40,6 +40,9 @@ public class  IntakeSettings {
     public final int parkSweepTime               = 400;
     public final double parkOffset               = 0.0;
 
+    public final double hangServoDown            = 0.424;
+    public final double hangServoUp              = 0.833;
+
     public final int positionSlideMin            = 10;
     public final int positionSlideMax            = 1200; // Physical limit = 1500; 1100 might be necessary if too long
     public final int positionSlideSpecimen       = 40;
