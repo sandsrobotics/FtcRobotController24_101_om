@@ -156,11 +156,15 @@ public class IntakeTasks {
 
         // Move to PickupSpecimen Position - for use in Teleop.
         moveToPickupSpecimenTask.autoStart = false;
+        moveToPickupSpecimenTask.addStep(() -> intake.positionSolver.setNewTarget(intake.p_nearObsZone.withZ(0), true));
+        moveToPickupSpecimenTask.addDelay(150);
         moveToPickupSpecimenTask.addStep(() -> intake.positionSolver.setNewTarget(intake.p_nearObsZone, true));
         moveToPickupSpecimenTask.addStep(() -> intake.positionSolver.isDone());
 
         // Move to HangSpecimen Position - for use in Teleop.
         moveToHangSpecimenTask.autoStart = false;
+        moveToHangSpecimenTask.addStep(() -> intake.positionSolver.setNewTarget(intake.p_beforeHighRung.withZ(0), true));
+        moveToHangSpecimenTask.addDelay(150);
         moveToHangSpecimenTask.addStep(() -> intake.positionSolver.setNewTarget(intake.p_beforeHighRung, true));
         moveToHangSpecimenTask.addStep(() -> intake.positionSolver.isDone());
 
@@ -201,6 +205,8 @@ public class IntakeTasks {
         prepareToHangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchLoose));
         prepareToHangSpecimenTask.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftHangReady, 1));
         prepareToHangSpecimenTask.addStep(intake::isLiftInTolerance);
+        prepareToHangSpecimenTask.addStep(() -> intake.getHardware().pinch.setPosition(intake.getSettings().pinchClosed));
+
 
         /* == Task: hangSpecimenTask == */
         hangSpecimenTask.autoStart = false;

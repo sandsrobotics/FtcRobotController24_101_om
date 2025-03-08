@@ -68,7 +68,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
 
     public final Vector3 p_nearObsZone = new Vector3(33.5, -56.5, 90); // p_12: Position near ObsZone for Pickup-Specimen.
     public final Vector3 p_atObsZone = new Vector3(33.5, -61.5, 90); // p_13: Position at ObsZone for Pickup-Specimen.
-    public final Vector3 p_beforeHighRung = new Vector3(2.75 - 6, -40.25 + 5 , -90); // p_19: Position before High-Rung for Hang-Specimen.
+    public final Vector3 p_beforeHighRung = new Vector3(2.75 - 6, -40.25 + 1 , -90); // Y: (-40.25 + 5); p_19: Position before High-Rung for Hang-Specimen.
 
     //***** Constructors *****
     public Intake(Robot parent) {
@@ -111,8 +111,12 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         getHardware().chute.setPosition(getSettings().chuteParked);
         getHardware().pinch.setPosition(getSettings().pinchFullOpen);
         getHardware().park.setPosition(getSettings().parkDown);
-//        if (FlipbotSettings.isAuto()) getHardware().hang.setPosition(getSettings().hangServoDown); // or whatever position is correct
-//        else getHardware().hang.setPosition(getSettings().hangServoPreUp);  // or whatever position is correct
+        if (FlipbotSettings.isAuto()) {
+            getHardware().hang.setPosition(getSettings().hangServoDown); //
+        }
+        else {
+            getHardware().hang.setPosition(getSettings().hangServoPreUp);  //
+        }
     }
 
     public void setSlidePosition(int position, double power) {

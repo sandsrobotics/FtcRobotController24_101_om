@@ -369,8 +369,8 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
         positionSolver.addMoveToTaskEx(pos_one, autoTasks);
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultSettings));
-        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
         autoTasks.addStep(() -> intake.getHardware().park.setPosition(intake.getSettings().parkUp));
+        positionSolver.addMoveToTaskEx(pos_two, autoTasks);
     }
 
     private void intakeSampleForAuto (TimedTask autoTasks, Vector3 pos_three, Vector3 pos_two, Vector3 pos_one) {
