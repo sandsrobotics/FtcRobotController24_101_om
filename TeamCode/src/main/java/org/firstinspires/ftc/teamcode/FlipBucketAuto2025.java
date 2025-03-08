@@ -169,6 +169,10 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         // Here is where we schedule the tasks for the autonomous run (testAuto function below run loop)
         testNewBucketAuto(autoTasks);
         startTime = System.currentTimeMillis();
+
+        // somewhere after init and before the main run loop should pop the hang servo up!
+        //intake.getHardware().hang.setPosition(intake.getSettings().hangServoPreUp);  // or whatever position is correct
+
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
             robot.run();

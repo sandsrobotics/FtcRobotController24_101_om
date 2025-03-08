@@ -104,12 +104,15 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         getHardware().chute.setSweepTime(getSettings().chuteSweepTime).setOffset(getSettings().chuteOffset);
         getHardware().pinch.setSweepTime(getSettings().pinchSweepTime).setOffset(getSettings().pinchOffset);
         getHardware().park.setSweepTime(getSettings().parkSweepTime).setOffset(getSettings().parkOffset);
+        getHardware().hang.setSweepTime(getSettings().hangServoSweepTime).setOffset(getSettings().hangServoOffset);
         // apply initial position
         getHardware().spinner.setPosition(getSettings().spinnerOff);
         getHardware().flipper.setPosition(getSettings().flipperParked);
         getHardware().chute.setPosition(getSettings().chuteParked);
         getHardware().pinch.setPosition(getSettings().pinchFullOpen);
         getHardware().park.setPosition(getSettings().parkDown);
+//        if (FlipbotSettings.isAuto()) getHardware().hang.setPosition(getSettings().hangServoDown); // or whatever position is correct
+//        else getHardware().hang.setPosition(getSettings().hangServoPreUp);  // or whatever position is correct
     }
 
     public void setSlidePosition(int position, double power) {

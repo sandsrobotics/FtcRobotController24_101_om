@@ -44,6 +44,8 @@ public class  IntakeSettings {
     public final double hangServoPreUp           = 0.800;
     public final double hangServoSafe            = 0.750;
     public final double hangServoHang            = 0.820;
+    public final int hangServoSweepTime          = 1500;
+    public final double hangServoOffset          = 0.0;
 
     public final int positionSlideMin            = 10;
     public final int positionSlideMax            = 1200; // Physical limit = 1500; 1100 might be necessary if too long

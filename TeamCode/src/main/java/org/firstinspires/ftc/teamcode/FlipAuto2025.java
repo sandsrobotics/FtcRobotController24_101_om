@@ -148,6 +148,10 @@ public class FlipAuto2025 extends LinearOpMode{
         //testNewAutoWithIntake needs Testing!
         // testNewAutoWithIntake(autoTasks);
         startTime = System.currentTimeMillis();
+
+        // somewhere after init and before the main run loop should pop the hang servo up!
+        //intake.getHardware().hang.setPosition(intake.getSettings().hangServoPreUp);  // or whatever position is correct
+
         while (opModeIsActive()) {
 //            start = System.currentTimeMillis();
             robot.run();
