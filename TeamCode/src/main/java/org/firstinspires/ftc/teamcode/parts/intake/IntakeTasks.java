@@ -2,11 +2,9 @@ package org.firstinspires.ftc.teamcode.parts.intake;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.parts.intake.hardware.IntakeHardware;
-import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolverSettings;
+
 import om.self.ezftc.core.Robot;
-import om.self.ezftc.utils.Vector3;
 import om.self.task.core.Group;
-import om.self.task.core.TaskEx;
 import om.self.task.other.TimedTask;
 
 public class IntakeTasks {
@@ -225,10 +223,11 @@ public class IntakeTasks {
         /* == Task: prepareToHangRobotTask == */
         prepareToHangRobotTask.autoStart = false;
         prepareToHangRobotTask.addStep(() -> intake.setHangPosition(intake.getSettings().positionHangReady, 1));
-        prepareToHangRobotTask.addStep(() -> intake.getHardware().hang.setPosition(intake.getSettings().hangServoUp));
-
+        prepareToHangRobotTask.addStep(() -> intake.getHardware().hang.setPosition(intake.getSettings().hangServoPreUp));
         /* == Task: hangRobotTask == */
+
         hangRobotTask.autoStart = false;
+        hangRobotTask.addStep(() ->intake.getHardware().hang.setPosition(intake.getSettings().hangServoHang));
         hangRobotTask.addStep(() -> intake.setHangPosition(intake.getSettings().positionHangFinal, 1));
         hangRobotTask.addDelay(1000);
         hangRobotTask.addStep(() ->intake.getHardware().hang.disable());

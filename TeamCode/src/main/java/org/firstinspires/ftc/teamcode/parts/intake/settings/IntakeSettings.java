@@ -41,7 +41,9 @@ public class  IntakeSettings {
     public final double parkOffset               = 0.0;
 
     public final double hangServoDown            = 0.424;
-    public final double hangServoUp              = 0.833;
+    public final double hangServoPreUp           = 0.800;
+    public final double hangServoSafe            = 0.750;
+    public final double hangServoHang            = 0.820;
 
     public final int positionSlideMin            = 10;
     public final int positionSlideMax            = 1200; // Physical limit = 1500; 1100 might be necessary if too long
@@ -88,8 +90,8 @@ public class  IntakeSettings {
 
     public final int positionHangMin             = 20;
     public final int positionHangMax             = 13500; //4350;
-    public final int positionHangReady           = 10050; //9000; //todo: get number
-    public final int positionHangFinal           = 2550; //745; //todo: get number
+    public final int positionHangReady           = 9600; //9000; //todo: get number
+    public final int positionHangFinal           = 4300; //745; //todo: get number
     public final int positionHangClear           = 12700;
     public final int toleranceHang               = 20;
 
