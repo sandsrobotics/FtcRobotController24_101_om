@@ -42,7 +42,7 @@ public class  IntakeSettings {
 
     public final double hangServoDown            = 0.424;
     public final double hangServoPreUp           = 0.800;
-    public final double hangServoSafe            = 0.750;
+    public final double hangServoSafe            = 0.780;
     public final double hangServoHang            = 0.820;
     public final int hangServoSweepTime          = 1500;
     public final double hangServoOffset          = 0.0;

@@ -123,27 +123,23 @@ public class FlipBucketAuto2025 extends LinearOpMode{
             }
             // example configuration capability during init
 
-            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.dpad_down, ButtonMgr.State.wasTapped)) {
-                FlipbotSettings.autonomousDebugMode = !FlipbotSettings.autonomousDebugMode;   //todo: disable this before competition!
-            }
-            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.right_bumper, ButtonMgr.State.wasTapped)) {
-                startDelay += 1000;
-            }
-            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.left_bumper, ButtonMgr.State.wasTapped)) {
-                startDelay -= 1000;
-                if(startDelay < 0) startDelay = 0;
-            }
-
-            telemetry.addData("DEBUG?:", FlipbotSettings.autonomousDebugMode ? "***** YES *****" : "No, normal");
-            telemetry.addData("PARK POSITION:", parkPosition == 0 ? "Normal mid wall" : parkPosition == 1 ? "Park MID" : parkPosition == 2 ? "Park CORNER" : "Park BOARD");
-            telemetry.addData("START DELAY:", startDelay / 1000);
+//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.dpad_down, ButtonMgr.State.wasTapped)) {
+//                FlipbotSettings.autonomousDebugMode = !FlipbotSettings.autonomousDebugMode;   //todo: disable this before competition!
+//            }
+//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.right_bumper, ButtonMgr.State.wasTapped)) {
+//                startDelay += 1000;
+//            }
+//            if (robot.buttonMgr.getState(1, ButtonMgr.Buttons.left_bumper, ButtonMgr.State.wasTapped)) {
+//                startDelay -= 1000;
+//                if(startDelay < 0) startDelay = 0;
+//            }
+//
+//            telemetry.addData("DEBUG?:", FlipbotSettings.autonomousDebugMode ? "***** YES *****" : "No, normal");
+//            telemetry.addData("PARK POSITION:", parkPosition == 0 ? "Normal mid wall" : parkPosition == 1 ? "Park MID" : parkPosition == 2 ? "Park CORNER" : "Park BOARD");
+//            telemetry.addData("START DELAY:", startDelay / 1000);
             telemetry.addData("SamplePos", samplePosFish);
             telemetry.addData("Red Side", FlipbotSettings.isRedGood);
             telemetry.addData("Blue Side", FlipbotSettings.isBlueGood);
-            StringBuilder tempString1 =new StringBuilder();
-            for (int j=9; j > modelOfSub; j--) {
-                tempString1.append("");
-            }
 
             StringBuilder tempString = new StringBuilder();
             for (int i=0; i< modelOfSub; i++) {
@@ -151,7 +147,7 @@ public class FlipBucketAuto2025 extends LinearOpMode{
             }
             tempString.append("*");
 
-            telemetry.addLine("" +tempString);
+            telemetry.addLine("      " +tempString);
             telemetry.addLine("|---------------------------------------------|");
             telemetry.update();
             sleep(50);
@@ -448,6 +444,7 @@ public class FlipBucketAuto2025 extends LinearOpMode{
         {
             // Deposit Pre-loaded Sample in High-basket
             autoTasks.addStep(() -> intake.getHardware().hang.setPosition(intake.getSettings().hangServoSafe));
+            autoTasks.addDelay(200);
             autoTasks.addStep(() -> intake.setLiftPosition(intake.getSettings().positionLiftMax, 1));
             positionSolver.addMoveToTaskEx(p_2, autoTasks);
             autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
@@ -468,13 +465,12 @@ public class FlipBucketAuto2025 extends LinearOpMode{
 
         intakeSampleForAuto(autoTasks, p_3, posPrePark, posPark);
         autoTasks.addStep(() ->{
-            if (((System.currentTimeMillis() - startTime) / 1000) < 8) {
-                parkForAutoAscent(autoTasks, p_8, p_9);
+            if (((System.currentTimeMillis() - startTime) / 1000) < (30-26)) {
+                autoIntakeDeposit(autoTasks, p_3);
 
-            } else {autoIntakeDeposit(autoTasks, p_3);
             }});
 
-        parkForAutoAscent(autoTasks, p_8, p_9);
+        parkForAutoAscent(autoTasks, posPrePark, posPark);
 
 
     }

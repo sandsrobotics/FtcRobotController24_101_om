@@ -343,9 +343,9 @@ public class FlipAuto2025 extends LinearOpMode{
         Vector3 p_14 = new Vector3(24, -47, 0);
         Vector3 p_15 = new Vector3(8.75, -40.25 + 5, -90); // Y:37.75
         Vector3 p_16 = new Vector3(8.75, -32.75 + 1, -90); // Y:32.75
-        Vector3 p_17 = new Vector3(5.75 - 3, -40.25 + 5 , -90); // Y:37.75
+        Vector3 p_17 = new Vector3(5.75 - 3, -40.25 + 5, -90); // Y:37.75
         Vector3 p_18 = new Vector3(5.75 - 3, -32.75 + 1, -90); // Y:32.75
-        Vector3 p_19 = new Vector3(2.75 - 6, -40.25 + 5 , -90); // Y:37.75
+        Vector3 p_19 = new Vector3(2.75 - 6, -40.25 + 5, -90); // Y:37.75
         Vector3 p_20 = new Vector3(2.75 - 6, -32.75 + 1, -90); // Y:32.75
         Vector3 p_00 = new Vector3(55.5, -56.5, 0); // Y:32.75
 
@@ -354,6 +354,8 @@ public class FlipAuto2025 extends LinearOpMode{
         autoTasks.addStep(() -> odo.setPosition(p_1));
 //        autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceSettings));
         autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.defaultTwiceNoAlwaysRunSettings));
+        autoTasks.addStep(() -> intake.getHardware().hang.setPosition(intake.getSettings().hangServoSafe));
+        autoTasks.addDelay(200);
         // Hang Pre-Loaded Specimen.
         autoTasks.addStep(() -> intake.tasks.prepareToHangSpecimenTask.restart());
         positionSolver.addMoveToTaskEx(p_2, autoTasks);
@@ -397,14 +399,17 @@ public class FlipAuto2025 extends LinearOpMode{
         specimenPickupAndHang(autoTasks, p_12, p_13, p_14, p_19, p_20);
 
         // Park.
-        if ((double) (System.currentTimeMillis() - startTime) /1000 < 3.5) {
-            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-            positionSolver.addMoveToTaskEx(p_19, autoTasks);  //p_00
-        } else {
-            autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
-            positionSolver.addMoveToTaskEx(p_00, autoTasks);  //p_00
-        }
+        autoTasks.addStep(() -> {
+            if ((System.currentTimeMillis() - startTime) / 1000 < (30 - 4)) {
+                autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+                positionSolver.addMoveToTaskEx(p_19, autoTasks);  //p_00
+            } else {
+                autoTasks.addStep(() -> positionSolver.setSettings(PositionSolverSettings.loseSettings));
+                positionSolver.addMoveToTaskEx(p_00, autoTasks);  //p_00
+            }
+        });
     }
+
 
     private void specimenPickupAndHang (TimedTask autoTasks, Vector3 pos_two, Vector3 pos_three,
                                         Vector3 pos_four, Vector3 prePosition, Vector3 position) {
