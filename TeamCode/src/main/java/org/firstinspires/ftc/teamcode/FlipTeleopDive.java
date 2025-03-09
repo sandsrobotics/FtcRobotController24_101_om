@@ -4,7 +4,9 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.lib.ButtonMgr;
 import org.firstinspires.ftc.teamcode.lib.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.parts.bulkread.BulkRead;
@@ -101,6 +103,8 @@ public class FlipTeleopDive extends LinearOpMode {
 
         extraSettings();
 
+////        intake.getHardware().robotHangMotor.setPower(-1);
+
         while (!isStarted()) {
             robot.buttonMgr.runLoop();
             telemetry.addData("Not Started", "Not Started");
@@ -126,7 +130,14 @@ public class FlipTeleopDive extends LinearOpMode {
             telemetry.addData("Position", position);
             dashboard.sendTelemetryPacket(packet);
             telemetry.update();
+
+////            if (intake.getHardware().robotHangMotor.getCurrent(CurrentUnit.MILLIAMPS) > 5000) {
+////                intake.getHardware().robotHangMotor.setPower(0);
+////                intake.getHardware().robotHangMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+////            }
         }
+
+////        intake.getHardware().robotHangMotor.setPower(0);  // in case it didn't get zeroed during init
 
         //odo.setPosition(fieldStartPos);
         robot.start();
