@@ -38,7 +38,7 @@ public class FlipTeleopDive extends LinearOpMode {
     Pinpoint odo;
     Vector3 fieldStartPos = new Vector3(-14.375,-62,90);  //for teleOp, this shouldn't be relevant
     boolean testModeReverse = false;
-    public long hangTime=0;
+//    public long hangTime=0;
 
     public void initTeleop(){
         new DriveTeleop(drive, DriveTeleopSettings.makeArcade1(robot));
@@ -131,15 +131,15 @@ public class FlipTeleopDive extends LinearOpMode {
         //odo.setPosition(fieldStartPos);
         robot.start();
 
-        hangTime = System.currentTimeMillis() + 90000;
+//        hangTime = System.currentTimeMillis() + 90000;
 
         while (opModeIsActive()) {
             start = System.currentTimeMillis();
             robot.run();
-            if (hangTime != 0 && System.currentTimeMillis() > hangTime) {
-                hangTime = 0;
-                intake.tasks.prepareToHangRobotTask.restart();
-            }
+//            if (hangTime != 0 && System.currentTimeMillis() > hangTime) {
+//                hangTime = 0;
+//                intake.tasks.prepareToHangRobotTask.restart();
+//            }
             FlipbotSettings.storeRobotPosition(pt.getCurrentPosition());
             telemetry.addData("position", pt.getCurrentPosition());
             telemetry.addData("tile position", fieldToTile(pt.getCurrentPosition()));
