@@ -213,9 +213,9 @@ public class Intake2 extends ControllablePart<Robot, IntakeSettings2, IntakeHard
 
     public void setRobotLiftPosition(int lift) {
         if (lift == 1) {
-            setRobotLiftPositionUnsafe(8720); // top //7200
+            setRobotLiftPositionUnsafe(13100); // top //7200
         } else if (lift == -1) {
-            setRobotLiftPositionUnsafe(3450); // bottom //1100
+            setRobotLiftPositionUnsafe(4500); // bottom //1100
         }
     }
 
