@@ -343,23 +343,23 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         }
     }
 
-//    public void applyControlGovernor() {
-//        //very prototype-y
-//        // Sets maximum Driver 1 inputs proportionally based on extension of slides
-//        //=1-maxGov*(MAX(eMin,MIN(E14,eMax))-eMin)/(eMax-eMin)
-//        int slidePMin = getSettings().positionSlideStartIntake;
-//        int slidePMax = getSettings().positionSlideMax;
-//        double slideMaxReduction = 0.75;
-//        double slideGov = 1 - slideMaxReduction*(clamp(currentSlidePos, slidePMin, slidePMax)-slidePMin)/(slidePMax-slidePMin);
-//        int liftPMin = getSettings().positionSlideStartIntake;
-//        int liftPMax = getSettings().positionLiftHangRelease;
-//        double liftMaxReduction = 0.67;
-//        double liftGov = 1 - liftMaxReduction*(clamp(currentLiftPos, liftPMin, liftPMax)-liftPMin)/(liftPMax-liftPMin);
-//        FlipbotSettings.setControlGovernor(Math.min(slideGov,liftGov));
-//    }
-//    private static int clamp(int val, int min, int max) {
-//        return Math.max(min, Math.min(val, max));
-//    }
+    public void applyControlGovernor() {
+        //very prototype-y
+        // Sets maximum Driver 1 inputs proportionally based on extension of slides
+        //=1-maxGov*(MAX(eMin,MIN(E14,eMax))-eMin)/(eMax-eMin)
+        int slidePMin = getSettings().positionSlideStartIntake;
+        int slidePMax = getSettings().positionSlideMax;
+        double slideMaxReduction = 0.75;
+        double slideGov = 1 - slideMaxReduction*(clamp(currentSlidePos, slidePMin, slidePMax)-slidePMin)/(slidePMax-slidePMin);
+        int liftPMin = getSettings().positionSlideStartIntake;
+        int liftPMax = getSettings().positionLiftHangRelease;
+        double liftMaxReduction = 0.67;
+        double liftGov = 1 - liftMaxReduction*(clamp(currentLiftPos, liftPMin, liftPMax)-liftPMin)/(liftPMax-liftPMin);
+        FlipbotSettings.setControlGovernor(Math.min(slideGov,liftGov));
+    }
+    private static int clamp(int val, int min, int max) {
+        return Math.max(min, Math.min(val, max));
+    }
 
     @Override
     public void onInit() {
@@ -434,7 +434,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         spinnerSliderPower = 0.0; // control.strafePower;
         currentSlidePos = getHardware().slideMotor.getCurrentPosition();
         currentLiftPos = getHardware().liftMotor.getCurrentPosition();
-//        applyControlGovernor();
+        applyControlGovernor();
 
         homingLiftZero.accept(getHardware().liftZeroSwitch.getState());
         homingSlideZero.accept(getHardware().slideZeroSwitch.getState());

@@ -13,6 +13,7 @@ public class ServoSSR implements Servo {
     private boolean enabled = false;        // tracks whether or not the servo is (or should be) enabled
     private boolean eStopped = true;        // tracks whether the servo is stopped in such a way that the position is unpredictable
     private boolean unknown = true;         // tracks whether the servo position is unknown (due to eStop or external shenanigans)
+    private boolean fullPwm = false;        // tracks whether the pwm is set to 500-2500 μs; required for blinkin
     private int sweepTime = 1500;           // the time (in ms) it takes the servo to move its entire range (account for loading when setting!)
     private int sweepTimeDec = 1500;        // the time (in ms) it takes the servo to move its entire range (account for loading when setting!)
     private int wakeTime = 200;             // a short interval for the servo to move from disabled/parked to last position
@@ -138,6 +139,7 @@ public class ServoSSR implements Servo {
             lowC = highC;
             highC = temp;
         }
+        fullPwm = lowC == 500 && highC == 2500;
         ((ServoImplEx)servo).setPwmRange(new PwmControl.PwmRange(lowC, highC));
         return this;
     }
@@ -452,13 +454,14 @@ public class ServoSSR implements Servo {
      * If using a Blinkin LED device, sets the Blinkin to a desired pattern number.
      * It does this by converting that number to a pulse width between 1000-2000 μs, and converting that to a 0-1 servo position.
      * <P>For this to work, the servo controller must be set to use the full range of 500-2500 μs,
-     * which can be set by using the .setFullPwmRange() method.
+     * which happens automatically.
      * @param pattern the desired pattern number between 1 and 100
      */
     public void setBlinkinPattern(int pattern) {
         // Q: Why do this craziness instead of defining the servo port as a Blinkin?
         // A: Because that changes the stored config and other things. Easier to just use all the servo ports as servos.
         if (pattern<1 || pattern>100) return;              // Or throw an error? Legal Blinkin patterns are between 1 and 100
+        if (!fullPwm) setFullPwmRange();                   // Make sure the full range is set
         int pulseWidth = 995 + 10*pattern;                 // Convert pattern number to pulse width between 1000-2000 μs)
         double setting = (pulseWidth - 500) / 2000.0;      // Covert pulse width to 0-1 servo position (based on 500-2500 μs)
         servo.setPosition(setting);
@@ -468,7 +471,7 @@ public class ServoSSR implements Servo {
      * If using a Blinkin LED device, sets the Blinkin to a desired pattern by name.
      * It does this by converting that name to a pulse width between 1000-2000 μs, and converting that to a 0-1 servo position.
      * <P>For this to work, the servo controller must be set to use the full range of 500-2500 μs,
-     * which can be set by using the .setFullPwmRange() method.
+     * which happens automatically.
      * @param pattern the desired pattern from enum RevBlinkinLedDriver.BlinkinPattern
      */
     public void setBlinkinPattern(RevBlinkinLedDriver.BlinkinPattern pattern) {
@@ -494,8 +497,8 @@ public class ServoSSR implements Servo {
            possible future to do: calculate the predicted position based on time and last position */
         return Math.min(System.currentTimeMillis() + sweepTimeByDir,      // need to cap this at full sweep time
                 Math.max(timer, System.currentTimeMillis())               // remaining time, not less than current time (accounts for timer reset to 0)
-                + (long)(calcSweepChange(newPosition) * sweepTimeByDir)   // normally calculated time for movement
-                + (enabled ? 0 : wakeTime));                              // add waketime if disabled (and expected to be near last position)
+                        + (long)(calcSweepChange(newPosition) * sweepTimeByDir)   // normally calculated time for movement
+                        + (enabled ? 0 : wakeTime));                              // add waketime if disabled (and expected to be near last position)
     }
 
     private double calcSweepChange(double newPosition) {
@@ -526,7 +529,7 @@ Usage
 Instantiate with a Servo interface instance:
 	ServoSSR servoWhatever;
 	servoWhatever = new ServoSSR(parts.robot.servo0);   -or similar-
-	servoWhatever = new ServoSSR(hardwareMap.get(Servo.class,"servo0");
+	servoWhatever = new ServoSSR(hardwareMap.get(Servo.class,"servo0"));
 
 For convenience, the new settings can be chained:
     servoWhatever.setSweepTime(1000).setWakeTime(250).setOffset(-0.05).setFullPwmRange()

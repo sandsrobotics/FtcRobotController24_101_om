@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.parts.drive.settings.DriveTeleopSettings;
 import org.firstinspires.ftc.teamcode.parts.intake.FlipbotSettings;
 import org.firstinspires.ftc.teamcode.parts.intake.Intake;
 import org.firstinspires.ftc.teamcode.parts.intake.IntakeTeleop;
+import org.firstinspires.ftc.teamcode.parts.intake.IntakeTeleopDemo;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.PositionSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.XRelativeSolver;
 import org.firstinspires.ftc.teamcode.parts.positionsolver.settings.PositionSolverSettings;
@@ -48,6 +49,7 @@ public class FlipTeleopDive extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        extraSettings();   // LK 20250602 Moved to top
         FlipbotSettings.setTeleOp();
         DecimalFormat df = new DecimalFormat("#0.0");
         long start;
@@ -83,7 +85,8 @@ public class FlipTeleopDive extends LinearOpMode {
         positionSolver.setSettings(PositionSolverSettings.specimenAssistSettings);
 
         intake = new Intake(robot);
-        new IntakeTeleop(intake);
+        if (!FlipbotSettings.isDemoMode) new IntakeTeleop(intake);
+        else new IntakeTeleopDemo(intake);
 
         robot.init();
 //        odo.setPosition(fieldStartPos);
@@ -101,7 +104,7 @@ public class FlipTeleopDive extends LinearOpMode {
             telemetry.update();
         }
 
-        extraSettings();
+
 
 ////        intake.getHardware().robotHangMotor.setPower(-1);
 
@@ -180,6 +183,7 @@ public class FlipTeleopDive extends LinearOpMode {
         FlipbotSettings.isBlueGood = false;
         FlipbotSettings.isYellowGood = true;
         FlipbotSettings.isRedGood = true;
+        FlipbotSettings.isDemoMode = false;
     }
 
     public void moveRobot(Vector3 target){

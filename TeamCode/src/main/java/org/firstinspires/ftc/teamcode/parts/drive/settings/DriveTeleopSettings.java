@@ -112,6 +112,25 @@ public class DriveTeleopSettings {
         );
     }
 
+    public static DriveTeleopSettings makeDemo1(Robot robot){
+        Gamepad gamepad = robot.opMode.gamepad1;   // Team driver
+        Gamepad gamepad2 = robot.opMode.gamepad2;  // Guest driver
+
+        return new DriveTeleopSettings(
+                () -> new Vector3(
+                        FlipbotSettings.getControlGovernor().X * gamepad.left_stick_x != 0 ? gamepad.left_stick_x : gamepad2.left_stick_x * FlipbotSettings.demoDriverMultiplier,
+                        FlipbotSettings.getControlGovernor().Y * gamepad.left_stick_y != 0 ? -gamepad.left_stick_y : -gamepad2.left_stick_y * FlipbotSettings.demoDriverMultiplier,
+                        FlipbotSettings.getControlGovernor().Z * gamepad.right_stick_x != 0 ? gamepad.right_stick_x : gamepad2.right_stick_x * FlipbotSettings.demoDriverMultiplier
+                ),
+                () -> false, // () -> gamepad.x,
+                () -> false, // new LatchedModifier().toSupplier(() -> gamepad.right_bumper),
+                0.67,
+                //new LatchedModifier().toSupplier(() -> gamepad.b),
+                () -> false, // () -> gamepad.right_trigger > 0.5,
+                0.33
+        );
+    }
+
     public static DriveTeleopSettings makeOrtho(Robot robot){
         Gamepad gamepad = robot.opMode.gamepad1;
 
