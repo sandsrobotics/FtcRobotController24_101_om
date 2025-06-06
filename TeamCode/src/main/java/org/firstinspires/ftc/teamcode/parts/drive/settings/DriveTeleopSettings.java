@@ -118,9 +118,9 @@ public class DriveTeleopSettings {
 
         return new DriveTeleopSettings(
                 () -> new Vector3(
-                        FlipbotSettings.getControlGovernor().X * gamepad.left_stick_x != 0 ? gamepad.left_stick_x : gamepad2.left_stick_x * FlipbotSettings.demoDriverMultiplier,
-                        FlipbotSettings.getControlGovernor().Y * gamepad.left_stick_y != 0 ? -gamepad.left_stick_y : -gamepad2.left_stick_y * FlipbotSettings.demoDriverMultiplier,
-                        FlipbotSettings.getControlGovernor().Z * gamepad.right_stick_x != 0 ? gamepad.right_stick_x : gamepad2.right_stick_x * FlipbotSettings.demoDriverMultiplier
+                        FlipbotSettings.getControlGovernor().X * (gamepad.left_stick_x != 0 ? gamepad.left_stick_x : gamepad2.left_stick_x * FlipbotSettings.demoDriverMultiplier),
+                        FlipbotSettings.getControlGovernor().Y * (gamepad.left_stick_y != 0 ? -gamepad.left_stick_y : -gamepad2.left_stick_y * FlipbotSettings.demoDriverMultiplier),
+                        FlipbotSettings.getControlGovernor().Z * (gamepad.right_stick_x != 0 ? gamepad.right_stick_x : gamepad2.right_stick_x * FlipbotSettings.demoDriverMultiplier)
                 ),
                 () -> false, // () -> gamepad.x,
                 () -> false, // new LatchedModifier().toSupplier(() -> gamepad.right_bumper),

@@ -83,6 +83,8 @@ public class IntakeTeleopDemo extends LoopedPartImpl<Intake, IntakeTeleopSetting
             parent.setUserSlidePower(parent.parent.opMode.gamepad1.right_trigger-parent.parent.opMode.gamepad1.left_trigger);
         } else if (enableDemoDriver) {
             parent.setUserSlidePower(parent.parent.opMode.gamepad2.right_trigger-parent.parent.opMode.gamepad2.left_trigger);
+        } else {
+            parent.setUserSlidePower(0);
         }
 
         // Driver 2 - start button is a "shift" key; anything below is if start is not pushed
