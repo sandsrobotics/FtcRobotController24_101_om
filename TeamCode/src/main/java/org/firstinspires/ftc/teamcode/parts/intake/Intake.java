@@ -321,6 +321,7 @@ public class Intake extends ControllablePart<Robot, IntakeSettings, IntakeHardwa
         return lastSample; // Nothing detected
     }
     public boolean isSampleGood(int sample) {
+        if (FlipbotSettings.isEverythingGood) return true;
         if (sample == 1 && FlipbotSettings.isRedGood) return true;
         if (sample == 2 && FlipbotSettings.isYellowGood) return true;
         if (sample == 3 && FlipbotSettings.isBlueGood) return true;

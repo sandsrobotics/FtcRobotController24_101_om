@@ -29,7 +29,7 @@ import om.self.supplier.suppliers.EdgeSupplier;
 import om.self.task.core.Group;
 import om.self.task.other.TimedTask;
 import static om.self.ezftc.utils.Constants.tileSide;
-//@Disabled
+@Disabled
 @Config
 @Autonomous(name="27050 Human Specimen", group="27050")
 public class ClawAutoSpec extends LinearOpMode{

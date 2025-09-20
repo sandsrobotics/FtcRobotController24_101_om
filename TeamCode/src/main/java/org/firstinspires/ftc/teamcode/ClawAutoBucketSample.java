@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import om.self.ezftc.utils.Vector3;
 
-//@Disabled
+@Disabled
 @Autonomous(name="27050 Bucket Sample", group="27050")
 public class ClawAutoBucketSample extends ClawAutoBucket {
     Vector3 bucketsamplestart = new Vector3(-37.5, -62, 90);

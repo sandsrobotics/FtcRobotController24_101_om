@@ -13,6 +13,7 @@ public class FlipbotSettings {
    public static boolean isRedGood = true;
    public static boolean isYellowGood = true;
    public static boolean isBlueGood = false;
+   public static boolean isEverythingGood = false;
    public static boolean autonomousDebugMode = false;
    public static boolean isRangingEnabled = false;
    public static boolean firstRun = true;
