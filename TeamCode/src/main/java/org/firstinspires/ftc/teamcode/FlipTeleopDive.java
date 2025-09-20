@@ -106,7 +106,7 @@ public class FlipTeleopDive extends LinearOpMode {
 
 
 
-////        intake.getHardware().robotHangMotor.setPower(-1);
+        intake.getHardware().robotHangMotor.setPower(-1);
 
         while (!isStarted()) {
             robot.buttonMgr.runLoop();
@@ -134,13 +134,13 @@ public class FlipTeleopDive extends LinearOpMode {
             dashboard.sendTelemetryPacket(packet);
             telemetry.update();
 
-////            if (intake.getHardware().robotHangMotor.getCurrent(CurrentUnit.MILLIAMPS) > 5000) {
-////                intake.getHardware().robotHangMotor.setPower(0);
-////                intake.getHardware().robotHangMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-////            }
+            if (intake.getHardware().robotHangMotor.getCurrent(CurrentUnit.MILLIAMPS) > 5000) {
+                intake.getHardware().robotHangMotor.setPower(0);
+                intake.getHardware().robotHangMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            }
         }
 
-////        intake.getHardware().robotHangMotor.setPower(0);  // in case it didn't get zeroed during init
+        intake.getHardware().robotHangMotor.setPower(0);  // in case it didn't get zeroed during init
 
         //odo.setPosition(fieldStartPos);
         robot.start();
