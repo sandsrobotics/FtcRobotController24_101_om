@@ -104,8 +104,7 @@ public class FlipTeleopDive extends LinearOpMode {
             telemetry.update();
         }
 
-
-
+        intake.getHardware().robotHangMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         intake.getHardware().robotHangMotor.setPower(-1);
 
         while (!isStarted()) {
