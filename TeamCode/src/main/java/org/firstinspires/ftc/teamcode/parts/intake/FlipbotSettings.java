@@ -19,7 +19,7 @@ public class FlipbotSettings {
    public static boolean firstRun = true;
    static Vector3 controlGovernor = new Vector3(1,1,1);
    public static boolean isDemoMode = false;
-   public static double demoDriverDefaultMultiplier = 0.5;
+   public static double demoDriverDefaultMultiplier = 0.33; //0.5;
    public static double demoDriverMultiplier = 0;
 
    public static void setTeleOp () { modeTeleOp = true; }
